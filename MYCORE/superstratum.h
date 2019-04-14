@@ -7,5 +7,9 @@
 #include <stdbool.h>
 #include "system_config.h"
 #include "movement.h"
+#include "plan.h"
+#include "location.h"
 
+
+/*********Function declaration*******/
 #endif

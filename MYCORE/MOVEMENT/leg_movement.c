@@ -1,6 +1,8 @@
+/*   
+   Constructing Fundamental Functions of Leg Motion
+*/
+
 #include "leg_movement.h"
-
-
 
 void LegModeChange()
 {

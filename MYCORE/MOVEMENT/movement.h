@@ -6,7 +6,8 @@
 #include "arm_math.h"
 #include <stdbool.h>
 #include "superstratum.h"
-#include "motor_movement.h"
+#include "DM_motor_movement.h"
+#include "RM_motor_movement.h"
 #include "leg_movement.h"
 
 /***运动模式的类型***/

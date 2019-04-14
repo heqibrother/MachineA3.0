@@ -1,5 +1,10 @@
-#include "movement.h"
+/*
+   To determine the timing of different motion control 
+	 modes, it is mainly divided into speed-first and 
+	 location-first timing control.
+*/
 
+#include "movement.h"
 
 MotorMoveState DM_MoveInfo,RM_MoveInfo;
 MovementStyle movement_style;
