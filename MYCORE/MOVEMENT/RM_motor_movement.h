@@ -7,8 +7,43 @@
 #include <stdbool.h>
 #include "superstratum.h"
 
+#define RM_radio 1.0 // //motor_angle * radio = real distance
 /***运动模式的类型***/
 
 /*********Function declaration*******/
+
+/**
+ * @brief: Determining the Motion State of Rotate Motor
+ * @return: none
+ * @status: 2019.4.15
+ */
 void MoveRM();
+
+/**
+ * @brief:  The stage - stop
+ * @return: none
+ * @status: 2019.4.15
+ */
+void RMStopMove();
+
+/**
+ * @brief:  The stage - accelerate
+ * @return: none
+ * @status: 2019.4.15
+ */
+void RMAccelerate();
+
+/**
+ * @brief:  The stage - decelerate
+ * @return: none
+ * @status: 2019.4.15
+ */
+void RMDecelerate();
+
+/**
+ * @brief: Judging the Motion Stage of Rotate Motor -----RM_speed_stage
+ * @return: none
+ * @status: 2019.4.15
+ */
+void JudgeRMSpeedStage();
 #endif

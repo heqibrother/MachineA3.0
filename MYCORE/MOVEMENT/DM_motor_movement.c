@@ -33,9 +33,10 @@ void MoveDM()
 
 void JudgeDMSpeedStage()
 {
-	if(DM_MoveInfo.motor_position)
+
+	if(JugdeStageTool(DriveMotor.PositionMeasure,DM_MoveInfo.finish_decelerate_position))
 	{
-		DM_speed_stage = kStopMove;
+		DM_MoveInfo.motor_position = true;
 	}
 	else if(JugdeStageTool(DriveMotor.PositionMeasure,DM_MoveInfo.finish_keep_speed_position))
 	{
@@ -48,6 +49,11 @@ void JudgeDMSpeedStage()
 	else
 	{
 		DM_speed_stage = kAccelerate;
+	}	
+	
+	if(DM_MoveInfo.motor_position&&DM_speed_stage!=kStopMove)
+	{
+		DM_speed_stage = kStopMove;
 	}
 }
 
