@@ -116,3 +116,25 @@ bool JugdeStageTool(float value_a,float value_b)
 		return false;
 	}
 }
+
+void DMPartInit()
+{
+	DM_MoveInfo.distance_data.target_distance = 0;
+	DM_MoveInfo.speed_data.target_position_speed = 0;
+	SetSpeedDirection();
+	DM_MoveInfo.position_data.initial_position =  + 12.5 / DM_radio ;
+	DM_speed_stage = kStopMove;
+	DM_MoveInfo.motor_position = true;
+}
+
+void SetSpeedDirection()
+{
+	if(kLegState == kHighLegMove)
+	{
+		DM_MoveInfo.speed_data.speed_direction = -1.0f;
+	}
+	else if(kLegState == kLowLegMove)
+	{
+		DM_MoveInfo.speed_data.speed_direction = 1.0f;
+	}
+}

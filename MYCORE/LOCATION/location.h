@@ -4,4 +4,5 @@
 #include "superstratum.h"
 
 /*********Function declaration*******/
+void RefreshLocation();
 #endif

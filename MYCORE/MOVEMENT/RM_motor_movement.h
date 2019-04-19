@@ -6,10 +6,12 @@
 #include "arm_math.h"
 #include <stdbool.h>
 #include "superstratum.h"
+#include "DM_motor_movement.h"
 
-#define RM_radio 1.0 // //motor_angle * radio = real distance
+extern const float RM_radio;
 /***运动模式的类型***/
 
+extern SpeedStage RM_speed_stage;
 /*********Function declaration*******/
 
 /**
@@ -46,4 +48,6 @@ void RMDecelerate();
  * @status: 2019.4.15
  */
 void JudgeRMSpeedStage();
+
+void RMPartInit();
 #endif

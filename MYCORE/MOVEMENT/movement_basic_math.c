@@ -3,7 +3,8 @@
  */
 
 #include "movement_basic_math.h"
-static const float speed_curve_area_radio = 0.5; //speed_curve_area_radio*accelerate_time*target_speed = real_distance_walked
+const float speed_curve_area_radio = 0.5; //speed_curve_area_radio*accelerate_time*target_speed = real_distance_walked
+const float angle_to_radian_radio = 0.017453;//3.14159/180
 static const float DM_speed_table[101] ;
 static const float DM_time_left_table[101] ;
 		
@@ -135,79 +136,68 @@ void CalDMMovementPosition()
 
 void CalMovementSpeed()
 {
-	
+	float speed_limmit;
+	speed_limmit = DM_MoveInfo.distance_data.distance_all / 600 * 400;//参考60cm可以速度到400不打脚
+	if(speed_limmit<DM_MoveInfo.speed_data.target_position_speed)
+	{
+	  DM_MoveInfo.speed_data.target_position_speed = speed_limmit;
+	}
 }
 
 void JudgeMovementSafiety()
 {	
 	//先确定角度需求
-////     switch(kLegState)
-////		{
-////			case kHighLegMove:
-////			{                                                  //旋转角度及其保护
-////				if(lowleg_yaw - RM_angle_min > target_yaw)
-////				{
-////					target_yaw = lowleg_yaw - RM_angle_min;
-////				}
-////				else if(lowleg_yaw + RM_angle_max  < target_yaw )
-////				{
-////					target_yaw = lowleg_yaw + RM_angle_max;
-////				}
-////				RM_target_position = RotateMotor.PositionMeasure  - 1 * Direction_RM * RM_radio * (target_yaw - highleg_yaw);
-////				RM_all_distance = fabs(RM_target_position - RotateMotor.PositionMeasure);
-////			}
-////			{                                                  //根据旋转角度设置前进安全距离
-////				if(target_distance  < CalMinSafeDistance()+10)
-////				{
-////					 target_distance= CalMinSafeDistance()+10;
-////				}
-////				if(target_distance  > CalMaxSafeDistance())
-////				{
-////					 target_distance = CalMaxSafeDistance();
-////				}
-////				DM_target_position = Direction_DM * DM_radio * target_distance -  DriveMotor_initial_position;
-////			}
-////			{
-////				DM_start_position = DriveMotor.PositionMeasure;
-////			}
-////			DM_all_distance = fabs(DM_target_position - DM_start_position);
-////			DistributeArea();
-////				break;
-////			
-////			case kLowLegMove:
-////			{                                                  //旋转角度及其保护
-////				if(highleg_yaw+ 3 <target_yaw )
-////				{
-////					target_yaw = highleg_yaw + 3;
-////				}
-////				else if(highleg_yaw -60 > target_yaw )
-////				{
-////					target_yaw = highleg_yaw - 60;
-////				}
-////				RM_target_position = RotateMotor.PositionMeasure  + 1 * Direction_RM * RM_radio * (target_yaw - lowleg_yaw);
-////				RM_all_distance = fabs(RM_target_position - RotateMotor.PositionMeasure);
-////			}
-////			{                                                  //根据旋转角度设置前进安全距离
-////				if(target_distance  < CalMinSafeDistance()+10)
-////				{
-////					 target_distance= CalMinSafeDistance()+10;
-////				}
-////				if(target_distance  > CalMaxSafeDistance())
-////				{
-////					 target_distance = CalMaxSafeDistance();
-////				}
-////				DM_target_position = -Direction_DM * DM_radio * target_distance -  DriveMotor_initial_position;
-////			}
-////			{
-////				DM_start_position = DriveMotor.PositionMeasure;
-////			}
-////			DM_all_distance = fabs(DM_target_position - DM_start_position);
-////			DistributeArea();
-////				break;
-////			
-////			default:
-////				break;
-////		}
+     switch(kLegState)
+		{
+			case kHighLegMove:
+			{                                                  //旋转角度及其保护
+				if(leg_angle.lowleg_yaw - RM_angle_min > leg_angle.target_yaw)
+				{
+					leg_angle.target_yaw = leg_angle.lowleg_yaw - RM_angle_min;
+				}
+				else if(leg_angle.lowleg_yaw + RM_angle_max  < leg_angle.target_yaw )
+				{
+					leg_angle.target_yaw = leg_angle.lowleg_yaw + RM_angle_max;
+				}
+			}
+			{                                                  //根据旋转角度设置前进安全距离
+				if(DM_MoveInfo.distance_data.target_distance  < CalDMMinSafeDistance()+10)
+				{
+					 DM_MoveInfo.distance_data.target_distance= CalDMMinSafeDistance()+10;
+				}
+				if(DM_MoveInfo.distance_data.target_distance  > CalDMMaxSafeDistance())
+				{
+					 DM_MoveInfo.distance_data.target_distance = CalDMMaxSafeDistance();
+				}
+			}
+				break;
+			
+			case kLowLegMove:
+			{                                                  //旋转角度及其保护
+				if(leg_angle.highleg_yaw+ RM_angle_min <leg_angle.target_yaw )
+				{
+					leg_angle.target_yaw = leg_angle.highleg_yaw + RM_angle_min;
+				}
+				else if(leg_angle.highleg_yaw -RM_angle_max > leg_angle.target_yaw )
+				{
+					leg_angle.target_yaw = leg_angle.highleg_yaw - RM_angle_max;
+				}
+			}
+			{                                                  //根据旋转角度设置前进安全距离
+				if(DM_MoveInfo.distance_data.target_distance  < CalDMMinSafeDistance()+10)
+				{
+					 DM_MoveInfo.distance_data.target_distance= CalDMMinSafeDistance()+10;
+				}
+				if(DM_MoveInfo.distance_data.target_distance  > CalDMMaxSafeDistance())
+				{
+					 DM_MoveInfo.distance_data.target_distance = CalDMMaxSafeDistance();
+				}
+			}
+				break;
+			
+			default:
+				break;
+		}
 }
 
 float CalRealSpeed(float speed)
@@ -228,5 +218,40 @@ float CalRealPosition(float distance_D_value)
 {
 	float result = 0;
 	result = distance_D_value*60.0f*1000.0f/(360.0f*DM_radio);
+	return result;
+}
+
+float CalDMMinSafeDistance()
+{
+	float result = 0;
+	result = 20;
+	return result;
+}
+
+float CalDMMaxSafeDistance()
+{
+		float result = 0;
+	if(kLegState == kHighLegMove)
+	{
+		if(leg_angle.target_yaw - leg_angle.lowleg_yaw == 0)
+		{
+			result = (Half_Length-70) ;
+		}
+		else
+		{
+	    result = (Half_Length-70) - Half_Width / tan((90 - 0.5*fabs(leg_angle.target_yaw - leg_angle.lowleg_yaw))*angle_to_radian_radio);
+		}
+	}
+	else
+	{
+		if(leg_angle.target_yaw - leg_angle.highleg_yaw == 0)
+		{
+			result = (Half_Length-70)  ;
+		}
+		else
+		{
+		  result = (Half_Length-70)  - Half_Width / tan((90 - 0.5*fabs(leg_angle.target_yaw - leg_angle.highleg_yaw))*angle_to_radian_radio);
+		}
+	}
 	return result;
 }

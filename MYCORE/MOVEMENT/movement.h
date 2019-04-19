@@ -78,7 +78,6 @@ typedef  struct
   MotorDistanceData distance_data;
   MotorTimeData time_data;
   MotorSpeedData speed_data;
-	LegAngle leg_angle;
 	bool motor_position;
 
 }MotorMoveState;
@@ -117,6 +116,7 @@ typedef enum{                //全部时点标志位
 
 
 extern MotorMoveState DM_MoveInfo,RM_MoveInfo;
+extern MovementStyle movement_style;
 /*********Function declaration*******/
 
 /**
@@ -124,7 +124,7 @@ extern MotorMoveState DM_MoveInfo,RM_MoveInfo;
  * @return: false(continue) / true(finish)
  * @status: 2019.4.14
  */
-bool ExcutePlan();
+bool ExecutePlan();
 
 /**
  * @brief: Executing the motion of the speed-first time point

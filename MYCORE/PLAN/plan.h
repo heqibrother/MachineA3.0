@@ -4,4 +4,7 @@
 #include "superstratum.h"
 
 /*********Function declaration*******/
+void MakePlan();
+void SetBasicMotionParameters(float targetpositiondistance,float targetpositionspeed,float targetyaw,int speedmode);
+
 #endif

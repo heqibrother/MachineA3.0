@@ -9,6 +9,9 @@
 
 /***运动模式的类型***/
 
+/***Declare variables***/
+extern const float speed_curve_area_radio;
+extern const float angle_to_radian_radio;
 
 /*********Function declaration*******/
 /**
@@ -37,4 +40,6 @@ void JudgeMovementSafiety();
 float CalRealSpeed(float speed);
 float CalRealDistance(float position_D_value);
 	float CalRealPosition(float distance_D_value);
+	float CalDMMinSafeDistance();
+	float CalDMMaxSafeDistance();
 #endif

@@ -1,15 +1,7 @@
 #ifndef __DM_MOTOR_MOVEMENT_H
 #define __DM_MOTOR_MOVEMENT_H
 
-#include "math.h"
-#include "stm32f4xx.h"
-#include "arm_math.h"
-#include <stdbool.h>
-#include "superstratum.h"
-
-static const float DM_radio = 3.0;  //motor_angle * radio = real distance
-
-/***运动状态***/
+/***运动状态***///在.h文件编译前定义，在RM.h中还有实例化extern声明，这样避免报错
 typedef enum 
 {
 	kStopMove,   	
@@ -18,6 +10,17 @@ typedef enum
 	kDeccelerate,
 }SpeedStage;//电机速度规划的各个状态
 
+#include "math.h"
+#include "stm32f4xx.h"
+#include "arm_math.h"
+#include <stdbool.h>
+#include "superstratum.h"
+
+static const float DM_radio = 0.57596;//   66pi（3.141592654）/360  //motor_angle * radio = real distance
+
+
+
+extern SpeedStage DM_speed_stage;
 /*********Function declaration*******/
 /**
  * @brief: Determining the Motion State of Direct Motor
@@ -82,4 +85,7 @@ float SuitableDecelerateSpeed();
  * @status: 2019.4.15
  */
 bool JugdeStageTool(float value_a,float value_b);
+
+void DMPartInit();
+void SetSpeedDirection();
 #endif

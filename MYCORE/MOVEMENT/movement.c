@@ -10,7 +10,7 @@ MotorMoveState DM_MoveInfo,RM_MoveInfo;
 MovementStyle movement_style;
 TimePoint time_point_for_speed,time_point_for_location;
 
-bool ExcutePlan()
+bool ExecutePlan()
 {
 	switch(movement_style)
 	{
@@ -104,12 +104,14 @@ void LocationFirstMode()
 
 void CalculateFurtherMovementData()
 {	
+	SetSpeedDirection();
 	JudgeMovementSafiety();
-	CalMovementSpeed();
+
 	
 	//DM运动部分详细参数计算
 	DM_MoveInfo.distance_data.distance_all = DM_MoveInfo.distance_data.target_distance +
-	CalRealDistance(fabs(DM_MoveInfo.position_data.initial_position - DriveMotor.PositionMeasure));
+	CalRealDistance(fabs(DM_MoveInfo.position_data.initial_position - DriveMotor.PositionMeasure));	
+	CalMovementSpeed();
 	CalDMMovementPosition();
 	
 }
