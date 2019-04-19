@@ -29,4 +29,12 @@ float LookUpDMSpeedTable(float value_t) ;
  */
 float LookUpDMTimeTable(float value_distance) ;
 
+
+void CalDMMovementPosition();
+													
+void CalMovementSpeed();
+void JudgeMovementSafiety();
+float CalRealSpeed(float speed);
+float CalRealDistance(float position_D_value);
+	float CalRealPosition(float distance_D_value);
 #endif

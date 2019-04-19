@@ -10,6 +10,7 @@
 #include "RM_motor_movement.h"
 #include "leg_movement.h"
 #include "movement_basic_math.h"
+#include "angle_movement.h"
 
 /***运动模式的类型***/
 typedef enum 
@@ -21,34 +22,65 @@ typedef enum
 /***运动模式的类型***/
 typedef enum 
 {
-	kCommonSine,
-	kSineCosineCombination
-}SpeedMode;
+  kOnlyAccelerateStability,
+	kOnlyDecelerateStability,
+	kBothStability,
+	kBothUnStablity
+}SpeedMode;//决定加减速时间
 
-/***运动信息的结构***/
-typedef  struct 
+/***电机运动位置数据***/
+typedef struct 
 {
-  float initial_position;
-	float finish_accelerate_position;
-	float finish_keep_speed_position;
-	float finish_decelerate_position;
-	float end_position;
-	float target_speed;
-	SpeedMode speed_mode;
-	int32_t start_time;
-	int32_t accelerate_time;
-	int32_t decelerate_time;
-	float obstacle_location;
-	float obstacle_width;
-	bool motor_position;
+  float initial_position;//记录腿零点时的电机角度值（标准时刻，两腿重合）
 	
+	float start_position;
+	float finish_accelerate_position;//计算的电机值节点
+	float finish_keepspeed_position;
+	float finish_decelerate_position;
+}MotorPositionData;
+
+/***电机运动绝对距离数据***/
+typedef struct 
+{
+	float target_distance;
 	float distance_accelerate;
 	float distance_decelerate;
 	float distance_walked;
 	float distance_left;
 	float distance_all;
+	
+	float obstacle_location;
+	float obstacle_width;
+}MotorDistanceData;
+
+/***电机运动时间数据***/
+typedef struct 
+{
+	int32_t start_time;
+	int32_t accelerate_time;
+	int32_t decelerate_time;
+}MotorTimeData;
+
+/***电机运动速度数据***/
+typedef struct 
+{
+	float target_position_speed;
+	float target_distance_speed;
 	float current_expected_speed;
 	float speed_direction;
+	SpeedMode speed_mode;
+}MotorSpeedData;
+
+/***运动信息的结构***/
+typedef  struct 
+{
+	MotorPositionData position_data;
+  MotorDistanceData distance_data;
+  MotorTimeData time_data;
+  MotorSpeedData speed_data;
+	LegAngle leg_angle;
+	bool motor_position;
+
 }MotorMoveState;
 
 /***以速度为优先的枚举时点变量***/

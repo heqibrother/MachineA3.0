@@ -3,7 +3,7 @@
 */
 
 #include "leg_movement.h"
-
+enum LegState kLegState;
 void LegModeChange()
 {
 	

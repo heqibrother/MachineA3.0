@@ -1,15 +1,15 @@
 #ifndef __LEG_MOVEMENT_H
 #define __LEG_MOVEMENT_H
 
-#include "math.h"
-#include "stm32f4xx.h"
-#include "arm_math.h"
-#include <stdbool.h>
-#include "superstratum.h"
+#include "movement.h"
 
-/***运动模式的类型***/
+/***运动中腿的模式***/
+enum LegState {//腿状态
+    kHighLegMove,//高腿移动，矮腿在地
+	  kLowLegMove
+};
 
-
+extern enum LegState kLegState;
 /*********Function declaration*******/
 bool DetectLegRecoverPosition();
 bool DetectLegLayDownPosition();

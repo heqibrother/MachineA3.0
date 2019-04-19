@@ -7,7 +7,7 @@
 #include <stdbool.h>
 #include "superstratum.h"
 
-#define DM_radio 3.0  //motor_angle * radio = real distance
+static const float DM_radio = 3.0;  //motor_angle * radio = real distance
 
 /***ÔË¶¯×´Ì¬***/
 typedef enum 

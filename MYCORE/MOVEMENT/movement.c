@@ -103,6 +103,13 @@ void LocationFirstMode()
 }
 
 void CalculateFurtherMovementData()
-{
+{	
+	JudgeMovementSafiety();
+	CalMovementSpeed();
+	
+	//DM运动部分详细参数计算
+	DM_MoveInfo.distance_data.distance_all = DM_MoveInfo.distance_data.target_distance +
+	CalRealDistance(fabs(DM_MoveInfo.position_data.initial_position - DriveMotor.PositionMeasure));
+	CalDMMovementPosition();
 	
 }

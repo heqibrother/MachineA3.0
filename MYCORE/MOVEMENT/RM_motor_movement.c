@@ -57,12 +57,12 @@ void RMStopMove()
 void RMAccelerate()
 {
 	RotateMotor.State = PIDPOSITION;
-	RotateMotor.State = RM_MoveInfo.finish_decelerate_position;
+	RotateMotor.State = RM_MoveInfo.position_data.finish_decelerate_position;
 }
 
 void RMDecelerate()
 {
-	if(fabs(RM_MoveInfo.finish_decelerate_position - RotateMotor.PositionMeasure)<5)
+	if(fabs(RM_MoveInfo.position_data.finish_decelerate_position - RotateMotor.PositionMeasure)<5)
 	{
 		RM_MoveInfo.motor_position = true;
 	}

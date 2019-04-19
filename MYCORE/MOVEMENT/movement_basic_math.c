@@ -3,6 +3,7 @@
  */
 
 #include "movement_basic_math.h"
+static const float speed_curve_area_radio = 0.5; //speed_curve_area_radio*accelerate_time*target_speed = real_distance_walked
 static const float DM_speed_table[101] ;
 static const float DM_time_left_table[101] ;
 		
@@ -98,3 +99,134 @@ static const float DM_speed_table[101] = {
 			0.70549,0.724469,0.743583,0.762822,0.782176,
 			0.801636,0.821194,0.840839,0.860562,0.880354,
 			0.900205,0.920104,0.940044,0.960012,0.980001,1.0};
+		
+void CalDMMovementPosition()
+{
+	switch(DM_MoveInfo.speed_data.speed_mode)
+	{
+		case kOnlyAccelerateStability:
+				 DM_MoveInfo.position_data.finish_accelerate_position = DM_MoveInfo.position_data.start_position 
+																															+ DM_MoveInfo.speed_data.speed_direction 
+																																* CalRealPosition(DM_MoveInfo.distance_data.distance_all /3);
+				 DM_MoveInfo.position_data.finish_keepspeed_position = DM_MoveInfo.position_data.start_position 
+																															+ DM_MoveInfo.speed_data.speed_direction * CalRealPosition(DM_MoveInfo.distance_data.distance_all *2/3);
+				 DM_MoveInfo.position_data.finish_decelerate_position = DM_MoveInfo.position_data.start_position 
+																															+ DM_MoveInfo.speed_data.speed_direction * CalRealPosition(DM_MoveInfo.distance_data.distance_all);
+				 
+			break;
+		
+		case kOnlyDecelerateStability:
+			break;
+																	
+		case kBothStability:
+			break;
+																																
+		case kBothUnStablity:
+			break;
+		
+		default:
+			break;
+	}
+	DM_MoveInfo.time_data.accelerate_time = (int32_t)fabs(DM_MoveInfo.position_data.finish_accelerate_position - DM_MoveInfo.position_data.start_position) / DM_MoveInfo.speed_data.target_position_speed / 60.0f;
+	DM_MoveInfo.time_data.decelerate_time = (int32_t)fabs(DM_MoveInfo.position_data.finish_accelerate_position - DM_MoveInfo.position_data.finish_keepspeed_position) / DM_MoveInfo.speed_data.target_position_speed / 60.0f;
+	DM_MoveInfo.distance_data.distance_accelerate = CalRealDistance(fabs(DM_MoveInfo.position_data.finish_accelerate_position - DM_MoveInfo.position_data.start_position));
+	DM_MoveInfo.distance_data.distance_decelerate = CalRealDistance(fabs(DM_MoveInfo.position_data.finish_accelerate_position - DM_MoveInfo.position_data.finish_keepspeed_position));
+}
+
+void CalMovementSpeed()
+{
+	
+}
+
+void JudgeMovementSafiety()
+{	
+	//先确定角度需求
+////     switch(kLegState)
+////		{
+////			case kHighLegMove:
+////			{                                                  //旋转角度及其保护
+////				if(lowleg_yaw - RM_angle_min > target_yaw)
+////				{
+////					target_yaw = lowleg_yaw - RM_angle_min;
+////				}
+////				else if(lowleg_yaw + RM_angle_max  < target_yaw )
+////				{
+////					target_yaw = lowleg_yaw + RM_angle_max;
+////				}
+////				RM_target_position = RotateMotor.PositionMeasure  - 1 * Direction_RM * RM_radio * (target_yaw - highleg_yaw);
+////				RM_all_distance = fabs(RM_target_position - RotateMotor.PositionMeasure);
+////			}
+////			{                                                  //根据旋转角度设置前进安全距离
+////				if(target_distance  < CalMinSafeDistance()+10)
+////				{
+////					 target_distance= CalMinSafeDistance()+10;
+////				}
+////				if(target_distance  > CalMaxSafeDistance())
+////				{
+////					 target_distance = CalMaxSafeDistance();
+////				}
+////				DM_target_position = Direction_DM * DM_radio * target_distance -  DriveMotor_initial_position;
+////			}
+////			{
+////				DM_start_position = DriveMotor.PositionMeasure;
+////			}
+////			DM_all_distance = fabs(DM_target_position - DM_start_position);
+////			DistributeArea();
+////				break;
+////			
+////			case kLowLegMove:
+////			{                                                  //旋转角度及其保护
+////				if(highleg_yaw+ 3 <target_yaw )
+////				{
+////					target_yaw = highleg_yaw + 3;
+////				}
+////				else if(highleg_yaw -60 > target_yaw )
+////				{
+////					target_yaw = highleg_yaw - 60;
+////				}
+////				RM_target_position = RotateMotor.PositionMeasure  + 1 * Direction_RM * RM_radio * (target_yaw - lowleg_yaw);
+////				RM_all_distance = fabs(RM_target_position - RotateMotor.PositionMeasure);
+////			}
+////			{                                                  //根据旋转角度设置前进安全距离
+////				if(target_distance  < CalMinSafeDistance()+10)
+////				{
+////					 target_distance= CalMinSafeDistance()+10;
+////				}
+////				if(target_distance  > CalMaxSafeDistance())
+////				{
+////					 target_distance = CalMaxSafeDistance();
+////				}
+////				DM_target_position = -Direction_DM * DM_radio * target_distance -  DriveMotor_initial_position;
+////			}
+////			{
+////				DM_start_position = DriveMotor.PositionMeasure;
+////			}
+////			DM_all_distance = fabs(DM_target_position - DM_start_position);
+////			DistributeArea();
+////				break;
+////			
+////			default:
+////				break;
+////		}
+}
+
+float CalRealSpeed(float speed)
+{
+	float result = 0;
+	result = speed/60.0f/1000.0f*(360.0f*DM_radio);
+	return result;
+}
+
+float CalRealDistance(float position_D_value)
+{
+	float result = 0;
+	result = position_D_value/60.0f/1000.0f*(360.0f*DM_radio);
+	return result;
+}
+
+float CalRealPosition(float distance_D_value)
+{
+	float result = 0;
+	result = distance_D_value*60.0f*1000.0f/(360.0f*DM_radio);
+	return result;
+}
