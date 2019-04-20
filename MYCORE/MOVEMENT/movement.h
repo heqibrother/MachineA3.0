@@ -58,6 +58,7 @@ typedef struct
 {
 	int32_t start_time;
 	int32_t accelerate_time;
+	int32_t keepspeed_time;
 	int32_t decelerate_time;
 }MotorTimeData;
 

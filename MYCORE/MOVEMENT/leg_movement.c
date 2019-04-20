@@ -5,29 +5,88 @@
 #include "leg_movement.h"
 enum LegState kLegState;
 LegStateData leg_state_data;
+LegDataFeedback leg_data_feedback;
 void LegModeChange()
 {
-	
+	leg_state_data.leg_state_number = leg_state_data.leg_state_number_pre;
 }
+
 void LayDown()
 {
-	
+	switch(kLegState)
+	{
+		case kHighLegMove:
+			LowlegLift();
+			break;
+		
+		case kLowLegMove:
+			HighlegLift();
+			break;
+		
+		default:
+			break;
+	}
 }
 bool DetectLegRecoverPosition()
 {
+				if(kLegState == kHighLegMove)
+		{
+			if((leg_data_feedback.leg_state_[1] == 0|| leg_data_feedback.leg_state_[1] == 8)
+			   &&(leg_data_feedback.leg_state_[3] == 0|| leg_data_feedback.leg_state_[3] == 8))
+			{
+				return true;
+			}
+		}
+		else if(kLegState==kLowLegMove)
+		{
+					if((leg_data_feedback.leg_state_[0] == 0|| leg_data_feedback.leg_state_[0] == 8)
+				 &&(leg_data_feedback.leg_state_[2] == 0|| leg_data_feedback.leg_state_[2] == 8)
+					)
+			{
+				return true;
+			}
+		}
 	return false;
 }
+
 bool DetectLegLayDownPosition()
 {
+				if(kLegState == kLowLegMove)
+		{
+			if((leg_data_feedback.leg_state_[0] == 1|| leg_data_feedback.leg_state_[0] == 9)
+				 &&(leg_data_feedback.leg_state_[1] != 1|| leg_data_feedback.leg_state_[1] != 9)
+				 &&(leg_data_feedback.leg_state_[2] == 1|| leg_data_feedback.leg_state_[2] == 9)
+			   &&(leg_data_feedback.leg_state_[3] != 1|| leg_data_feedback.leg_state_[3] != 9))
+			{
+				return true;
+			}
+		}
+		else if(kLegState==kHighLegMove)
+		{
+					if((leg_data_feedback.leg_state_[0] != 1|| leg_data_feedback.leg_state_[0] != 9)
+				 &&(leg_data_feedback.leg_state_[1] == 1|| leg_data_feedback.leg_state_[1] == 9)
+				 &&(leg_data_feedback.leg_state_[2] != 1|| leg_data_feedback.leg_state_[2] != 9)
+			   &&(leg_data_feedback.leg_state_[3] == 1|| leg_data_feedback.leg_state_[3] == 9))
+			{
+				return true;
+			}
+		}
 	return false;
 }
 bool LegPartAnswer()
 {
+	if(leg_state_data.leg_state_number_pre == leg_data_feedback.leg_state_feedback)
+	{
+		return true;
+	}
 	return false;
 }
 bool TimeToLayDown()
 {
-	
+	if(GetTimeLeft()<=GetTimeLayDownAdvance())
+	{
+		return true;
+	}
 	return false;
 }
 
@@ -73,4 +132,51 @@ void LegPartInit()
 	leg_state_data.leg_safe_to_laydown = 0;
 	leg_state_data.leg_state_number = 0;
 	kLegState = kHighLegMove;
+}
+
+int32_t GetTimeLayDownAdvance()
+{
+	int32_t result = 0;
+	switch(leg_state_data.leg_state_number)
+	{
+		case 2:
+			result = 90;
+			break;
+		
+		case 3:
+			result = 190;
+			break;
+		
+		case 4:
+			result = 190;
+			break;
+		
+		case 5:
+			result = 110;
+			break;
+		
+		case 6:
+			result = 110;
+			break;
+		
+		case 7:
+			result = 160;
+			break;
+		
+		case 8:
+			result = 250;
+			break;
+		
+		case 9:
+			result = 190;
+			break;
+		
+		case 10:
+			result = 90;
+			break;
+		
+		default:
+			break;
+	}
+	return result;
 }

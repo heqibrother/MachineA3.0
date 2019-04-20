@@ -117,6 +117,26 @@ bool JugdeStageTool(float value_a,float value_b)
 	}
 }
 
+int32_t GetTimeLeft()
+{
+	int32_t result;
+	if(DM_MoveInfo.distance_data.distance_walked>DM_MoveInfo.distance_data.distance_all-DM_MoveInfo.distance_data.distance_decelerate)
+	{//¼õËÙÇø
+		result = (int32_t)(LookUpDMTimeTable(DM_MoveInfo.distance_data.distance_left/DM_MoveInfo.distance_data.distance_decelerate)*DM_MoveInfo.time_data.decelerate_time);
+	}
+	else if(DM_MoveInfo.distance_data.distance_walked>DM_MoveInfo.distance_data.distance_accelerate)
+	{
+		result = (int32_t)((DM_MoveInfo.distance_data.distance_all-DM_MoveInfo.distance_data.distance_decelerate - DM_MoveInfo.distance_data.distance_walked)
+		          /CalRealSpeed(DM_MoveInfo.speed_data.target_position_speed));
+		result = result + DM_MoveInfo.time_data.decelerate_time;
+	}
+	else
+	{
+		result = (int32_t)((1.0f-LookUpDMTimeTable(DM_MoveInfo.distance_data.distance_walked/DM_MoveInfo.distance_data.distance_accelerate))*DM_MoveInfo.time_data.accelerate_time);
+		result = result + DM_MoveInfo.time_data.keepspeed_time + DM_MoveInfo.time_data.decelerate_time;
+	}
+}
+
 void DMPartInit()
 {
 	DM_MoveInfo.distance_data.target_distance = 0;

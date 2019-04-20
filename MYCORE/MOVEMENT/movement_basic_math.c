@@ -129,6 +129,7 @@ void CalDMMovementPosition()
 			break;
 	}
 	DM_MoveInfo.time_data.accelerate_time = (int32_t)fabs(DM_MoveInfo.position_data.finish_accelerate_position - DM_MoveInfo.position_data.start_position) / DM_MoveInfo.speed_data.target_position_speed / 60.0f;
+	DM_MoveInfo.time_data.keepspeed_time = (int32_t)fabs(DM_MoveInfo.position_data.finish_keepspeed_position - DM_MoveInfo.position_data.finish_accelerate_position) / DM_MoveInfo.speed_data.target_position_speed / 60.0f;
 	DM_MoveInfo.time_data.decelerate_time = (int32_t)fabs(DM_MoveInfo.position_data.finish_accelerate_position - DM_MoveInfo.position_data.finish_keepspeed_position) / DM_MoveInfo.speed_data.target_position_speed / 60.0f;
 	DM_MoveInfo.distance_data.distance_accelerate = CalRealDistance(fabs(DM_MoveInfo.position_data.finish_accelerate_position - DM_MoveInfo.position_data.start_position));
 	DM_MoveInfo.distance_data.distance_decelerate = CalRealDistance(fabs(DM_MoveInfo.position_data.finish_accelerate_position - DM_MoveInfo.position_data.finish_keepspeed_position));
