@@ -8,6 +8,7 @@ void LegYawInit()
 	leg_angle.highleg_yaw = 0;
 	leg_angle.lowleg_yaw = 0;
 	leg_angle.target_yaw = 0;
+	leg_angle.initial_yaw = leg_angle.original_yaw;
 }
 
 float CalYaw()
@@ -23,4 +24,10 @@ float CalYaw()
 			result = result + 360;
 		}
 	return result;
+}
+
+void RefreshLegYaw()
+{
+	leg_angle.lowleg_yaw = CalYaw();
+	leg_angle.highleg_yaw = leg_angle.lowleg_yaw -  (RotateMotor.PositionMeasure -RM_MoveInfo.position_data.initial_position)*RM_radio;
 }

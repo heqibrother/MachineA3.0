@@ -84,9 +84,9 @@ void GetLaser1Location(LocationData *locationdata)
 
 void GetLaserRadarLocation(LocationData *locationdata)
 {
-	LocationDataType *location =&(*locationdata).laser_radar;
+	LocationDataType *location =&(*locationdata).laser_radar_position;
 	PositionDataType *position =&(*locationdata).current_position;
-	(*location).y = Hill_Position_Y - (*locationdata).laser_radar_data -CalOpositionY(Rplidar_position_X,Rplidar_position_Y,kHighLegMove);
+	(*location).y = Hill_Position_Y - (*locationdata).laser_radar_data_y -CalOpositionY(Rplidar_position_X,Rplidar_position_Y,kHighLegMove);
 	if(kLegState == kHighLegMove)
 	{
 		if((*location).ShouldBeTrusted)

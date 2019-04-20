@@ -12,6 +12,7 @@ typedef enum
 }MachineATestItem;
 
 /*********Function declaration*******/
+void TestInit();
 void TestMode();
 
 #endif

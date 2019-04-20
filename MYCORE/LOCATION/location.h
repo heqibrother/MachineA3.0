@@ -30,14 +30,15 @@ typedef struct
 typedef struct 
 {
   LocationDataType relative_position;
-  LocationDataType laser_radar;
+  LocationDataType laser_radar_position;
 	LocationDataType laser1_position;
 	
 	PositionDataType current_position;
   PositionDataType motor_position;
 	
 	float laser1_data;
-	float laser_radar_data;
+	float laser_radar_data_x;
+	float laser_radar_data_y;
 	float relative_data_x;
 	float relative_data_y;
 }LocationData;
@@ -50,4 +51,5 @@ extern LocationData location_data;
 /*********Function declaration*******/
 void RefreshLocation();
 void RecordLocation();
+void SendPCMessage();
 #endif

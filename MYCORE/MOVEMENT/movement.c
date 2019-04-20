@@ -42,12 +42,13 @@ void SpeedFirstMode()
 	{
 		case kBeforeFurtherPlan:
 			CalculateFurtherMovementData();
+		  time_point_for_speed = kBeforeRecoverLeg;
 			break;
 		
 		case kBeforeRecoverLeg:
 			MoveDM();
 		  MoveRM();
-		  if(DetectLegRecoverPosition())
+	//	  if(DetectLegRecoverPosition())
 			{
 				time_point_for_speed = kBeforeRiseItself;
 			}
@@ -57,7 +58,7 @@ void SpeedFirstMode()
 			MoveDM();
 		  MoveRM();
 		  LegModeChange();
-		  if(LegPartAnswer())
+	//	  if(LegPartAnswer())
 			{
 				time_point_for_speed = kBeforeLayDownLegs;
 			}
@@ -66,7 +67,7 @@ void SpeedFirstMode()
 		case kBeforeLayDownLegs:
 			MoveDM();
 		  MoveRM();
-			if(TimeToLayDown())
+	//		if(TimeToLayDown())
 			{
 				LayDown();
 				time_point_for_speed = kBeforeDMPosition;
@@ -76,14 +77,14 @@ void SpeedFirstMode()
 		case kBeforeDMPosition:
 			MoveDM();
 		  MoveRM();
-		  if(DM_MoveInfo.motor_position&&DM_MoveInfo.motor_position)
+		  if(DM_MoveInfo.motor_position&&RM_MoveInfo.motor_position)
 			{
 				time_point_for_speed = kBeforeLegTouchGround;
 			}
 			break;
 			
 		case kBeforeLegTouchGround:
-			if(DetectLegLayDownPosition())
+		//	if(DetectLegLayDownPosition())
 			{
 				time_point_for_speed = kAllDone;
 			}

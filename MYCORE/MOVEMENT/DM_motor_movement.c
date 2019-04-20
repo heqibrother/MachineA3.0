@@ -8,6 +8,7 @@ SpeedStage DM_speed_stage;
 void MoveDM()
 {
 	JudgeDMSpeedStage();
+	if(DM_speed_stage!=kStopMove)RefreshMotorDistanceWalked();
 	switch(DM_speed_stage)
 	{
 		case kStopMove:
@@ -64,6 +65,7 @@ void DMStopMove()
 		DriveMotor.State=PIDPOSITION;
 		DriveMotor.PositionExpected = DriveMotor.PositionMeasure;
 	}
+	DM_MoveInfo.position_data.record_position = DriveMotor.PositionMeasure;
 }
 
 void DMAccelerate()
@@ -92,6 +94,7 @@ float SuitableAccelerateSpeed()
 	float result = 0;
 	int32_t time_walked = 0;
 	time_walked = LookUpDMTimeTable(DM_MoveInfo.distance_data.distance_walked/DM_MoveInfo.distance_data.distance_accelerate)*DM_MoveInfo.time_data.accelerate_time;
+	if(DM_MoveInfo.time_data.accelerate_time!=0)
 	result = DM_MoveInfo.speed_data.target_position_speed * LookUpDMSpeedTable((float)time_walked/DM_MoveInfo.time_data.accelerate_time);
 	return result;
 }
@@ -101,6 +104,7 @@ float SuitableDecelerateSpeed()
 	float result = 0;
 	int32_t time_left = 0;
 	time_left = LookUpDMTimeTable(DM_MoveInfo.distance_data.distance_left/DM_MoveInfo.distance_data.distance_decelerate)*DM_MoveInfo.time_data.decelerate_time;
+	if(DM_MoveInfo.time_data.decelerate_time!=0)
 	result = DM_MoveInfo.speed_data.target_position_speed * LookUpDMSpeedTable((float)time_left/DM_MoveInfo.time_data.decelerate_time);
 	return result;
 }
@@ -157,4 +161,14 @@ void SetSpeedDirection()
 	{
 		DM_MoveInfo.speed_data.speed_direction = 1.0f;
 	}
+}
+
+void RefreshMotorDistanceWalked()
+{
+	DM_MoveInfo.position_data.position_walked = DM_MoveInfo.position_data.position_walked + fabs(DriveMotor.PositionMeasure - DM_MoveInfo.position_data.record_position);
+	DM_MoveInfo.position_data.record_position = DriveMotor.PositionMeasure;
+	DM_MoveInfo.distance_data.distance_walked = CalRealDistance(DM_MoveInfo.position_data.position_walked);
+	
+	DM_MoveInfo.position_data.position_left = fabs(DriveMotor.PositionMeasure - DM_MoveInfo.position_data.finish_decelerate_position);
+	DM_MoveInfo.distance_data.distance_left = CalRealDistance(DM_MoveInfo.position_data.position_walked);
 }

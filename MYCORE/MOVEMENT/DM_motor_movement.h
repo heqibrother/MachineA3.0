@@ -89,4 +89,5 @@ bool JugdeStageTool(float value_a,float value_b);
 void DMPartInit();
 void SetSpeedDirection();
 int32_t GetTimeLeft();
+void RefreshMotorDistanceWalked();
 #endif

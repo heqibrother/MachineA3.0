@@ -131,9 +131,9 @@ void CalMovementPosition(MotorMoveState *motor)
 		default:
 			break;
 	}
-	(*time).accelerate_time = (int32_t)fabs((*position).finish_accelerate_position - (*position).start_position) / (*speed).target_position_speed / 60.0f;
-	(*time).keepspeed_time = (int32_t)fabs((*position).finish_keepspeed_position - (*position).finish_accelerate_position) / (*speed).target_position_speed / 60.0f;
-	(*time).decelerate_time = (int32_t)fabs((*position).finish_accelerate_position -(*position).finish_keepspeed_position) / (*speed).target_position_speed / 60.0f;
+	(*time).accelerate_time = (int32_t)(fabs((*position).finish_accelerate_position - (*position).start_position) / (*speed).target_position_speed / 60.0f*1000.0f/speed_curve_area_radio);
+	(*time).keepspeed_time = (int32_t)(fabs((*position).finish_keepspeed_position - (*position).finish_accelerate_position) / (*speed).target_position_speed / 60.0f*1000.0f);
+	(*time).decelerate_time = (int32_t)(fabs((*position).finish_accelerate_position -(*position).finish_keepspeed_position) / (*speed).target_position_speed / 60.0f*1000.0f/speed_curve_area_radio);
 	(*distance).distance_accelerate = CalRealDistance(fabs((*position).finish_accelerate_position - (*position).start_position));
 	(*distance).distance_decelerate = CalRealDistance(fabs((*position).finish_accelerate_position - (*position).finish_keepspeed_position));
 }
@@ -214,14 +214,14 @@ float CalRealSpeed(float speed)
 float CalRealDistance(float position_D_value)
 {
 	float result = 0;
-	result = position_D_value/60.0f/1000.0f*(360.0f*DM_radio);
+	result = position_D_value*DM_radio;
 	return result;
 }
 
 float CalRealPosition(float distance_D_value)
 {
 	float result = 0;
-	result = distance_D_value*60.0f*1000.0f/(360.0f*DM_radio);
+	result = distance_D_value/DM_radio;
 	return result;
 }
 

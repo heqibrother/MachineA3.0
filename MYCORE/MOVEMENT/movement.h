@@ -32,6 +32,11 @@ typedef struct
 	float finish_accelerate_position;//计算的电机值节点
 	float finish_keepspeed_position;
 	float finish_decelerate_position;
+	
+	float current_position;
+	float record_position;
+	float position_walked;
+	float position_left;
 }MotorPositionData;
 
 /***电机运动绝对距离数据***/
