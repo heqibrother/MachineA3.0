@@ -5,10 +5,8 @@
 */
 #include "superstratum.h"
 
-const float Half_Length = 275.0f;
-const float Half_Width = 310.0f;
 MachineAGeneralState kMachineAGeneralState;
-
+MachineAState kMachineAState;
 void CompetitionMode()
 {
 	UpdateInformation();

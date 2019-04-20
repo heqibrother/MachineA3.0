@@ -8,11 +8,12 @@ typedef struct
   float highleg_yaw;
 	float lowleg_yaw;
 	float target_yaw;
+	float initial_yaw;
+	float original_yaw;
 }LegAngle;
 
 extern LegAngle leg_angle;
-extern const float RM_angle_min;
-extern const float RM_angle_max;
+
 
 
 
@@ -20,5 +21,6 @@ extern const float RM_angle_max;
 
 /*********Function declaration*******/
 void LegYawInit();
+float CalYaw();
 
 #endif

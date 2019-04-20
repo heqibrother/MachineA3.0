@@ -101,18 +101,21 @@ static const float DM_speed_table[101] = {
 			0.801636,0.821194,0.840839,0.860562,0.880354,
 			0.900205,0.920104,0.940044,0.960012,0.980001,1.0};
 		
-void CalDMMovementPosition()
+void CalMovementPosition(MotorMoveState *motor)
 {
+	MotorPositionData *position = &(*motor).position_data;
+  MotorDistanceData *distance = &(*motor).distance_data;
+  MotorTimeData *time = &(*motor).time_data;
+  MotorSpeedData *speed = &(*motor).speed_data;
 	switch(DM_MoveInfo.speed_data.speed_mode)
 	{
 		case kOnlyAccelerateStability:
-				 DM_MoveInfo.position_data.finish_accelerate_position = DM_MoveInfo.position_data.start_position 
-																															+ DM_MoveInfo.speed_data.speed_direction 
-																																* CalRealPosition(DM_MoveInfo.distance_data.distance_all /3);
-				 DM_MoveInfo.position_data.finish_keepspeed_position = DM_MoveInfo.position_data.start_position 
-																															+ DM_MoveInfo.speed_data.speed_direction * CalRealPosition(DM_MoveInfo.distance_data.distance_all *2/3);
-				 DM_MoveInfo.position_data.finish_decelerate_position = DM_MoveInfo.position_data.start_position 
-																															+ DM_MoveInfo.speed_data.speed_direction * CalRealPosition(DM_MoveInfo.distance_data.distance_all);
+				 (*position).finish_accelerate_position = (*position).start_position 
+																								+ (*speed).speed_direction * CalRealPosition((*distance).distance_all /3);
+				 (*position).finish_keepspeed_position = (*position).start_position 
+																							  + (*speed).speed_direction * CalRealPosition((*distance).distance_all *2/3);
+				 (*position).finish_decelerate_position = (*position).start_position 
+																								+ (*speed).speed_direction * CalRealPosition((*distance).distance_all);
 				 
 			break;
 		
@@ -128,11 +131,11 @@ void CalDMMovementPosition()
 		default:
 			break;
 	}
-	DM_MoveInfo.time_data.accelerate_time = (int32_t)fabs(DM_MoveInfo.position_data.finish_accelerate_position - DM_MoveInfo.position_data.start_position) / DM_MoveInfo.speed_data.target_position_speed / 60.0f;
-	DM_MoveInfo.time_data.keepspeed_time = (int32_t)fabs(DM_MoveInfo.position_data.finish_keepspeed_position - DM_MoveInfo.position_data.finish_accelerate_position) / DM_MoveInfo.speed_data.target_position_speed / 60.0f;
-	DM_MoveInfo.time_data.decelerate_time = (int32_t)fabs(DM_MoveInfo.position_data.finish_accelerate_position - DM_MoveInfo.position_data.finish_keepspeed_position) / DM_MoveInfo.speed_data.target_position_speed / 60.0f;
-	DM_MoveInfo.distance_data.distance_accelerate = CalRealDistance(fabs(DM_MoveInfo.position_data.finish_accelerate_position - DM_MoveInfo.position_data.start_position));
-	DM_MoveInfo.distance_data.distance_decelerate = CalRealDistance(fabs(DM_MoveInfo.position_data.finish_accelerate_position - DM_MoveInfo.position_data.finish_keepspeed_position));
+	(*time).accelerate_time = (int32_t)fabs((*position).finish_accelerate_position - (*position).start_position) / (*speed).target_position_speed / 60.0f;
+	(*time).keepspeed_time = (int32_t)fabs((*position).finish_keepspeed_position - (*position).finish_accelerate_position) / (*speed).target_position_speed / 60.0f;
+	(*time).decelerate_time = (int32_t)fabs((*position).finish_accelerate_position -(*position).finish_keepspeed_position) / (*speed).target_position_speed / 60.0f;
+	(*distance).distance_accelerate = CalRealDistance(fabs((*position).finish_accelerate_position - (*position).start_position));
+	(*distance).distance_decelerate = CalRealDistance(fabs((*position).finish_accelerate_position - (*position).finish_keepspeed_position));
 }
 
 void CalMovementSpeed()

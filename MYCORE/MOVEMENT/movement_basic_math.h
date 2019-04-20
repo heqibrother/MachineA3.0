@@ -32,8 +32,7 @@ float LookUpDMSpeedTable(float value_t) ;
  */
 float LookUpDMTimeTable(float value_distance) ;
 
-
-void CalDMMovementPosition();
+void CalMovementPosition(MotorMoveState *motor);
 													
 void CalMovementSpeed();
 void JudgeMovementSafiety();

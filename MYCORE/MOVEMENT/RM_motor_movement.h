@@ -8,7 +8,6 @@
 #include "superstratum.h"
 #include "DM_motor_movement.h"
 
-extern const float RM_radio;
 /***运动模式的类型***/
 
 extern SpeedStage RM_speed_stage;

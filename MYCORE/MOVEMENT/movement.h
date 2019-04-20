@@ -5,12 +5,7 @@
 #include "stm32f4xx.h"
 #include "arm_math.h"
 #include <stdbool.h>
-#include "superstratum.h"
-#include "DM_motor_movement.h"
-#include "RM_motor_movement.h"
-#include "leg_movement.h"
-#include "movement_basic_math.h"
-#include "angle_movement.h"
+
 
 /***运动模式的类型***/
 typedef enum 
@@ -115,6 +110,13 @@ typedef enum{                //全部时点标志位
 	  kAllDone                //所有操作均已完成
 }TimePoint;
 
+//下置引用，确保应用中调用结构体时，结构体已经被声明
+#include "superstratum.h"
+#include "DM_motor_movement.h"
+#include "RM_motor_movement.h"
+#include "leg_movement.h"
+#include "movement_basic_math.h"
+#include "angle_movement.h"
 
 extern MotorMoveState DM_MoveInfo,RM_MoveInfo;
 extern MovementStyle movement_style;

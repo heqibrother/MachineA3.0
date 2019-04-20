@@ -112,6 +112,6 @@ void CalculateFurtherMovementData()
 	DM_MoveInfo.distance_data.distance_all = DM_MoveInfo.distance_data.target_distance +
 	CalRealDistance(fabs(DM_MoveInfo.position_data.initial_position - DriveMotor.PositionMeasure));	
 	CalMovementSpeed();
-	CalDMMovementPosition();
+	CalMovementPosition(&DM_MoveInfo);
 	
 }

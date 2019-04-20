@@ -16,7 +16,7 @@ typedef enum
 #include <stdbool.h>
 #include "superstratum.h"
 
-static const float DM_radio = 0.57596;//   66pi£¨3.141592654£©/360  //motor_angle * radio = real distance
+
 
 
 

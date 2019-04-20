@@ -3,7 +3,7 @@
  * @status: 2019.4.14
  */
 #include "RM_motor_movement.h"
-const float RM_radio = 0.32075;//34:106 //   360/80pi£¨3.141592654£© //motor_angle * radio = real angle
+
 SpeedStage RM_speed_stage;
 
 void MoveRM()
