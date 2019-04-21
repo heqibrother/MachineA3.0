@@ -246,7 +246,7 @@ float CalDMMaxSafeDistance()
 	    result = (Half_Length-70) - Half_Width / tan((90 - 0.5*fabs(leg_angle.target_yaw - leg_angle.lowleg_yaw))*angle_to_radian_radio);
 		}
 	}
-	else
+	else if(kLegState == kLowLegMove)
 	{
 		if(leg_angle.target_yaw - leg_angle.highleg_yaw == 0)
 		{

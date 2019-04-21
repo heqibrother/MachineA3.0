@@ -1,6 +1,5 @@
 #include "localcomputing.h"
-
-void ChangePositionRecord(enum LegState klegstate,PositionDataType *position)
+void ChangePositionRecord(LegState klegstate,PositionDataType *position)
 {
 	if(klegstate==kHighLegMove)
 	{

@@ -72,21 +72,21 @@ void DMAccelerate()
 {
 	DriveMotor.State=PIDSPEED;
 	DM_MoveInfo.speed_data.current_expected_speed = SuitableAccelerateSpeed();
-	DriveMotor.SpeedExpected = DM_MoveInfo.speed_data.speed_direction * DM_MoveInfo.speed_data.current_expected_speed;
+	DriveMotor.SpeedExpected = (int16_t)(DM_MoveInfo.speed_data.speed_direction * DM_MoveInfo.speed_data.current_expected_speed);
 }
 
 void DMKeepSpeed()
 {
 	DriveMotor.State=PIDSPEED;
 	DM_MoveInfo.speed_data.current_expected_speed = DM_MoveInfo.speed_data.target_position_speed;
-	DriveMotor.SpeedExpected = DM_MoveInfo.speed_data.speed_direction * DM_MoveInfo.speed_data.current_expected_speed;
+	DriveMotor.SpeedExpected = (int16_t)(DM_MoveInfo.speed_data.speed_direction * DM_MoveInfo.speed_data.current_expected_speed);
 }
 
 void DMDeccelerate()
 {
 	DriveMotor.State=PIDSPEED;
 	DM_MoveInfo.speed_data.current_expected_speed = SuitableDecelerateSpeed();
-	DriveMotor.SpeedExpected = DM_MoveInfo.speed_data.speed_direction * DM_MoveInfo.speed_data.current_expected_speed;
+	DriveMotor.SpeedExpected = (int16_t)(DM_MoveInfo.speed_data.speed_direction * DM_MoveInfo.speed_data.current_expected_speed);
 }
 
 float SuitableAccelerateSpeed()
@@ -96,6 +96,9 @@ float SuitableAccelerateSpeed()
 	time_walked = LookUpDMTimeTable(DM_MoveInfo.distance_data.distance_walked/DM_MoveInfo.distance_data.distance_accelerate)*DM_MoveInfo.time_data.accelerate_time;
 	if(DM_MoveInfo.time_data.accelerate_time!=0)
 	result = DM_MoveInfo.speed_data.target_position_speed * LookUpDMSpeedTable((float)time_walked/DM_MoveInfo.time_data.accelerate_time);
+	
+	if(result<DM_MoveInfo.speed_data.target_position_speed/20)
+	return DM_MoveInfo.speed_data.target_position_speed/20;
 	return result;
 }
 
@@ -106,6 +109,8 @@ float SuitableDecelerateSpeed()
 	time_left = LookUpDMTimeTable(DM_MoveInfo.distance_data.distance_left/DM_MoveInfo.distance_data.distance_decelerate)*DM_MoveInfo.time_data.decelerate_time;
 	if(DM_MoveInfo.time_data.decelerate_time!=0)
 	result = DM_MoveInfo.speed_data.target_position_speed * LookUpDMSpeedTable((float)time_left/DM_MoveInfo.time_data.decelerate_time);
+		if(result<DM_MoveInfo.speed_data.target_position_speed/20)
+	return DM_MoveInfo.speed_data.target_position_speed/20;
 	return result;
 }
 
@@ -170,5 +175,5 @@ void RefreshMotorDistanceWalked()
 	DM_MoveInfo.distance_data.distance_walked = CalRealDistance(DM_MoveInfo.position_data.position_walked);
 	
 	DM_MoveInfo.position_data.position_left = fabs(DriveMotor.PositionMeasure - DM_MoveInfo.position_data.finish_decelerate_position);
-	DM_MoveInfo.distance_data.distance_left = CalRealDistance(DM_MoveInfo.position_data.position_walked);
+	DM_MoveInfo.distance_data.distance_left = CalRealDistance(DM_MoveInfo.position_data.position_left);
 }

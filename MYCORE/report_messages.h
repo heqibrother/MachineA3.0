@@ -6,5 +6,6 @@
 
 /*********Function declaration*******/
 void ReportMessage();
+void ReportCurve();
 
 #endif

@@ -115,6 +115,37 @@ typedef enum{                //全部时点标志位
 	  kAllDone                //所有操作均已完成
 }TimePoint;
 
+/***运动中腿着地的模式***/
+typedef enum {//腿状态
+    kHighLegMove,//高腿移动，矮腿在地
+	  kLowLegMove,
+	  kAnyLegMove
+}LegState;
+
+/***运动中腿的数据***/
+typedef struct 
+{
+  int leg_state_number;
+	int leg_state_number_pre;
+	int leg_target_state_time;
+	int leg_safe_to_laydown;//1安全 0不安全
+}LegStateData;
+
+/***运动中腿返回的数据***/
+typedef struct 
+{
+	int16_t leg_state_[4] ;
+	int leg_state_feedback;
+	bool crossed_step ;
+}LegDataFeedback;
+
+///***运动中腿高低的模式***/
+//enum LegHeightState {//腿状态
+//    kLegNothing,
+//	  kLegWaitToStart,
+//	  
+//};
+
 //下置引用，确保应用中调用结构体时，结构体已经被声明
 #include "superstratum.h"
 #include "DM_motor_movement.h"
@@ -125,6 +156,7 @@ typedef enum{                //全部时点标志位
 
 extern MotorMoveState DM_MoveInfo,RM_MoveInfo;
 extern MovementStyle movement_style;
+extern TimePoint time_point_for_speed,time_point_for_location;
 /*********Function declaration*******/
 
 /**
@@ -153,4 +185,6 @@ void LocationFirstMode();
  * @status: 2019.4.14
  */
 void CalculateFurtherMovementData();
+
+void RefreshMovementDataEveryBegining();
 #endif

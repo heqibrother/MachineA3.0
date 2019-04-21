@@ -3,7 +3,7 @@
 */
 
 #include "leg_movement.h"
-enum LegState kLegState;
+LegState kLegState;
 LegStateData leg_state_data;
 LegDataFeedback leg_data_feedback;
 void LegModeChange()
@@ -179,4 +179,16 @@ int32_t GetTimeLayDownAdvance()
 			break;
 	}
 	return result;
+}
+
+LegState ChangeLegState(LegState klegstate)
+{
+	if(klegstate == kHighLegMove)
+	{
+		return kLowLegMove; 
+	}
+	else if(klegstate == kLowLegMove)
+	{
+		return kHighLegMove;
+	}
 }

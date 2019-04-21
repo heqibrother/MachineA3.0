@@ -86,6 +86,7 @@ void SpeedFirstMode()
 		case kBeforeLegTouchGround:
 		//	if(DetectLegLayDownPosition())
 			{
+				kLegState = ChangeLegState(kLegState);
 				time_point_for_speed = kAllDone;
 			}
 			break;
@@ -110,9 +111,19 @@ void CalculateFurtherMovementData()
 
 	
 	//DM运动部分详细参数计算
-	DM_MoveInfo.distance_data.distance_all = DM_MoveInfo.distance_data.target_distance +
-	CalRealDistance(fabs(DM_MoveInfo.position_data.initial_position - DriveMotor.PositionMeasure));	
+  RefreshMovementDataEveryBegining();
 	CalMovementSpeed();
 	CalMovementPosition(&DM_MoveInfo);
 	
+}
+
+void RefreshMovementDataEveryBegining()
+{
+	DM_MoveInfo.distance_data.distance_all = DM_MoveInfo.distance_data.target_distance +
+	CalRealDistance(fabs(DM_MoveInfo.position_data.initial_position - DriveMotor.PositionMeasure));	
+	DM_MoveInfo.position_data.start_position = DriveMotor.PositionMeasure;
+	DM_MoveInfo.distance_data.distance_left = 0;
+	DM_MoveInfo.distance_data.distance_walked=0;
+	DM_MoveInfo.position_data.position_left = 0;
+	DM_MoveInfo.position_data.position_walked = 0;
 }

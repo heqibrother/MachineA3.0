@@ -23,3 +23,8 @@ void ReportMessage()
 	SendFrame.Data.floats_ts[15] = kLegState;
 	FRAME_Send(&SendFrame,BLUETEETH_USART_MASK );
 }
+
+void ReportCurve()
+{
+	VisualScope_Send(DriveMotor.PositionExpected,DriveMotor.PositionMeasure,DriveMotor.SpeedExpected,DriveMotor.SpeedMeasure);
+}
