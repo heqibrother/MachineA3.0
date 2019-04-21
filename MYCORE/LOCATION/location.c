@@ -7,7 +7,7 @@ int16_t laser_radar_message[4] = {0};
 
 void RefreshLocation()
 {
-		
+	RefreshCurrentPosition();
 }
 
 void RecordLocation()

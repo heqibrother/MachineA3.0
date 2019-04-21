@@ -7,6 +7,7 @@
 
 MachineAGeneralState kMachineAGeneralState;
 MachineAState kMachineAState;
+MachineAGeneralData machineA_general_data;
 void CompetitionMode()
 {
 	UpdateInformation();
@@ -18,12 +19,17 @@ void UpdateInformation()
 {
 	CheckState();
 	RefreshLocation();
+	RefreshMovementData();
 	MakePlan();
 }
 
 void JudgeMovement()
 {
-	ExecutePlan();
+	if(ExecutePlan())
+	{
+		machineA_general_data.stage_step_number++;
+		machineA_general_data.total_step_number++;
+	}
 }
 
 void CheckState()
@@ -37,5 +43,17 @@ void StateInit()
 	LegYawInit();
 	RMPartInit();
 	DMPartInit();
-	
+}
+
+void CompetitionInit()
+{
+	StateInit();
+	leg_state_data.leg_state_number = 2;
+	leg_state_data.leg_safe_to_laydown =1 ;
+	HighlegLift();
+	MyDelayms(500);
+	kMachineAGeneralState = kNormalWalk;//kWaitDebug;
+	kMachineAState = kBeforeStart;
+	machineA_general_data.stage_step_number = 1;
+	machineA_general_data.total_step_number = 0;
 }

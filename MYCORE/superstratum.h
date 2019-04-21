@@ -53,11 +53,20 @@ typedef enum{        //A车状态
 		kWaitToBeAwaken =25           //等待重启准备
 }MachineAState;
 
+/***A车总体数据***/
+typedef struct
+{
+	int total_step_number;
+	int stage_step_number;
+}MachineAGeneralData;
+
 extern MachineAGeneralState kMachineAGeneralState;
 extern MachineAState kMachineAState;
+extern MachineAGeneralData machineA_general_data;
 /*********Function declaration*******/
 void UpdateInformation();
 void JudgeMovement();
 void CheckState();
 void StateInit();
+void CompetitionInit();
 #endif

@@ -11,11 +11,12 @@ void TestInit()
 	StateInit();
 	leg_state_data.leg_state_number = 2;
 	HighlegLift();
+	MyDelayms(1000);
 	kMachineATestItem = kTestVelocityCurveWithoutChangeLeg;//kWaitDebug;
 	test_value1[0] = 200;
 	test_value1[1] = 20;
-	test_value1[2] = 0;
-	SetBasicMotionParameters(test_value1[0],test_value1[1],test_value1[2],0);
+	test_value1[2] = kBothUnStablity;
+	SetBasicMotionParameters(test_value1[0],test_value1[1],test_value1[2],0,kSpeedFirst);
 }
 
 void TestMode()
@@ -29,10 +30,11 @@ void TestMode()
 		case kTestVelocityCurveWithoutChangeLeg:
 		  if(ExecutePlan())
 			{
-				SetBasicMotionParameters(test_value1[0],test_value1[1],test_value1[2],0);
+				SetBasicMotionParameters(test_value1[0],test_value1[1],test_value1[2],0,kSpeedFirst);
 				//kMachineATestItem = kWaitDebug;
 			}
 			break;
 	}
-	ReportCurve();
+	ReportMessage();
+	//ReportCurve();
 }

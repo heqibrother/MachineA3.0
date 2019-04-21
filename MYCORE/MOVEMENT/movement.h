@@ -80,7 +80,7 @@ typedef  struct
   MotorTimeData time_data;
   MotorSpeedData speed_data;
 	bool motor_position;
-
+  bool obstacle_exist;
 }MotorMoveState;
 
 /***以速度为优先的枚举时点变量***/
@@ -187,4 +187,14 @@ void LocationFirstMode();
 void CalculateFurtherMovementData();
 
 void RefreshMovementDataEveryBegining();
+
+bool SafeToMoveBeforeRecover();
+
+bool SafeToLayDownBeforePosition();
+
+void SelfCorrection();
+
+void SetObstacleLocation(float obstacleposition,float obstaclewidth);
+
+void RefreshMovementData();
 #endif

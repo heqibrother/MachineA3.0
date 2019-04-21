@@ -120,20 +120,38 @@ void CalMovementPosition(MotorMoveState *motor)
 			break;
 		
 		case kOnlyDecelerateStability:
+					(*position).finish_accelerate_position = (*position).start_position 
+																								+ (*speed).speed_direction * CalRealPosition((*distance).distance_all /3);
+				 (*position).finish_keepspeed_position = (*position).start_position 
+																							  + (*speed).speed_direction * CalRealPosition((*distance).distance_all *2/3);
+				 (*position).finish_decelerate_position = (*position).start_position 
+																								+ (*speed).speed_direction * CalRealPosition((*distance).distance_all);
 			break;
 																	
 		case kBothStability:
+				 (*position).finish_accelerate_position = (*position).start_position 
+																								+ (*speed).speed_direction * CalRealPosition((*distance).distance_all /3);
+				 (*position).finish_keepspeed_position = (*position).start_position 
+																							  + (*speed).speed_direction * CalRealPosition((*distance).distance_all *2/3);
+				 (*position).finish_decelerate_position = (*position).start_position 
+																								+ (*speed).speed_direction * CalRealPosition((*distance).distance_all);
 			break;
 																																
 		case kBothUnStablity:
+				 (*position).finish_accelerate_position = (*position).start_position 
+																								+ (*speed).speed_direction * CalRealPosition((*distance).distance_all /3);
+				 (*position).finish_keepspeed_position = (*position).start_position 
+																							  + (*speed).speed_direction * CalRealPosition((*distance).distance_all *2/3);
+				 (*position).finish_decelerate_position = (*position).start_position 
+																								+ (*speed).speed_direction * CalRealPosition((*distance).distance_all);
 			break;
 		
 		default:
 			break;
 	}
-	(*time).accelerate_time = (int32_t)(fabs((*position).finish_accelerate_position - (*position).start_position) / (*speed).target_position_speed / 60.0f*1000.0f/speed_curve_area_radio);
-	(*time).keepspeed_time = (int32_t)(fabs((*position).finish_keepspeed_position - (*position).finish_accelerate_position) / (*speed).target_position_speed / 60.0f*1000.0f);
-	(*time).decelerate_time = (int32_t)(fabs((*position).finish_accelerate_position -(*position).finish_keepspeed_position) / (*speed).target_position_speed / 60.0f*1000.0f/speed_curve_area_radio);
+	(*time).accelerate_time = (int32_t)(fabs((*position).finish_accelerate_position - (*position).start_position) / ((*speed).target_position_speed*360.0f / 60.0f /1000.0f)/speed_curve_area_radio);
+	(*time).keepspeed_time = (int32_t)(fabs((*position).finish_keepspeed_position - (*position).finish_accelerate_position) / ((*speed).target_position_speed*360.0f / 60.0f/1000.0f));
+	(*time).decelerate_time = (int32_t)(fabs((*position).finish_accelerate_position -(*position).finish_keepspeed_position) / ((*speed).target_position_speed*360.0f / 60.0f/1000.0f)/speed_curve_area_radio);
 	(*distance).distance_accelerate = CalRealDistance(fabs((*position).finish_accelerate_position - (*position).start_position));
 	(*distance).distance_decelerate = CalRealDistance(fabs((*position).finish_accelerate_position - (*position).finish_keepspeed_position));
 }

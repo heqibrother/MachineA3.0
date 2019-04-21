@@ -9,6 +9,10 @@ void MoveDM()
 {
 	JudgeDMSpeedStage();
 	if(DM_speed_stage!=kStopMove)RefreshMotorDistanceWalked();
+	else{
+			DM_MoveInfo.distance_data.distance_left = 0;
+	DM_MoveInfo.position_data.position_left = 0;
+	}
 	switch(DM_speed_stage)
 	{
 		case kStopMove:
@@ -125,7 +129,7 @@ bool JugdeStageTool(float value_a,float value_b)
 		return false;
 	}
 }
-
+int32_t test;
 int32_t GetTimeLeft()
 {
 	int32_t result;
@@ -144,6 +148,8 @@ int32_t GetTimeLeft()
 		result = (int32_t)((1.0f-LookUpDMTimeTable(DM_MoveInfo.distance_data.distance_walked/DM_MoveInfo.distance_data.distance_accelerate))*DM_MoveInfo.time_data.accelerate_time);
 		result = result + DM_MoveInfo.time_data.keepspeed_time + DM_MoveInfo.time_data.decelerate_time;
 	}
+	test = result;
+	return result;
 }
 
 void DMPartInit()

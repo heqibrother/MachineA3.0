@@ -6,5 +6,6 @@
 void GetRelativeLocation();
 void GetLaser1Location();
 void GetLaserRadarLocation();
+void RefreshCurrentPosition();
 
 #endif
