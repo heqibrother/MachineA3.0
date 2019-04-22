@@ -58,10 +58,7 @@ extern LocationData location_data;
 void RefreshLocation();
 
 /**
- * @brief: Only relying on the motor to record the position information 
-           is used to measure the reliability of the acquired position 
-           data, and occasionally update the sensor data to avoid sensor 
-           accidents.
+ * @brief: Record the position of the ground leg and the suspended leg
  * @return: none
  * @status: 2019.4.21
  */
@@ -72,5 +69,5 @@ void RecordLocation();
  * @return: none
  * @status: 2019.4.21
  */
-void SendPCMessage();
+void SendPCMessage(short I1, short I2,short I3,short I4,short I5, short I6,short I7,short I8);
 #endif

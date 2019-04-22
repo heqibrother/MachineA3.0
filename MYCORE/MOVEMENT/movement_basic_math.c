@@ -113,7 +113,7 @@ void CalMovementPosition(MotorMoveState *motor)
 				 (*position).finish_accelerate_position = (*position).start_position 
 																								+ (*speed).speed_direction * CalRealPosition((*distance).distance_all /3);
 				 (*position).finish_keepspeed_position = (*position).start_position 
-																							  + (*speed).speed_direction * CalRealPosition((*distance).distance_all *2/3);
+																							  + (*speed).speed_direction * CalRealPosition((*distance).distance_all *4/5);
 				 (*position).finish_decelerate_position = (*position).start_position 
 																								+ (*speed).speed_direction * CalRealPosition((*distance).distance_all);
 				 
@@ -121,7 +121,7 @@ void CalMovementPosition(MotorMoveState *motor)
 		
 		case kOnlyDecelerateStability:
 					(*position).finish_accelerate_position = (*position).start_position 
-																								+ (*speed).speed_direction * CalRealPosition((*distance).distance_all /3);
+																								+ (*speed).speed_direction * CalRealPosition((*distance).distance_all /5);
 				 (*position).finish_keepspeed_position = (*position).start_position 
 																							  + (*speed).speed_direction * CalRealPosition((*distance).distance_all *2/3);
 				 (*position).finish_decelerate_position = (*position).start_position 
@@ -139,9 +139,9 @@ void CalMovementPosition(MotorMoveState *motor)
 																																
 		case kBothUnStablity:
 				 (*position).finish_accelerate_position = (*position).start_position 
-																								+ (*speed).speed_direction * CalRealPosition((*distance).distance_all /3);
+																								+ (*speed).speed_direction * CalRealPosition((*distance).distance_all /5);
 				 (*position).finish_keepspeed_position = (*position).start_position 
-																							  + (*speed).speed_direction * CalRealPosition((*distance).distance_all *2/3);
+																							  + (*speed).speed_direction * CalRealPosition((*distance).distance_all *6/7);
 				 (*position).finish_decelerate_position = (*position).start_position 
 																								+ (*speed).speed_direction * CalRealPosition((*distance).distance_all);
 			break;

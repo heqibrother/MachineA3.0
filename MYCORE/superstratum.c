@@ -25,16 +25,25 @@ void UpdateInformation()
 
 void JudgeMovement()
 {
-	if(ExecutePlan())
+	if(machineA_general_data.plan_isok && ExecutePlan())
 	{
 		machineA_general_data.stage_step_number++;
 		machineA_general_data.total_step_number++;
+		machineA_general_data.plan_isok = false;
 	}
 }
 
 void CheckState()
 {
-	
+	if(!IsDOORTouched(DOOR1))
+	{
+    kMachineATestItem = kTestMotorLocation;
+		kMachineAGeneralState = kNormalWalk;
+	}
+	if(!IsDOORTouched(DOOR2))
+	{
+
+	}
 }
 
 void StateInit()
@@ -43,6 +52,7 @@ void StateInit()
 	LegYawInit();
 	RMPartInit();
 	DMPartInit();
+	machineA_general_data.plan_isok = false;
 }
 
 void CompetitionInit()
@@ -52,7 +62,7 @@ void CompetitionInit()
 	leg_state_data.leg_safe_to_laydown =1 ;
 	HighlegLift();
 	MyDelayms(500);
-	kMachineAGeneralState = kNormalWalk;//kWaitDebug;
+	kMachineAGeneralState = kWaitToStart;//kWaitDebug;
 	kMachineAState = kBeforeStart;
 	machineA_general_data.stage_step_number = 1;
 	machineA_general_data.total_step_number = 0;

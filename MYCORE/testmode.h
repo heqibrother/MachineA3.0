@@ -8,9 +8,11 @@
 typedef enum
 {
 	kWaitDebug,//等待调试
-	kTestVelocityCurveWithoutChangeLeg//测试速度波形
+	kTestVelocityCurveWithoutChangeLeg,//测试速度波形
+	kTestMotorLocation,//测试电机定位
 }MachineATestItem;
 
+extern MachineATestItem kMachineATestItem;
 /*********Function declaration*******/
 /**
  * @brief: Test mode initialization

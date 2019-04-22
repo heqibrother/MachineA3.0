@@ -42,7 +42,7 @@ void SendLocationInfo()
 	laser_radar_message[1] = Hill_Position_Y - CalOpositionY(Rplidar_position_X,Rplidar_position_Y,kHighLegMove) - location_data.motor_position.highleg_y;
 	laser_radar_message[2] = leg_angle.highleg_yaw;
    SendPCMessage(laser_radar_message[0],laser_radar_message[1],laser_radar_message[2],field_direction
-	              ,kMachineAGeneralState,kMachineAState,kLegState,location_data.current_position.highleg_y,location_data.current_position.lowleg_y);
+	              ,kMachineAState,kLegState,location_data.current_position.highleg_y,location_data.current_position.lowleg_y);
 }
 
 void SendPCMessage(short I1, short I2,short I3,short I4,short I5, short I6,short I7,short I8)

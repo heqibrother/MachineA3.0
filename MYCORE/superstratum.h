@@ -11,6 +11,7 @@
 #include "location.h"
 #include "hust_math_lib.h"
 #include "report_messages.h"
+#include "testmode.h"
 
 /***A车宏观状态***/
 typedef enum
@@ -58,6 +59,7 @@ typedef struct
 {
 	int total_step_number;//记录行动总步数
 	int stage_step_number;//记录行走的每一个阶段的步数
+	bool plan_isok;
 }MachineAGeneralData;
 
 extern MachineAGeneralState kMachineAGeneralState;

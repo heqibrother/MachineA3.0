@@ -25,6 +25,8 @@ void RefreshCurrentPosition()
 		default:
 			break;
 	}
+	ChangePositionRecord(kLegState,&location_data.current_position);
+	ChangePositionRecord(kLegState,&location_data.motor_position);
 	RecordLocation();
 }
 

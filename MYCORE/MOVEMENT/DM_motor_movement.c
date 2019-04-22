@@ -9,7 +9,7 @@ void MoveDM()
 {
 	JudgeDMSpeedStage();
 	if(DM_speed_stage!=kStopMove)RefreshMotorDistanceWalked();
-	else{
+	else{//防止电机到位，但position_left没清零（判断间隔）
 			DM_MoveInfo.distance_data.distance_left = 0;
 	DM_MoveInfo.position_data.position_left = 0;
 	}
@@ -129,7 +129,6 @@ bool JugdeStageTool(float value_a,float value_b)
 		return false;
 	}
 }
-int32_t test;
 int32_t GetTimeLeft()
 {
 	int32_t result;
@@ -148,7 +147,6 @@ int32_t GetTimeLeft()
 		result = (int32_t)((1.0f-LookUpDMTimeTable(DM_MoveInfo.distance_data.distance_walked/DM_MoveInfo.distance_data.distance_accelerate))*DM_MoveInfo.time_data.accelerate_time);
 		result = result + DM_MoveInfo.time_data.keepspeed_time + DM_MoveInfo.time_data.decelerate_time;
 	}
-	test = result;
 	return result;
 }
 
@@ -180,6 +178,7 @@ void RefreshMotorDistanceWalked()
 	DM_MoveInfo.position_data.record_position = DriveMotor.PositionMeasure;
 	DM_MoveInfo.distance_data.distance_walked = CalRealDistance(DM_MoveInfo.position_data.position_walked);
 	
-	DM_MoveInfo.position_data.position_left = fabs(DriveMotor.PositionMeasure - DM_MoveInfo.position_data.finish_decelerate_position);
+	DM_MoveInfo.position_data.position_left = DM_MoveInfo.speed_data.speed_direction*(DM_MoveInfo.position_data.finish_decelerate_position - DriveMotor.PositionMeasure);
+	if(DM_MoveInfo.position_data.position_left<0)DM_MoveInfo.position_data.position_left = 0;
 	DM_MoveInfo.distance_data.distance_left = CalRealDistance(DM_MoveInfo.position_data.position_left);
 }

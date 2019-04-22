@@ -197,7 +197,7 @@ bool SafeToLayDownBeforePosition()
 void RefreshMovementDataEveryBegining()
 {
 	DM_MoveInfo.distance_data.distance_all = DM_MoveInfo.distance_data.target_distance +
-	CalRealDistance(fabs(DM_MoveInfo.position_data.initial_position - DriveMotor.PositionMeasure));	
+	CalRealDistance(DM_MoveInfo.speed_data.speed_direction*(DM_MoveInfo.position_data.initial_position - DriveMotor.PositionMeasure));	
 	DM_MoveInfo.position_data.start_position = DriveMotor.PositionMeasure;
 	DM_MoveInfo.distance_data.distance_left = 0;
 	DM_MoveInfo.distance_data.distance_walked=0;

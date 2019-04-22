@@ -8,7 +8,11 @@ void MakePlan()
 	switch(kMachineAGeneralState)
 	{
 		case kNormalWalk:
-			if(LastWalkOver())WalkPlan();
+			if(LastWalkOver())
+			{
+				WalkPlan();
+				machineA_general_data.plan_isok = true;
+			}
 			break;
 		
 		default:

@@ -9,19 +9,19 @@ void WalkPlan()
 		case kStart:
 		 	if(machineA_general_data.stage_step_number == 1)
 			{
-			  SetBasicMotionParameters(300,150,0,kBothUnStablity,kSpeedFirst);
+			  SetBasicMotionParameters(300,100,0,kBothUnStablity,kSpeedFirst);
 			}
 			else 	if(machineA_general_data.stage_step_number == 2)
 			{
-			  SetBasicMotionParameters(300,200,0,kBothUnStablity,kSpeedFirst);
+			  SetBasicMotionParameters(300,100,0,kBothUnStablity,kSpeedFirst);
 			} 			
 			else 	if(machineA_general_data.stage_step_number == 3)
 			{
-			  SetBasicMotionParameters(300,250,0,kBothUnStablity,kSpeedFirst);
+			  SetBasicMotionParameters(300,100,0,kBothUnStablity,kSpeedFirst);
 			}
 			else 	if(machineA_general_data.stage_step_number == 4)
 			{
-			  SetBasicMotionParameters(300,300,0,kBothUnStablity,kSpeedFirst);
+			  SetBasicMotionParameters(300,100,0,kBothUnStablity,kSpeedFirst);
 			}
 			if(machineA_general_data.stage_step_number > 4)
 			{
