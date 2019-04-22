@@ -9,6 +9,7 @@
 MotorMoveState DM_MoveInfo,RM_MoveInfo;
 MovementStyle movement_style;
 TimePoint time_point_for_speed,time_point_for_location;
+Obstacle obstacle1,obstacle2;
 
 bool ExecutePlan()
 {
@@ -88,6 +89,8 @@ void SpeedFirstMode()
 				time_point_for_speed = kAllDone;
 		
 		case kAllDone:
+				obstacle1.obstacle_exist = false;
+		    obstacle2.obstacle_exist = false;
 			break;
 		
 		default:
@@ -162,6 +165,8 @@ void LocationFirstMode()
 			else break;
 		
 		case kAllDone:
+				obstacle1.obstacle_exist = false;
+		    obstacle2.obstacle_exist = false;
 			break;
 		
 		default:
@@ -184,13 +189,15 @@ void CalculateFurtherMovementData()
 
 bool SafeToMoveBeforeRecover()
 {
-	if(DM_MoveInfo.distance_data.obstacle_location>150||!DM_MoveInfo.obstacle_exist)return true;
+	if((obstacle1.obstacle_location>150||!obstacle1.obstacle_exist)
+		&&(obstacle2.obstacle_location>150||!obstacle2.obstacle_exist))return true;
   return false;
 }
 
 bool SafeToLayDownBeforePosition()
 {
-	if(2*DM_MoveInfo.distance_data.distance_walked>DM_MoveInfo.distance_data.obstacle_location||!DM_MoveInfo.obstacle_exist)return true;
+	if((2*(DM_MoveInfo.distance_data.distance_all - DM_MoveInfo.distance_data.distance_left)>obstacle1.obstacle_location||!obstacle1.obstacle_exist)
+		&&(2*(DM_MoveInfo.distance_data.distance_all - DM_MoveInfo.distance_data.distance_left)>obstacle2.obstacle_location||!obstacle2.obstacle_exist))return true;
 	return false;
 }
 
@@ -210,11 +217,11 @@ void SelfCorrection()
 	
 }
 
-void SetObstacleLocation(float obstacleposition,float obstaclewidth)
+void SetObstacleLocation(float obstacleposition,float obstaclewidth,Obstacle *targetobstacle)
 {
-	DM_MoveInfo.distance_data.obstacle_location = obstacleposition;
-	DM_MoveInfo.distance_data.obstacle_width = obstaclewidth;
-	DM_MoveInfo.obstacle_exist = true;
+	(*targetobstacle).obstacle_location = obstacleposition;
+	(*targetobstacle).obstacle_width = obstaclewidth;
+	(*targetobstacle).obstacle_exist = true;
 }
 
 void RefreshMovementData()

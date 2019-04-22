@@ -108,3 +108,30 @@ void GetLaserRadarLocation(LocationData *locationdata)
 	}
 }
 
+void GetStepLocationData()
+{
+	if(leg_data_feedback.crossd_step_state==1&&!leg_data_feedback.crossed_step)
+	{
+		leg_data_feedback.crossed_step = true;
+		if(kLegState == kHighLegMove)
+		{
+			location_data.ground_leg_after_step = fabs(DM_MoveInfo.position_data.finish_decelerate_position - DriveMotor.PositionMeasure)*DM_radio * 2 
+                                      			/ arm_cos_f32((45 - leg_angle.highleg_yaw)*angle_to_radian_radio);
+			location_data.ground_leg_before_step = 2*Half_Length - location_data.ground_leg_after_step;
+			location_data.suspend_leg_before_step = fabs(DriveMotor.PositionMeasure - DM_MoveInfo.position_data.initial_position)*DM_radio * 2
+			                                       *arm_cos_f32((45 - leg_angle.highleg_yaw)*angle_to_radian_radio);
+		}
+		else
+		{
+			location_data.ground_leg_after_step = fabs(DM_MoveInfo.position_data.finish_decelerate_position - DriveMotor.PositionMeasure)*DM_radio * 2 
+                                      			/ arm_cos_f32((45 - leg_angle.lowleg_yaw)*angle_to_radian_radio);
+			location_data.ground_leg_before_step = 2*Half_Length - location_data.ground_leg_after_step;
+			location_data.suspend_leg_before_step = fabs(DriveMotor.PositionMeasure - DM_MoveInfo.position_data.initial_position)*DM_radio * 2
+			                                       *arm_cos_f32((45 - leg_angle.lowleg_yaw)*angle_to_radian_radio);
+		}
+		
+
+		
+	}
+}
+

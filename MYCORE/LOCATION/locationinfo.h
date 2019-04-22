@@ -32,4 +32,10 @@ void GetLaserRadarLocation();
  */
 void RefreshCurrentPosition();
 
+/**
+ * @brief: use photoelectric switches to locate steps
+ * @return: none
+ * @status: 2019.4.22
+ */
+void GetStepLocationData();
 #endif

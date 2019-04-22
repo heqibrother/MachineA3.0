@@ -48,10 +48,7 @@ typedef struct
 	float distance_walked;//已走距离
 	float distance_left;
 	float distance_all;
-	
-	//障碍位置是实际位置，和电机运行有两倍关系
-	float obstacle_location;
-	float obstacle_width;
+
 }MotorDistanceData;
 
 /***电机运动时间数据（阶段总时间）***/
@@ -73,6 +70,15 @@ typedef struct
 	SpeedMode speed_mode;
 }MotorSpeedData;
 
+/***障碍的位置信息***/
+typedef struct 
+{
+  bool obstacle_exist;//判断这一步是否存在障碍
+  //障碍位置是实际位置，和电机运行有两倍关系
+	float obstacle_location;
+	float obstacle_width;
+}Obstacle;
+
 /***运动信息的结构***/
 typedef  struct 
 {
@@ -81,7 +87,6 @@ typedef  struct
   MotorTimeData time_data;
   MotorSpeedData speed_data;
 	bool motor_position;//标志位，判断电机是否到位
-  bool obstacle_exist;//判断这一步是否存在障碍
 }MotorMoveState;
 
 /***控制结构，所有时点***/
@@ -119,6 +124,7 @@ typedef struct
 {
 	int16_t leg_state_[4] ;//记录每条腿的状态，顺序右前逆时针到右后
 	int leg_state_feedback;//返回的腿状态
+	int crossd_step_state;
 	bool crossed_step ;//判断是否越过台阶
 }LegDataFeedback;
 
@@ -133,6 +139,7 @@ typedef struct
 extern MotorMoveState DM_MoveInfo,RM_MoveInfo;
 extern MovementStyle movement_style;
 extern TimePoint time_point_for_speed,time_point_for_location;
+extern Obstacle obstacle1,obstacle2;
 /*********Function declaration*******/
 
 /**
@@ -195,7 +202,7 @@ void SelfCorrection();
  * @return: none
  * @status: 2019.4.21
  */
-void SetObstacleLocation(float obstacleposition,float obstaclewidth);
+void SetObstacleLocation(float obstacleposition,float obstaclewidth,Obstacle *targetobstacle);
 
 /**
  * @brief: Update regular motion data

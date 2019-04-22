@@ -27,7 +27,6 @@ void SetBasicMotionParameters(float targetpositiondistance,float targetpositions
 	leg_angle.target_yaw = targetyaw;
 	DM_MoveInfo.speed_data.speed_mode = speedmode;
 	movement_style = movementstyle;
-	DM_MoveInfo.obstacle_exist = false;
 	DM_MoveInfo.motor_position = false;
 	time_point_for_speed = kBeforeFurtherPlan;
 	time_point_for_location = kBeforeFurtherPlan;

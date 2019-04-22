@@ -34,4 +34,11 @@ void LegYawInit();
  */
 float CalYaw();
 
+/**
+ * @brief: Refresh yaw of highleg and lowleg
+ * @return: none
+ * @status: 2019.4.22
+ */
+void RefreshLegYaw();
+
 #endif

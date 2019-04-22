@@ -42,6 +42,10 @@ typedef struct
 	float laser_radar_data_y;
 	float relative_data_x;
 	float relative_data_y;
+	
+	float ground_leg_after_step;//Ç°ÍÈ
+	float ground_leg_before_step;//ºóÍÈ
+	float suspend_leg_before_step;
 }LocationData;
 
 extern LocationData location_data;

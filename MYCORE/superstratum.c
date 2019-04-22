@@ -25,10 +25,14 @@ void UpdateInformation()
 
 void JudgeMovement()
 {
-	if(machineA_general_data.plan_isok && ExecutePlan())
+	if(machineA_general_data.plan_isok &&kMachineAGeneralState == kNormalWalk&& ExecutePlan())
 	{
 		machineA_general_data.stage_step_number++;
 		machineA_general_data.total_step_number++;
+		machineA_general_data.plan_isok = false;
+	}
+	else
+	{
 		machineA_general_data.plan_isok = false;
 	}
 }
@@ -37,7 +41,7 @@ void CheckState()
 {
 	if(!IsDOORTouched(DOOR1))
 	{
-    kMachineATestItem = kTestStepDistanceCal;
+    kMachineATestItem = kTestFunctionCrossRope;
 		kMachineAGeneralState = kNormalWalk;
 	}
 	if(!IsDOORTouched(DOOR2))
@@ -53,6 +57,7 @@ void StateInit()
 	RMPartInit();
 	DMPartInit();
 	machineA_general_data.plan_isok = false;
+	leg_data_feedback.crossed_step = false;
 }
 
 void CompetitionInit()
