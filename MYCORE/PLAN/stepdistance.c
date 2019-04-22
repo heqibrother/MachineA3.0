@@ -3,12 +3,13 @@ int CalStepNumber(float alldistance,float distancehope,int required_remainder,fl
 {
 	float deviation = 70;
 	int steps_far =0,steps_near = 0,steps_medium = 0,steps_result;
-	steps_far = 2*MyFloor(alldistance - distancehope*(float)required_remainder)/(2.0f*(distancehope+deviation));
-	steps_medium = 2*MyClose(alldistance - distancehope*(float)required_remainder)/(2.0f*distancehope);
-	steps_near =  2*MyCeil(alldistance - distancehope*(float)required_remainder)/(2.0f*(distancehope-deviation));
+	steps_far = 2*MyCeil((alldistance - distancehope*(float)required_remainder)/(2.0f*(distancehope+deviation)));
+	steps_medium = 2*MyClose((alldistance - distancehope*(float)required_remainder)/(2.0f*distancehope));
+	steps_near =  2*MyFloor((alldistance - distancehope*(float)required_remainder)/(2.0f*(distancehope-deviation)));
 	steps_result = MyClose(CompareMin((float)steps_medium,(float)steps_near));
 	steps_result = MyClose(CompareMax((float)steps_far,(float)steps_result));
 	(*step_distance) = (alldistance - distancehope*(float)required_remainder)/steps_result;
+	if((*step_distance)<0.7*distancehope)(*step_distance) = (alldistance)/(float)(steps_result+required_remainder);
 	return (steps_result+required_remainder);
 }
 

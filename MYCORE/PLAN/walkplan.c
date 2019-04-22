@@ -10,27 +10,47 @@ void WalkPlan()
 		 	if(machineA_general_data.stage_step_number == 1)
 			{
 			  SetBasicMotionParameters(300,100,0,kBothUnStablity,kSpeedFirst);
+				break;
 			}
 			else 	if(machineA_general_data.stage_step_number == 2)
 			{
 			  SetBasicMotionParameters(300,100,0,kBothUnStablity,kSpeedFirst);
+				break;
 			} 			
 			else 	if(machineA_general_data.stage_step_number == 3)
 			{
 			  SetBasicMotionParameters(300,100,0,kBothUnStablity,kSpeedFirst);
+				break;
 			}
 			else 	if(machineA_general_data.stage_step_number == 4)
 			{
 			  SetBasicMotionParameters(300,100,0,kBothUnStablity,kSpeedFirst);
+				break;
 			}
-			if(machineA_general_data.stage_step_number > 4)
-			{
 				kMachineAState = kBeforeLaserDetect;
 				machineA_general_data.stage_step_number = 1;
+      			
+			
+    case kBeforeLaserDetect:
+
+			if(location_data.current_position.ground_leg_y<Redline_Position_Prepare)
+			{
+			  SetBasicMotionParameters(300,100,0,kBothUnStablity,kSpeedFirst);
+				break;
 			}
-      else break;			
-    case kBeforeLaserDetect:   
-	  case kBeforeTurnLeft:      
+				kMachineAState = kBeforeTurnLeft;
+				machineA_general_data.stage_step_number = 1;
+
+	  case kBeforeTurnLeft:
+       if(location_data.current_position.ground_leg_y<Redline_Position_Y1-50)
+			 {
+         SetBasicMotionParameters(CalStepDistance(Redline_Position_Y1,location_data.current_position.ground_leg_y,300,kLowLegMove)
+				  ,100,0,kBothUnStablity,kSpeedFirst);   
+				 break;
+			 }				 
+			 	kMachineAState = kTurnLeft;
+				machineA_general_data.stage_step_number = 1;
+			 
 	  case kTurnLeft:             
 	  case kBothLegTurnLeft:
 	  case kBeforeStepUp:         

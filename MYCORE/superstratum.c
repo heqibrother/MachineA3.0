@@ -37,7 +37,7 @@ void CheckState()
 {
 	if(!IsDOORTouched(DOOR1))
 	{
-    kMachineATestItem = kTestMotorLocation;
+    kMachineATestItem = kTestStepDistanceCal;
 		kMachineAGeneralState = kNormalWalk;
 	}
 	if(!IsDOORTouched(DOOR2))
