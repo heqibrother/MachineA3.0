@@ -92,11 +92,13 @@ bool TimeToLayDown()
 
 void HighlegLift()
 {
-	ChangeLeg(0x1010,leg_state_data.leg_target_state_time,leg_state_data.leg_state_number,leg_state_data.leg_safe_to_laydown);
+	leg_state_data.leg_state_command = 0x1010;
+  SendLegCommand();
 }
 void LowlegLift()
 {
-  ChangeLeg(0x0101,leg_state_data.leg_target_state_time,leg_state_data.leg_state_number,leg_state_data.leg_safe_to_laydown);
+	leg_state_data.leg_state_command = 0x0101;
+   SendLegCommand();
 }
 
 void ChangeLeg(short I1, short I2,short I3,short I4)
@@ -191,4 +193,9 @@ LegState ChangeLegState(LegState klegstate)
 	{
 		return kHighLegMove;
 	}
+}
+
+void SendLegCommand()
+{
+	ChangeLeg(leg_state_data.leg_state_command,leg_state_data.leg_target_state_time,leg_state_data.leg_state_number,leg_state_data.leg_safe_to_laydown);
 }

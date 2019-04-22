@@ -9,8 +9,8 @@ typedef struct
 {
   float x;
 	float y;
-	int32_t time;
-	bool ShouldBeTrusted;
+	int32_t time;//获取时间
+	bool ShouldBeTrusted;//置信标志，数据信任程度
 }LocationDataType;
 
 /***机器坐标结构***/
@@ -20,9 +20,9 @@ typedef struct
 	float highleg_y;
 	float lowleg_x;
 	float lowleg_y;
-	float ground_leg_x;
+	float ground_leg_x;//着地腿坐标
 	float ground_leg_y;
-	float suspend_leg_x;
+	float suspend_leg_x;//悬空腿坐标
 	float suspend_leg_y;
 }PositionDataType;
 
@@ -36,6 +36,7 @@ typedef struct
 	PositionDataType current_position;
   PositionDataType motor_position;
 	
+	//获取坐标的原始数据
 	float laser1_data;
 	float laser_radar_data_x;
 	float laser_radar_data_y;
@@ -49,7 +50,27 @@ extern LocationData location_data;
 #include "locationinfo.h"
 #include "localcomputing.h"
 /*********Function declaration*******/
+/**
+ * @brief: Refresh location information
+ * @return: none
+ * @status: 2019.4.21
+ */
 void RefreshLocation();
+
+/**
+ * @brief: Only relying on the motor to record the position information 
+           is used to measure the reliability of the acquired position 
+           data, and occasionally update the sensor data to avoid sensor 
+           accidents.
+ * @return: none
+ * @status: 2019.4.21
+ */
 void RecordLocation();
+
+/**
+ * @brief: Send the information needed by the computer
+ * @return: none
+ * @status: 2019.4.21
+ */
 void SendPCMessage();
 #endif

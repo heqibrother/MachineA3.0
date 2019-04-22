@@ -32,13 +32,64 @@ float LookUpDMSpeedTable(float value_t) ;
  */
 float LookUpDMTimeTable(float value_distance) ;
 
+/**
+ * @brief: Calculate the acceleration and deceleration position and 
+           distance according to the set target and speed mode
+ * @param: Motor Data Structure Address
+ * @return: none
+ * @status: 2019.4.21
+ */
 void CalMovementPosition(MotorMoveState *motor);
-													
+
+/**
+ * @brief: Correction of Expected Speed Based on Step Spacing
+ * @return: none
+ * @status: 2019.4.21
+ */
 void CalMovementSpeed();
+
+/**
+ * @brief: Modification of Angles and Steps Based on Vehicle Size
+ * @return: none
+ * @status: 2019.4.21
+ */
 void JudgeMovementSafiety();
+
+/**
+ * @brief: Conversion of motor speed
+ * @param: motor speed (бу/min)
+ * @return: real speed (mm/ms)
+ * @status: 2019.4.21
+ */
 float CalRealSpeed(float speed);
+
+/**
+ * @brief: Conversion of motor position
+ * @param: motor position (бу)
+ * @return: real distance (mm)
+ * @status: 2019.4.21
+ */
 float CalRealDistance(float position_D_value);
-	float CalRealPosition(float distance_D_value);
-	float CalDMMinSafeDistance();
-	float CalDMMaxSafeDistance();
+
+/**
+ * @brief: Conversion of real distance
+ * @param: real distance (mm)
+ * @return: motor position (бу)
+ * @status: 2019.4.21
+ */
+float CalRealPosition(float distance_D_value);
+
+/**
+ * @brief: Calculate the maximum step distance according to the angle
+ * @return: the maximum step
+ * @status: 2019.4.21
+ */
+float CalDMMinSafeDistance();
+
+/**
+ * @brief: Calculate the minimum step distance according to the angle
+ * @return: the minimum step
+ * @status: 2019.4.21
+ */
+float CalDMMaxSafeDistance();
 #endif

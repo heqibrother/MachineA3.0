@@ -22,4 +22,5 @@ void LowlegLift();
 void ChangeLeg(short I1, short I2,short I3,short I4);
 void LegPartInit();
 int32_t GetTimeLayDownAdvance();
+void SendLegCommand();
 #endif

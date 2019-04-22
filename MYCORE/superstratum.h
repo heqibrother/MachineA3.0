@@ -15,12 +15,12 @@
 /***A车宏观状态***/
 typedef enum
 {
-  kWaitToStart,
-	kNormalWalk,
-	kNeedToRestart,
-	kWaitToRestart,
-	kTestMode,
-	kMachineError,
+  kWaitToStart,//没有任何触发
+	kNormalWalk,//正常行走
+	kNeedToRestart,//触发了急停，恢复重启姿态
+	kWaitToRestart,//已经恢复重启姿态，等待触发启动
+	kTestMode,//测试模式
+	kMachineError,//报错
 }MachineAGeneralState;
 
 /***A车行进阶段***/
@@ -56,17 +56,46 @@ typedef enum{        //A车状态
 /***A车总体数据***/
 typedef struct
 {
-	int total_step_number;
-	int stage_step_number;
+	int total_step_number;//记录行动总步数
+	int stage_step_number;//记录行走的每一个阶段的步数
 }MachineAGeneralData;
 
 extern MachineAGeneralState kMachineAGeneralState;
 extern MachineAState kMachineAState;
 extern MachineAGeneralData machineA_general_data;
 /*********Function declaration*******/
+/**
+ * @brief: Routinely perform data update tasks
+ * @return: none
+ * @status: 2019.4.21
+ */
 void UpdateInformation();
+
+/**
+ * @brief: Judge whether to end a step or not, and execute a movement if not.
+ * @return: none
+ * @status: 2019.4.21
+ */
 void JudgeMovement();
+
+/**
+ * @brief: Detect vehicle status for trigger switch
+ * @return: none
+ * @status: 2019.4.14
+ */
 void CheckState();
+
+/**
+ * @brief:  Initialize status flag at the very beginning
+ * @return: none
+ * @status: 2019.4.21
+ */
 void StateInit();
+
+/**
+ * @brief: State Initialization Before Machine Motion
+ * @return: none
+ * @status: 2019.4.21
+ */
 void CompetitionInit();
 #endif

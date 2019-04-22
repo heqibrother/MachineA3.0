@@ -48,5 +48,10 @@ void RMDecelerate();
  */
 void JudgeRMSpeedStage();
 
+/**
+ * @brief: Initialize of Rotate Motor at the very beginning
+ * @return: none
+ * @status: 2019.4.21
+ */
 void RMPartInit();
 #endif

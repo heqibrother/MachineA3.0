@@ -84,12 +84,8 @@ void SpeedFirstMode()
 			else break;
 			
 		case kBeforeLegTouchGround:
-			if(DetectLegLayDownPosition())
-			{
 				kLegState = ChangeLegState(kLegState);
 				time_point_for_speed = kAllDone;
-			}
-			else break;
 		
 		case kAllDone:
 			break;
@@ -224,4 +220,5 @@ void SetObstacleLocation(float obstacleposition,float obstaclewidth)
 void RefreshMovementData()
 {
 	RefreshLegYaw();
+	SendLegCommand();
 }

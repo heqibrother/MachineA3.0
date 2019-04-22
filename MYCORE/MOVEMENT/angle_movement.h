@@ -8,8 +8,8 @@ typedef struct
   float highleg_yaw;
 	float lowleg_yaw;
 	float target_yaw;
-	float initial_yaw;
-	float original_yaw;
+	float initial_yaw;//陀螺仪初始绝对角度
+	float original_yaw;//陀螺仪的值
 }LegAngle;
 
 extern LegAngle leg_angle;
@@ -20,7 +20,18 @@ extern LegAngle leg_angle;
 
 
 /*********Function declaration*******/
+/**
+ * @brief: Initialize the angle information and record the absolute angle at the beginning
+ * @return: none
+ * @status: 2019.4.21
+ */
 void LegYawInit();
+
+/**
+ * @brief: Obtaining the Relative Angle of Gyroscope
+ * @return: yaw of lowleg(°)
+ * @status: 2019.4.21
+ */
 float CalYaw();
 
 #endif

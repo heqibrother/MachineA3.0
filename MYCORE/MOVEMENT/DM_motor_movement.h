@@ -86,8 +86,31 @@ float SuitableDecelerateSpeed();
  */
 bool JugdeStageTool(float value_a,float value_b);
 
+/**
+ * @brief: Initialize of Direct Motor at the very beginning
+ * @return: none
+ * @status: 2019.4.21
+ */
 void DMPartInit();
+
+/**
+ * @brief: Setting Speed Direction of Direct Motor Based on Leg State
+ * @return: none
+ * @status: 2019.4.21
+ */
 void SetSpeedDirection();
+
+/**
+ * @brief: Get the remaining time for each step of the calculation
+ * @return: none
+ * @status: 2019.4.21
+ */
 int32_t GetTimeLeft();
+
+/**
+ * @brief: Accumulate the distance in each step
+ * @return: none
+ * @status: 2019.4.21
+ */
 void RefreshMotorDistanceWalked();
 #endif

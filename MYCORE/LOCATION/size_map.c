@@ -31,7 +31,7 @@ const float Second_line_restart_Y =4600.0f;
 
 const float Test_position_Y_to_First_rope =890.0f;
 const float Hill_Position_Y =6425.0f;
-const float Camera_System_x = -1230.0f; //1170+50   30
+const float Camera_System_x = -1230.0f; //1170+50   30摄像头与车坐标系的距离
 const float Camera_System_y = 630.0f; //1200-50    30
 
 const float Position_Test_X =1200.0f;

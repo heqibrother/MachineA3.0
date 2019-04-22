@@ -5,7 +5,18 @@
 
 
 /*********Function declaration*******/
+/**
+ * @brief: Return data and record with txt
+ * @return: none
+ * @status: 2019.4.21
+ */
 void ReportMessage();
-void ReportCurve();
+
+/**
+ * @brief: Return data and draw waveforms
+ * @return: none
+ * @status: 2019.4.21
+ */
+void ReportCurve();//·µ»ØÊý¾Ý
 
 #endif

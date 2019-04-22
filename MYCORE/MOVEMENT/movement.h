@@ -10,25 +10,25 @@
 /***运动模式的类型***/
 typedef enum 
 {
-	kSpeedFirst,
-	kLocationFirst
+	kSpeedFirst,//速度优先模式，直行电机到位优先，用于直行段
+	kLocationFirst//定位优先模式，确保稳定性，用于踩准步伐，跨绳，台阶等
 }MovementStyle;
 
 /***运动模式的类型***/
 typedef enum 
 {
-  kOnlyAccelerateStability,
-	kOnlyDecelerateStability,
-	kBothStability,
-	kBothUnStablity
+  kOnlyAccelerateStability,//只延长加速段
+	kOnlyDecelerateStability,//只延长减速段
+	kBothStability,          //加速段减速段都延长
+	kBothUnStablity          //正常，都不延长
 }SpeedMode;//决定加减速时间
 
-/***电机运动位置数据***/
+/***电机运动位置数据（角度为单位）***/
 typedef struct 
 {
   float initial_position;//记录腿零点时的电机角度值（标准时刻，两腿重合）
 	
-	float start_position;
+	float start_position;//每步开始的位置
 	float finish_accelerate_position;//计算的电机值节点
 	float finish_keepspeed_position;
 	float finish_decelerate_position;
@@ -39,24 +39,25 @@ typedef struct
 	float position_left;
 }MotorPositionData;
 
-/***电机运动绝对距离数据***/
+/***电机运动绝对距离数据（毫米为单位）***/
 typedef struct 
 {
 	float target_distance;
 	float distance_accelerate;
 	float distance_decelerate;
-	float distance_walked;
+	float distance_walked;//已走距离
 	float distance_left;
 	float distance_all;
 	
+	//障碍位置是实际位置，和电机运行有两倍关系
 	float obstacle_location;
 	float obstacle_width;
 }MotorDistanceData;
 
-/***电机运动时间数据***/
+/***电机运动时间数据（阶段总时间）***/
 typedef struct 
 {
-	int32_t start_time;
+	int32_t start_time;//每步开始的时间
 	int32_t accelerate_time;
 	int32_t keepspeed_time;
 	int32_t decelerate_time;
@@ -65,10 +66,10 @@ typedef struct
 /***电机运动速度数据***/
 typedef struct 
 {
-	float target_position_speed;
+	float target_position_speed;//以电机角度为单位
 	float target_distance_speed;
 	float current_expected_speed;
-	float speed_direction;
+	float speed_direction;//高矮腿切换，速度方向取反系数
 	SpeedMode speed_mode;
 }MotorSpeedData;
 
@@ -79,30 +80,11 @@ typedef  struct
   MotorDistanceData distance_data;
   MotorTimeData time_data;
   MotorSpeedData speed_data;
-	bool motor_position;
-  bool obstacle_exist;
+	bool motor_position;//标志位，判断电机是否到位
+  bool obstacle_exist;//判断这一步是否存在障碍
 }MotorMoveState;
 
-/***以速度为优先的枚举时点变量***/
-//typedef enum{                //速度优先的时点标志位
-//	  kSBeforeFurtherPlan,     //计算更详细的参数
-//	  kSBeforeRecoverLeg,      //未把腿收起来
-//    kSBeforeRiseItself,      //未把身体升到指定高度
-//	  kSBeforeLayDownLegs,     //未到放腿位置
-//	  kSBeforeDMPosition,      //直行电机未到位
-//	  kSAllDone                //所有操作均已完成
-//}TimePointForSpeed;
-
-///***以定位为优先的控制结构***/
-//typedef enum{                //定位优先的时点标志位
-//	  kLBeforeFurtherPlan,     //计算更加详细的参数
-//	  kLBeforeRecoverLegAndRiseItself,  //未把腿收起来并且未把身体升到指定高度
-//	  kLBeforeSelfCorrection,  //未进行自纠错
-//	  kLBeforeDRMPosition,     //直行电机、旋转未到位
-//	  kLAllDone                //所有操作均已完成
-//}TimePointForLocation;
-
-/***以定位为优先的控制结构***/
+/***控制结构，所有时点***/
 typedef enum{                //全部时点标志位
 	  kBeforeFurtherPlan,     //计算更详细的参数
 	  kBeforeRecoverLeg,      //未把腿收起来
@@ -125,26 +107,20 @@ typedef enum {//腿状态
 /***运动中腿的数据***/
 typedef struct 
 {
-  int leg_state_number;
-	int leg_state_number_pre;
-	int leg_target_state_time;
+	int leg_state_command;//发给腿的指令，控制是否伸缩
+  int leg_state_number;//当时正发给腿的状态数据
+	int leg_state_number_pre;//记录状态数据，用于腿切换时点的切换
+	int leg_target_state_time;//记录到下一个状态的时间
 	int leg_safe_to_laydown;//1安全 0不安全
 }LegStateData;
 
 /***运动中腿返回的数据***/
 typedef struct 
 {
-	int16_t leg_state_[4] ;
-	int leg_state_feedback;
-	bool crossed_step ;
+	int16_t leg_state_[4] ;//记录每条腿的状态，顺序右前逆时针到右后
+	int leg_state_feedback;//返回的腿状态
+	bool crossed_step ;//判断是否越过台阶
 }LegDataFeedback;
-
-///***运动中腿高低的模式***/
-//enum LegHeightState {//腿状态
-//    kLegNothing,
-//	  kLegWaitToStart,
-//	  
-//};
 
 //下置引用，确保应用中调用结构体时，结构体已经被声明
 #include "superstratum.h"
@@ -186,15 +162,45 @@ void LocationFirstMode();
  */
 void CalculateFurtherMovementData();
 
+/**
+ * @brief: Refresh the previous record before each step starts
+ * @status: 2019.4.21
+ */
 void RefreshMovementDataEveryBegining();
 
+/**
+ * @brief: Determine whether you need to wait for your legs to be lifted in place
+ * @return: true(need to wait) false(no)
+ * @status: 2019.4.21
+ */
 bool SafeToMoveBeforeRecover();
 
+/**
+ * @brief: Determine if you need to wait for your legs to cross the barrier before putting them down
+ * @return: true(need to wait) false(no)
+ * @status: 2019.4.21
+ */
 bool SafeToLayDownBeforePosition();
 
+/**
+ * @brief: Detect errors in the initial decision based on location
+ * @return: none
+ * @status: 2019.4.21
+ */
 void SelfCorrection();
 
+/**
+ * @brief: set obstacles in one step
+ * @param: position of obstacles , width of obstacles
+ * @return: none
+ * @status: 2019.4.21
+ */
 void SetObstacleLocation(float obstacleposition,float obstaclewidth);
 
+/**
+ * @brief: Update regular motion data
+ * @return: none
+ * @status: 2019.4.21
+ */
 void RefreshMovementData();
 #endif
