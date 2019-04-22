@@ -100,4 +100,11 @@ void StateInit();
  * @status: 2019.4.21
  */
 void CompetitionInit();
+
+/**
+ * @brief: Running the Formal Competition Mode
+ * @return: none
+ * @status: 2019.4.22
+ */
+void CompetitionMode();
 #endif

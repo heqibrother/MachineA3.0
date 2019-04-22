@@ -57,7 +57,7 @@ void RMStopMove()
 void RMAccelerate()
 {
 	RotateMotor.State = PIDPOSITION;
-	RotateMotor.State = RM_MoveInfo.position_data.finish_decelerate_position;
+	RotateMotor.PositionExpected = RM_MoveInfo.position_data.finish_decelerate_position;
 }
 
 void RMDecelerate()

@@ -165,10 +165,12 @@ void SetSpeedDirection()
 	if(kLegState == kHighLegMove)
 	{
 		DM_MoveInfo.speed_data.speed_direction = -1.0f;
+		RM_MoveInfo.speed_data.speed_direction = -1.0f;
 	}
 	else if(kLegState == kLowLegMove)
 	{
 		DM_MoveInfo.speed_data.speed_direction = 1.0f;
+		RM_MoveInfo.speed_data.speed_direction = 1.0f;
 	}
 }
 

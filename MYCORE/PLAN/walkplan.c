@@ -32,7 +32,6 @@ void WalkPlan()
       			
 			
     case kBeforeLaserDetect:
-
 			if(location_data.current_position.ground_leg_y<Redline_Position_Prepare)
 			{
 			  SetBasicMotionParameters(300,100,0,kBothUnStablity,kSpeedFirst);

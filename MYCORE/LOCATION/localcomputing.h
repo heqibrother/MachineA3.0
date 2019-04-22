@@ -10,7 +10,7 @@
  * @return: none
  * @status: 2019.4.21
  */
-void ChangePositionRecord(LegState klegstate,PositionDataType *position);
+void ChangePositionRecord(LegState klegstate,PositionDataType *position,MotorMoveState *motorstate);
 
 /**
  * @brief: Calculate the X-Direction Distance between the Location of the 

@@ -25,8 +25,8 @@ void RefreshCurrentPosition()
 		default:
 			break;
 	}
-	ChangePositionRecord(kLegState,&location_data.current_position);
-	ChangePositionRecord(kLegState,&location_data.motor_position);
+	ChangePositionRecord(kLegState,&location_data.current_position,&DM_MoveInfo);
+	ChangePositionRecord(kLegState,&location_data.motor_position,&DM_MoveInfo);
 	RecordLocation();
 }
 
@@ -51,7 +51,7 @@ void GetRelativeLocation(LocationData *locationdata)
 		{
 		  (*position).highleg_y = (*location).y;
 		  (*position).highleg_x =  (*location).x;
-		  ChangePositionRecord(kHighLegMove,position);
+		  ChangePositionRecord(kHighLegMove,position,&DM_MoveInfo);
 			(*location).ShouldBeTrusted = false;
 		}
 	}
@@ -78,7 +78,7 @@ void GetLaser1Location(LocationData *locationdata)
 		{
 		  (*position).highleg_y = (*location).y;
 		  (*position).highleg_x = field_direction * (*location).x;
-		  ChangePositionRecord(kHighLegMove,position);
+		  ChangePositionRecord(kHighLegMove,position,&DM_MoveInfo);
 			(*location).ShouldBeTrusted = false;
 		}
 	}
@@ -102,7 +102,7 @@ void GetLaserRadarLocation(LocationData *locationdata)
 				if((*location).ShouldBeTrusted)
 		{
 		  (*position).highleg_y = (*location).y;
-		  ChangePositionRecord(kHighLegMove,position);
+		  ChangePositionRecord(kHighLegMove,position,&DM_MoveInfo);
 			(*location).ShouldBeTrusted = false;
 		}
 	}

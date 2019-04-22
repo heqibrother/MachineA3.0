@@ -30,10 +30,9 @@ void JudgeMovement()
 		machineA_general_data.stage_step_number++;
 		machineA_general_data.total_step_number++;
 		machineA_general_data.plan_isok = false;
-	}
-	else
-	{
-		machineA_general_data.plan_isok = false;
+		DMStopMove();
+		RMStopMove();
+		kMachineAGeneralState = kNeedToRestart;
 	}
 }
 

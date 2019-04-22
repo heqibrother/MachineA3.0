@@ -104,7 +104,7 @@ void LocationFirstMode()
 	{
 		case kBeforeFurtherPlan:
 			CalculateFurtherMovementData();
-		  time_point_for_speed = kBeforeRecoverLeg;
+		  time_point_for_location = kBeforeRecoverLeg;
 			//break;
 		
 		case kBeforeRecoverLeg:
@@ -115,7 +115,7 @@ void LocationFirstMode()
 			}
 			if(DetectLegRecoverPosition())
 			{
-				time_point_for_speed = kBeforeRiseItself;
+				time_point_for_location = kBeforeRiseItself;
 			}
 			else break;
 		
@@ -128,13 +128,13 @@ void LocationFirstMode()
 		  LegModeChange();
 		  if(LegPartAnswer())
 			{
-				time_point_for_speed = kBeforeSelfCorrection;
+				time_point_for_location = kBeforeSelfCorrection;
 			}
 			else break;
 			
 		case kBeforeSelfCorrection:
 			SelfCorrection();
-			time_point_for_speed = kBeforeLayDownLegs;
+			time_point_for_location = kBeforeLayDownLegs;
 			//break;
 			
 		case kBeforeLayDownLegs:
@@ -143,7 +143,7 @@ void LocationFirstMode()
 			if(SafeToLayDownBeforePosition()&&TimeToLayDown())
 			{
 				LayDown();
-				time_point_for_speed = kBeforeDMPosition;
+				time_point_for_location = kBeforeDMPosition;
 			}
 			else break;
 		
@@ -152,7 +152,7 @@ void LocationFirstMode()
 		  MoveRM();
 		  if(DM_MoveInfo.motor_position&&RM_MoveInfo.motor_position)
 			{
-				time_point_for_speed = kBeforeLegTouchGround;
+				time_point_for_location = kBeforeLegTouchGround;
 			}
 			else break;
 			
@@ -160,7 +160,7 @@ void LocationFirstMode()
 			if(DetectLegLayDownPosition())
 			{
 				kLegState = ChangeLegState(kLegState);
-				time_point_for_speed = kAllDone;
+				time_point_for_location = kAllDone;
 			}
 			else break;
 		
@@ -179,7 +179,8 @@ void CalculateFurtherMovementData()
 	SetSpeedDirection();
 	JudgeMovementSafiety();
 
-	
+	RM_MoveInfo.position_data.finish_decelerate_position = RotateMotor.PositionMeasure + RM_MoveInfo.speed_data.speed_direction 
+	                                                        * (leg_angle.target_yaw - leg_angle.highleg_yaw) / RM_radio;
 	//DM运动部分详细参数计算
   RefreshMovementDataEveryBegining();
 	CalMovementSpeed();

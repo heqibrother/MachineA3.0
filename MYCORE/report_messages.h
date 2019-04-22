@@ -19,4 +19,18 @@ void ReportMessage();
  */
 void ReportCurve();//·µ»ØÊý¾Ý
 
+/**
+ * @brief: Return data and record with txt about position
+ * @return: none
+ * @status: 2019.4.23
+ */
+void ReportPosition();
+
+/**
+ * @brief: Return data and record with txt about machine state
+ * @return: none
+ * @status: 2019.4.23
+ */
+void ReportState();
+
 #endif
