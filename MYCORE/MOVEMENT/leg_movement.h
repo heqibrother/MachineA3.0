@@ -8,6 +8,7 @@ extern LegState kLegState;
 extern LegStateData leg_state_data;
 extern LegDataFeedback leg_data_feedback;
 extern LegState ChangeLegState(LegState klegstate);
+
 /*********Function declaration*******/
 bool DetectLegRecoverPosition();
 bool DetectLegLayDownPosition();
@@ -19,7 +20,7 @@ void LayDown();
 
 void HighlegLift();
 void LowlegLift();
-void ChangeLeg(short I1, short I2,short I3,short I4);
+//void ChangeLeg(short I1, short I2,short I3,short I4);
 void LegPartInit();
 int32_t GetTimeLayDownAdvance();
 void SendLegCommand();

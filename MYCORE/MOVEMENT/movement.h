@@ -96,7 +96,7 @@ typedef enum{                //全部时点标志位
     kBeforeRiseItself,      //未把身体升到指定高度
 	  kBeforeLayDownLegs,     //未到放腿位置
   	kBeforeSelfCorrection,  //未进行自纠错
-	  kBeforeDMPosition,      //直行电机未到位
+	  kBeforeDMPosition=5,      //直行电机未到位
 	  kBeforeRMPosition,      //旋转电机未到位
 	  kBeforeLegTouchGround,  //放腿触地
 	  kAllDone                //所有操作均已完成
@@ -126,6 +126,7 @@ typedef struct
 	int leg_state_feedback;//返回的腿状态
 	int crossd_step_state;
 	bool crossed_step ;//判断是否越过台阶
+	bool send_leg_change_flag;
 }LegDataFeedback;
 
 //下置引用，确保应用中调用结构体时，结构体已经被声明

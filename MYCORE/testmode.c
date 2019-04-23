@@ -8,7 +8,7 @@ float show_data[4] = {0.0f};
 void TestInit()
 {
 
-//	MotorOff(CAN2);
+	MotorOff(CAN2);
 	StateInit();
 	leg_state_data.leg_state_number = 2;
 	HighlegLift();
@@ -21,7 +21,7 @@ void TestInit()
 	test_value1[0] = 300;
 	test_value1[1] = 100;
 	test_value1[2] = kBothUnStablity;
-	SetBasicMotionParameters(test_value1[0],test_value1[1],test_value1[2],0,kSpeedFirst);
+	SetBasicMotionParameters(test_value1[0],test_value1[1],test_value1[2],0,kSpeedFirst); 
 }
 
 void TestMode()
@@ -90,4 +90,14 @@ void TestMode()
 		default:
 			break;
 	}
+}
+
+void TestFirstRedLine()
+{
+	location_data.current_position.lowleg_y = Redline_Position_X1;
+	location_data.current_position.lowleg_y = Redline_Position_Y1;
+	kMachineAState = kTurnLeft;
+	ChangePositionRecord(kLegState,&location_data.current_position,&DM_MoveInfo);
+	ChangePositionRecord(kLegState,&location_data.motor_position,&DM_MoveInfo);
+	RecordLocation();
 }

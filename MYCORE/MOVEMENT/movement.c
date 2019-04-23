@@ -52,18 +52,18 @@ void SpeedFirstMode()
 		  if(DetectLegRecoverPosition())
 			{
 				time_point_for_speed = kBeforeRiseItself;
+				LegModeChange();//在这一阶段执行，避免反复置位
 			}
 			else break;
 		
 		case kBeforeRiseItself:
 			MoveDM();
 		  MoveRM();
-		  LegModeChange();
-		  //if(LegPartAnswer())
+		  if(LegPartAnswer())
 			{
 				time_point_for_speed = kBeforeLayDownLegs;
 			}
-			//else break;
+			else break;
 		
 		case kBeforeLayDownLegs:
 			MoveDM();
@@ -86,6 +86,7 @@ void SpeedFirstMode()
 			
 		case kBeforeLegTouchGround:
 				kLegState = ChangeLegState(kLegState);
+			   SetSpeedDirection();
 				time_point_for_speed = kAllDone;
 		
 		case kAllDone:
@@ -116,6 +117,7 @@ void LocationFirstMode()
 			if(DetectLegRecoverPosition())
 			{
 				time_point_for_location = kBeforeRiseItself;
+				LegModeChange();//在这一阶段执行，避免反复置位
 			}
 			else break;
 		
@@ -125,12 +127,12 @@ void LocationFirstMode()
 				MoveDM();
 		    MoveRM();
 			}
-		  LegModeChange();
-		 // if(LegPartAnswer())
+		  
+		  if(LegPartAnswer())
 			{
 				time_point_for_location = kBeforeSelfCorrection;
 			}
-		//	else break;
+			else break;
 			
 		case kBeforeSelfCorrection:
 			SelfCorrection();
@@ -160,6 +162,7 @@ void LocationFirstMode()
 			if(DetectLegLayDownPosition())
 			{
 				kLegState = ChangeLegState(kLegState);
+					SetSpeedDirection();
 				time_point_for_location = kAllDone;
 			}
 			else break;
@@ -235,5 +238,4 @@ void SetObstacleLocation(float obstacleposition,float obstaclewidth,Obstacle *ta
 void RefreshMovementData()
 {
 	RefreshLegYaw();
-	SendLegCommand();
 }

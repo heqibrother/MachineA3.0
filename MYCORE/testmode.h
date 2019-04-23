@@ -30,5 +30,6 @@ void TestInit();
  * @status: 2019.4.21
  */
 void TestMode();
+void TestFirstRedLine();
 
 #endif

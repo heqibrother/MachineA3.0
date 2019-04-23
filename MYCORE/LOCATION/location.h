@@ -74,4 +74,6 @@ void RecordLocation();
  * @status: 2019.4.21
  */
 void SendPCMessage(short I1, short I2,short I3,short I4,short I5, short I6,short I7,short I8);
+
+void PositionInit();
 #endif

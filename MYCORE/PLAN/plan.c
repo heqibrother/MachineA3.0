@@ -29,6 +29,8 @@ void SetBasicMotionParameters(float targetpositiondistance,float targetpositions
 	movement_style = movementstyle;
 	DM_MoveInfo.motor_position = false;
 	RM_MoveInfo.motor_position = false;
+	RM_speed_stage = kStopMove;
+	DM_speed_stage = kStopMove;
 	time_point_for_speed = kBeforeFurtherPlan;
 	time_point_for_location = kBeforeFurtherPlan;
 }

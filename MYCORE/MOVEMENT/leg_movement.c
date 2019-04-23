@@ -6,9 +6,11 @@
 LegState kLegState;
 LegStateData leg_state_data;
 LegDataFeedback leg_data_feedback;
+
 void LegModeChange()
 {
 	leg_state_data.leg_state_number = leg_state_data.leg_state_number_pre;
+	SendLegCommand();
 }
 
 void LayDown()
@@ -75,7 +77,7 @@ bool DetectLegLayDownPosition()
 }
 bool LegPartAnswer()
 {
-	if(leg_state_data.leg_state_number == leg_data_feedback.leg_state_feedback)
+	if(!leg_data_feedback.send_leg_change_flag)
 	{
 		return true;
 	}
@@ -101,32 +103,32 @@ void LowlegLift()
    SendLegCommand();
 }
 
-void ChangeLeg(short I1, short I2,short I3,short I4)
-{
-	CanTxMsg TxMessage;
-	uint16_t i = 0;
-	uint8_t TransmitMailbox = CAN_TxStatus_NoMailBox;	
-	uint16_t  time_out_count = 0;
-	TxMessage.StdId=0x121;
-	TxMessage.IDE=CAN_ID_STD;
-	TxMessage.RTR=CAN_RTR_DATA;
-	TxMessage.DLC=8;
-	
-	TxMessage.Data[0]=I1>>8;
-	TxMessage.Data[1]=I1&0xff;
-	TxMessage.Data[2]=I2>>8;
-	TxMessage.Data[3]=I2&0xff;
-	TxMessage.Data[4]=I3>>8;
-	TxMessage.Data[5]=I3&0xff;
-	TxMessage.Data[6]=I4>>8;
-	TxMessage.Data[7]=I4&0xff;
-	
-	    while((TransmitMailbox == CAN_TxStatus_NoMailBox) && (time_out_count++ != 0xFF))
-    {
-				TransmitMailbox = CAN_Transmit(CAN1, &TxMessage);
-		}
-		
-}
+//void ChangeLeg(short I1, short I2,short I3,short I4)
+//{
+//	CanTxMsg TxMessage;
+//	uint16_t i = 0;
+//	uint8_t TransmitMailbox = CAN_TxStatus_NoMailBox;	
+//	uint16_t  time_out_count = 0;
+//	TxMessage.StdId=0x121;
+//	TxMessage.IDE=CAN_ID_STD;
+//	TxMessage.RTR=CAN_RTR_DATA;
+//	TxMessage.DLC=8;
+//	
+//	TxMessage.Data[0]=I1>>8;
+//	TxMessage.Data[1]=I1&0xff;
+//	TxMessage.Data[2]=I2>>8;
+//	TxMessage.Data[3]=I2&0xff;
+//	TxMessage.Data[4]=I3>>8;
+//	TxMessage.Data[5]=I3&0xff;
+//	TxMessage.Data[6]=I4>>8;
+//	TxMessage.Data[7]=I4&0xff;
+//	
+//	    while((TransmitMailbox == CAN_TxStatus_NoMailBox) && (time_out_count++ != 0xFF))
+//    {
+//				TransmitMailbox = CAN_Transmit(CAN1, &TxMessage);
+//		}
+//		
+//}
 
 void LegPartInit()
 {
@@ -197,7 +199,8 @@ LegState ChangeLegState(LegState klegstate)
 
 void SendLegCommand()
 {
-	ChangeLeg(leg_state_data.leg_state_command,leg_state_data.leg_target_state_time,leg_state_data.leg_state_number,leg_state_data.leg_safe_to_laydown);
+	//ChangeLeg(leg_state_data.leg_state_command,leg_state_data.leg_target_state_time,leg_state_data.leg_state_number,leg_state_data.leg_safe_to_laydown);
+  leg_data_feedback.send_leg_change_flag = true;
 }
 
 void TaskLEGCOMMUNICATION(void *p_arg)
@@ -205,7 +208,11 @@ void TaskLEGCOMMUNICATION(void *p_arg)
 	  OS_ERR err;
     while(1)
     {
-			
-	  	OSTimeDlyHMSM(0, 0, 2, 0, OS_OPT_TIME_HMSM_STRICT, &err);
+			if(leg_data_feedback.send_leg_change_flag == true)
+			{
+				//SendLegChange(1,2,3,4);
+				SendLegChange(leg_state_data.leg_state_command,leg_state_data.leg_target_state_time,leg_state_data.leg_state_number,leg_state_data.leg_safe_to_laydown);
+			}
+	  	OSTimeDlyHMSM(0, 0, 0, 5, OS_OPT_TIME_HMSM_STRICT, &err);
 	  }
 }

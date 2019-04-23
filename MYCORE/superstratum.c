@@ -30,8 +30,8 @@ void JudgeMovement()
 		machineA_general_data.stage_step_number++;
 		machineA_general_data.total_step_number++;
 		machineA_general_data.plan_isok = false;
-		DMStopMove();
-		RMStopMove();
+		//DMStopMove();//
+		//RMStopMove();
 		kMachineAGeneralState = kNeedToRestart;
 	}
 }
@@ -55,8 +55,11 @@ void StateInit()
 	LegYawInit();
 	RMPartInit();
 	DMPartInit();
+	PositionInit();
 	machineA_general_data.plan_isok = false;
 	leg_data_feedback.crossed_step = false;
+	leg_data_feedback.send_leg_change_flag = false;
+	
 }
 
 void CompetitionInit()
@@ -68,6 +71,7 @@ void CompetitionInit()
 	MyDelayms(500);
 	kMachineAGeneralState = kWaitToStart;//kWaitDebug;
 	kMachineAState = kBeforeStart;
+	TestFirstRedLine();
 	machineA_general_data.stage_step_number = 1;
 	machineA_general_data.total_step_number = 0;
 }

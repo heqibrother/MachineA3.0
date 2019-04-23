@@ -8,9 +8,14 @@ void RefreshCurrentPosition()
     case kStart:               
     case kBeforeLaserDetect:   
 	  case kBeforeTurnLeft:      
-	  case kTurnLeft:             
+	  case kTurnLeft:   
+       break;			
+		
 	  case kBothLegTurnLeft:
-	  case kBeforeStepUp:         
+	  case kBeforeStepUp:    
+       GetStepLocationData();
+      break;
+		
 	  case kStepUp:             
 	  case kClimbOverTheStep:      
 	  case kBeforeTurnRight:      

@@ -47,11 +47,8 @@ void JudgeRMSpeedStage()
 
 void RMStopMove()
 {
-  if(fabs(RotateMotor.PositionExpected - RotateMotor.PositionMeasure)>5)
-	{
 		RotateMotor.State = PIDPOSITION;
-		RotateMotor.PositionExpected = RotateMotor.PositionMeasure;
-	}
+		RotateMotor.PositionExpected = RM_MoveInfo.position_data.finish_decelerate_position;
 }
 
 void RMAccelerate()
@@ -65,6 +62,7 @@ void RMDecelerate()
 	if(fabs(RM_MoveInfo.position_data.finish_decelerate_position - RotateMotor.PositionMeasure)<5)
 	{
 		RM_MoveInfo.motor_position = true;
+		RM_speed_stage = kStopMove;
 	}
 	
 }

@@ -86,7 +86,7 @@ void WalkPlan()
 				SetObstacleLocation(location_data.suspend_leg_before_step,0,&obstacle1);
 				break;
 			}
-			  kMachineAState = kBeforeStepUp;
+			  kMachineAState = kClimbOverTheStep;
 				machineA_general_data.stage_step_number = 1;
 		
 	  case kClimbOverTheStep:  
@@ -105,10 +105,13 @@ void WalkPlan()
 			machineA_general_data.stage_step_number = 1;
 			
 	  case kBeforeTurnRight:  
-			leg_state_data.leg_state_number_pre = 7;
+			if(leg_data_feedback.crossd_step_state == 2||machineA_general_data.stage_step_number == 2)
+			{
+				leg_state_data.leg_state_number_pre = 7;
+			}
      if(location_data.current_position.ground_leg_x<Oblique_PositionTurn_X-50)
 		 {
-			   SetBasicMotionParameters(CalStepDistance(Oblique_PositionTurn_X,location_data.current_position.ground_leg_y,
+			   SetBasicMotionParameters(CalStepDistance(Oblique_PositionTurn_X,location_data.current_position.ground_leg_x,
 			                                             300*arm_cos_f32(60*angle_to_radian_radio),kHighLegMove)/arm_cos_f32(60*angle_to_radian_radio)
 				  ,100,60*field_direction,kBothUnStablity,kSpeedFirst);   
 				 break;

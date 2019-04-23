@@ -24,7 +24,7 @@ void ReportCurve();//·µ»ØÊý¾Ý
  * @return: none
  * @status: 2019.4.23
  */
-void ReportPosition();
+void ReportPositionY();
 
 /**
  * @brief: Return data and record with txt about machine state
@@ -32,5 +32,8 @@ void ReportPosition();
  * @status: 2019.4.23
  */
 void ReportState();
-
+void ReportLegState();
+void ReportLegStateYaw();
+void ReportStepPosition();
+void ReportPositionX();
 #endif

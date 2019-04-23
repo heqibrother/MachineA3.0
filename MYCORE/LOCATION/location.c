@@ -96,3 +96,8 @@ void SendPCMessage(short I1, short I2,short I3,short I4,short I5, short I6,short
 		
 }
 
+void PositionInit()
+{
+	location_data.current_position.lowleg_x = Redline_Position_X1;
+	location_data.current_position.lowleg_y = 0;
+}

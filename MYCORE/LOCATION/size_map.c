@@ -3,7 +3,7 @@
 const float field_direction = 1.0f;
 
 const float DM_radio = 0.57596f;//   66pi£¨3.141592654£©/360  //motor_angle * radio = real distance
-const float RM_radio = 0.32075f;//34:106 //   360/80pi£¨3.141592654£© //motor_angle * radio = real angle
+const float RM_radio = 0.265624709472974f;//0.32075f;//34:106 //motor_angle * radio = real angle
 const float RM_angle_min = 3.0f;
 const float RM_angle_max = 63.0f;
 
