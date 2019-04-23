@@ -96,9 +96,9 @@ void WalkPlan()
 				SetObstacleLocation(location_data.ground_leg_before_step,0,&obstacle1);
 				break;
 			}			
-			if(machineA_general_data.stage_step_number == 1)
+			if(machineA_general_data.stage_step_number == 2)
 			{
-			  SetBasicMotionParameters(300,100,45*field_direction,kBothUnStablity,kLocationFirst);
+			  SetBasicMotionParameters(300,100,60*field_direction,kBothUnStablity,kLocationFirst);
 				break;
 			}
 			kMachineAState = kBeforeTurnRight;
