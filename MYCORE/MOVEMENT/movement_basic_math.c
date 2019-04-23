@@ -151,9 +151,9 @@ void CalMovementPosition(MotorMoveState *motor)
 	}
 	(*time).accelerate_time = (int32_t)(fabs((*position).finish_accelerate_position - (*position).start_position) / ((*speed).target_position_speed*360.0f / 60.0f /1000.0f)/speed_curve_area_radio);
 	(*time).keepspeed_time = (int32_t)(fabs((*position).finish_keepspeed_position - (*position).finish_accelerate_position) / ((*speed).target_position_speed*360.0f / 60.0f/1000.0f));
-	(*time).decelerate_time = (int32_t)(fabs((*position).finish_accelerate_position -(*position).finish_keepspeed_position) / ((*speed).target_position_speed*360.0f / 60.0f/1000.0f)/speed_curve_area_radio);
+	(*time).decelerate_time = (int32_t)(fabs((*position).finish_decelerate_position -(*position).finish_keepspeed_position) / ((*speed).target_position_speed*360.0f / 60.0f/1000.0f)/speed_curve_area_radio);
 	(*distance).distance_accelerate = CalRealDistance(fabs((*position).finish_accelerate_position - (*position).start_position));
-	(*distance).distance_decelerate = CalRealDistance(fabs((*position).finish_accelerate_position - (*position).finish_keepspeed_position));
+	(*distance).distance_decelerate = CalRealDistance(fabs((*position).finish_decelerate_position - (*position).finish_keepspeed_position));
 }
 
 void CalMovementSpeed()

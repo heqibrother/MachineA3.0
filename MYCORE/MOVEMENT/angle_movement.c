@@ -30,4 +30,14 @@ void RefreshLegYaw()
 {
 	leg_angle.lowleg_yaw = CalYaw();
 	leg_angle.highleg_yaw = leg_angle.lowleg_yaw -  (RotateMotor.PositionMeasure -RM_MoveInfo.position_data.initial_position)*RM_radio;
+	if(kLegState == kHighLegMove)
+	{
+		leg_angle.groundleg_yaw = leg_angle.lowleg_yaw;
+		leg_angle.suspendleg_yaw = leg_angle.highleg_yaw;
+	}
+	else if(kLegState == kLowLegMove)
+	{
+		leg_angle.groundleg_yaw = leg_angle.highleg_yaw;
+		leg_angle.suspendleg_yaw = leg_angle.lowleg_yaw;
+	}
 }

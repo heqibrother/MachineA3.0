@@ -7,7 +7,7 @@
 extern LegState kLegState;
 extern LegStateData leg_state_data;
 extern LegDataFeedback leg_data_feedback;
-LegState ChangeLegState(LegState klegstate);
+extern LegState ChangeLegState(LegState klegstate);
 /*********Function declaration*******/
 bool DetectLegRecoverPosition();
 bool DetectLegLayDownPosition();

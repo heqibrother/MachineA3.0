@@ -2,7 +2,8 @@
 
 void ReportMessage()
 {
-   ReportPosition();
+	ReportCurve();
+  // ReportPosition();
 }
 
 void ReportCurve()

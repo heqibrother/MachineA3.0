@@ -75,7 +75,7 @@ bool DetectLegLayDownPosition()
 }
 bool LegPartAnswer()
 {
-	if(leg_state_data.leg_state_number_pre == leg_data_feedback.leg_state_feedback)
+	if(leg_state_data.leg_state_number == leg_data_feedback.leg_state_feedback)
 	{
 		return true;
 	}
@@ -198,4 +198,14 @@ LegState ChangeLegState(LegState klegstate)
 void SendLegCommand()
 {
 	ChangeLeg(leg_state_data.leg_state_command,leg_state_data.leg_target_state_time,leg_state_data.leg_state_number,leg_state_data.leg_safe_to_laydown);
+}
+
+void TaskLEGCOMMUNICATION(void *p_arg)
+{
+	  OS_ERR err;
+    while(1)
+    {
+			
+	  	OSTimeDlyHMSM(0, 0, 2, 0, OS_OPT_TIME_HMSM_STRICT, &err);
+	  }
 }

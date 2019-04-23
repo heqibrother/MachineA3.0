@@ -59,11 +59,11 @@ void SpeedFirstMode()
 			MoveDM();
 		  MoveRM();
 		  LegModeChange();
-		  if(LegPartAnswer())
+		  //if(LegPartAnswer())
 			{
 				time_point_for_speed = kBeforeLayDownLegs;
 			}
-			else break;
+			//else break;
 		
 		case kBeforeLayDownLegs:
 			MoveDM();
@@ -126,11 +126,11 @@ void LocationFirstMode()
 		    MoveRM();
 			}
 		  LegModeChange();
-		  if(LegPartAnswer())
+		 // if(LegPartAnswer())
 			{
 				time_point_for_location = kBeforeSelfCorrection;
 			}
-			else break;
+		//	else break;
 			
 		case kBeforeSelfCorrection:
 			SelfCorrection();
@@ -180,12 +180,19 @@ void CalculateFurtherMovementData()
 	JudgeMovementSafiety();
 
 	RM_MoveInfo.position_data.finish_decelerate_position = RotateMotor.PositionMeasure + RM_MoveInfo.speed_data.speed_direction 
-	                                                        * (leg_angle.target_yaw - leg_angle.highleg_yaw) / RM_radio;
+	                                                        * (leg_angle.target_yaw - leg_angle.suspendleg_yaw) / RM_radio;
 	//DM运动部分详细参数计算
   RefreshMovementDataEveryBegining();
 	CalMovementSpeed();
 	CalMovementPosition(&DM_MoveInfo);
-	
+	if(2*DM_MoveInfo.speed_data.target_position_speed<400)
+	{
+		RM_speed_limit = (int)(2.0f*DM_MoveInfo.speed_data.target_position_speed);
+	}
+	else
+	{
+		RM_speed_limit = 400;
+	}
 }
 
 bool SafeToMoveBeforeRecover()

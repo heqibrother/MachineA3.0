@@ -7,6 +7,8 @@ typedef struct
 {
   float highleg_yaw;
 	float lowleg_yaw;
+	float groundleg_yaw;
+	float suspendleg_yaw;
 	float target_yaw;
 	float initial_yaw;//陀螺仪初始绝对角度
 	float original_yaw;//陀螺仪的值

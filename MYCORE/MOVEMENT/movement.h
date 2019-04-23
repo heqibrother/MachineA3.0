@@ -140,6 +140,7 @@ extern MotorMoveState DM_MoveInfo,RM_MoveInfo;
 extern MovementStyle movement_style;
 extern TimePoint time_point_for_speed,time_point_for_location;
 extern Obstacle obstacle1,obstacle2;
+extern int RM_speed_limit;
 /*********Function declaration*******/
 
 /**
