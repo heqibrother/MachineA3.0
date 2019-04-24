@@ -47,12 +47,14 @@ void JudgeRMSpeedStage()
 
 void RMStopMove()
 {
+	securityitem.sMotorState.refresh_flag = true;
 		RotateMotor.State = PIDPOSITION;
 		RotateMotor.PositionExpected = RM_MoveInfo.position_data.finish_decelerate_position;
 }
 
 void RMAccelerate()
 {
+	securityitem.sMotorState.refresh_flag = true;
 	RotateMotor.State = PIDPOSITION;
 	RotateMotor.PositionExpected = RM_MoveInfo.position_data.finish_decelerate_position;
 }

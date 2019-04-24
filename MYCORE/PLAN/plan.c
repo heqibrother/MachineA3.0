@@ -14,6 +14,14 @@ void MakePlan()
 				machineA_general_data.plan_isok = true;
 			}
 			break;
+			
+		case kClamberModeWaiting:
+			LegPrepareForClamber();
+			break;
+			
+		case kNeedToRestart:
+			
+			break;
 		
 		default:
 			break;
@@ -31,13 +39,12 @@ void SetBasicMotionParameters(float targetpositiondistance,float targetpositions
 	RM_MoveInfo.motor_position = false;
 	RM_speed_stage = kStopMove;
 	DM_speed_stage = kStopMove;
-	time_point_for_speed = kBeforeFurtherPlan;
-	time_point_for_location = kBeforeFurtherPlan;
+	time_point = kBeforeFurtherPlan;
 }
 
 bool LastWalkOver()
 {
-	if(time_point_for_location == kAllDone || time_point_for_speed == kAllDone)
+	if(time_point == kAllDone)
 	{
 		return true;
 	}

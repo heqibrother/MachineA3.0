@@ -142,7 +142,7 @@ void WalkPlan()
 			 if(location_data.current_position.ground_leg_y<Rope_Psition_Y1 - 120-50)
 			 {
 				 SetBasicMotionParameters(CalStepDistance(Rope_Psition_Y1 - 120,location_data.current_position.ground_leg_y,300,kAnyLegMove)
-				  ,100,0,kBothUnStablity,kSpeedFirst);     
+				  ,100,0,kBothUnStablity,kLocationFirst);     
 				 break;
 			 }
 			 	kMachineAState = kCrossTheFirstRope;
@@ -228,13 +228,33 @@ void WalkPlan()
 				                        ,100,0,kBothUnStablity,kSpeedFirst);
 				break;
 			}
-			kMachineAState = kStopAtPost;
+			kMachineAState = kClamberMode;
+			machineA_general_data.stage_step_number = 1;
+		
+		case kClamberMode: 
+			 leg_state_data.leg_state_number_pre = 2;
+      if(machineA_general_data.stage_step_number == 1)
+			{
+			  SetBasicMotionParameters(0,100,0,kBothUnStablity,kClamberPrepare);
+				if(kLegState == kHighLegMove)
+				{
+					DM_MoveInfo.distance_data.target_distance = (Aluminum_Tube_Width/2 + 15)/DM_radio;
+				}
+				else
+				{
+					DM_MoveInfo.distance_data.target_distance = -(Aluminum_Tube_Width/2 + 15)/DM_radio;
+				}
+				break;
+			}
+			kMachineAState = kClamberReady;
 			machineA_general_data.stage_step_number = 1;
 			
-	  case kStopAtPost: 
-      RMStopMove();
-      DMStopMove();
-   		kMachineAGeneralState = kNeedToRestart;
+		case kClamberReady:     
+      kMachineAGeneralState = kClamberModeWaiting;	
+		break;
+		
+	  case kClamber:          
+	  case kReachSummit:         
 		
 		default:
 			break;

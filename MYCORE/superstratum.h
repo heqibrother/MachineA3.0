@@ -12,14 +12,17 @@
 #include "hust_math_lib.h"
 #include "report_messages.h"
 #include "testmode.h"
+#include "securitydetection.h"
 
 /***A车宏观状态***/
 typedef enum
 {
   kWaitToStart,//没有任何触发
 	kNormalWalk,//正常行走
+	kClamberModeWaiting,//处于上坡前的等待模式，等待启动
 	kNeedToRestart,//触发了急停，恢复重启姿态
 	kWaitToRestart,//已经恢复重启姿态，等待触发启动
+	kWaitCommand,//等待指令
 	kTestMode,//测试模式
 	kMachineError,//报错
 }MachineAGeneralState;

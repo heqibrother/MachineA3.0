@@ -42,6 +42,7 @@ void JudgeDMSpeedStage()
 	if(JugdeStageTool(DriveMotor.PositionMeasure,DM_MoveInfo.position_data.finish_decelerate_position))
 	{
 		DM_MoveInfo.motor_position = true;
+		DMStopMove();
 	}
 	else if(JugdeStageTool(DriveMotor.PositionMeasure,DM_MoveInfo.position_data.finish_keepspeed_position))
 	{
@@ -64,6 +65,7 @@ void JudgeDMSpeedStage()
 
 void DMStopMove()
 {
+	//securityitem.sMotorState.refresh_flag = true;
 	if(DriveMotor.State!=PIDPOSITION)
 	{
 		DriveMotor.State=PIDPOSITION;
@@ -74,6 +76,7 @@ void DMStopMove()
 
 void DMAccelerate()
 {
+	//securityitem.sMotorState.refresh_flag = true;
 	DriveMotor.State=PIDSPEED;
 	DM_MoveInfo.speed_data.current_expected_speed = SuitableAccelerateSpeed();
 	DriveMotor.SpeedExpected = (int16_t)(DM_MoveInfo.speed_data.speed_direction * DM_MoveInfo.speed_data.current_expected_speed);
@@ -81,6 +84,7 @@ void DMAccelerate()
 
 void DMKeepSpeed()
 {
+	//securityitem.sMotorState.refresh_flag = true;
 	DriveMotor.State=PIDSPEED;
 	DM_MoveInfo.speed_data.current_expected_speed = DM_MoveInfo.speed_data.target_position_speed;
 	DriveMotor.SpeedExpected = (int16_t)(DM_MoveInfo.speed_data.speed_direction * DM_MoveInfo.speed_data.current_expected_speed);
@@ -88,6 +92,7 @@ void DMKeepSpeed()
 
 void DMDeccelerate()
 {
+	//securityitem.sMotorState.refresh_flag = true;
 	DriveMotor.State=PIDSPEED;
 	DM_MoveInfo.speed_data.current_expected_speed = SuitableDecelerateSpeed();
 	DriveMotor.SpeedExpected = (int16_t)(DM_MoveInfo.speed_data.speed_direction * DM_MoveInfo.speed_data.current_expected_speed);
@@ -183,4 +188,22 @@ void RefreshMotorDistanceWalked()
 	DM_MoveInfo.position_data.position_left = DM_MoveInfo.speed_data.speed_direction*(DM_MoveInfo.position_data.finish_decelerate_position - DriveMotor.PositionMeasure);
 	if(DM_MoveInfo.position_data.position_left<0)DM_MoveInfo.position_data.position_left = 0;
 	DM_MoveInfo.distance_data.distance_left = CalRealDistance(DM_MoveInfo.position_data.position_left);
+}
+
+void FlexibleMoveDM()
+{
+	if(fabs(DM_MoveInfo.position_data.finish_decelerate_position - DM_MoveInfo.position_data.start_position)>50)
+	{
+		MoveDM();
+	}
+	else
+	{
+		securityitem.sMotorState.refresh_flag = true;
+		DriveMotor.State = PIDPOSITION;
+		DriveMotor.PositionExpected = DM_MoveInfo.position_data.finish_decelerate_position;
+		if(fabs(DriveMotor.PositionMeasure-DriveMotor.PositionExpected)<5)
+		{
+			DM_MoveInfo.motor_position = true;
+		}
+	}
 }

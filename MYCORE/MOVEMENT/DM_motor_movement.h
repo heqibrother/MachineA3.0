@@ -113,4 +113,6 @@ int32_t GetTimeLeft();
  * @status: 2019.4.21
  */
 void RefreshMotorDistanceWalked();
+
+void FlexibleMoveDM();
 #endif

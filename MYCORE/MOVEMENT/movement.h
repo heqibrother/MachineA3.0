@@ -11,7 +11,9 @@
 typedef enum 
 {
 	kSpeedFirst,//速度优先模式，直行电机到位优先，用于直行段
-	kLocationFirst//定位优先模式，确保稳定性，用于踩准步伐，跨绳，台阶等
+	kLocationFirst,//定位优先模式，确保稳定性，用于踩准步伐，跨绳，台阶等
+	kClamberPrepare,//上坡前的预备动作
+	kClamberWorking,//攀登状态
 }MovementStyle;
 
 /***运动模式的类型***/
@@ -109,6 +111,15 @@ typedef enum {//腿状态
 	  kAnyLegMove
 }LegState;
 
+/***腿长的***/
+typedef struct 
+{
+  int16_t right_front;
+	int16_t left_front;
+	int16_t left_behind;
+	int16_t right_behind;
+}LegLength;
+
 /***运动中腿的数据***/
 typedef struct 
 {
@@ -117,6 +128,10 @@ typedef struct
 	int leg_state_number_pre;//记录状态数据，用于腿切换时点的切换
 	int leg_target_state_time;//记录到下一个状态的时间
 	int leg_safe_to_laydown;//1安全 0不安全
+	LegLength leglength_high;
+	LegLength leglength_low;
+	LegLength leglength_high_pre;
+	LegLength leglength_low_pre;
 }LegStateData;
 
 /***运动中腿返回的数据***/
@@ -124,9 +139,10 @@ typedef struct
 {
 	int16_t leg_state_[4] ;//记录每条腿的状态，顺序右前逆时针到右后
 	int leg_state_feedback;//返回的腿状态
-	int crossd_step_state;
+	int16_t crossd_step_state;
 	bool crossed_step ;//判断是否越过台阶
 	bool send_leg_change_flag;
+	bool send_leg_height_change_flag;
 }LegDataFeedback;
 
 //下置引用，确保应用中调用结构体时，结构体已经被声明
@@ -139,7 +155,7 @@ typedef struct
 
 extern MotorMoveState DM_MoveInfo,RM_MoveInfo;
 extern MovementStyle movement_style;
-extern TimePoint time_point_for_speed,time_point_for_location;
+extern TimePoint time_point;
 extern Obstacle obstacle1,obstacle2;
 extern int RM_speed_limit;
 /*********Function declaration*******/
@@ -212,4 +228,9 @@ void SetObstacleLocation(float obstacleposition,float obstaclewidth,Obstacle *ta
  * @status: 2019.4.21
  */
 void RefreshMovementData();
+void CalMovementDataForClamberMode();
+void ClamberWorkingMode();
+void ClamberPrepareMode();
+bool LegCrossOtherLeg();
+
 #endif

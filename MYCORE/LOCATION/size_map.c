@@ -3,17 +3,18 @@
 const float field_direction = 1.0f;
 
 const float DM_radio = 0.57596f;//   66pi（3.141592654）/360  //motor_angle * radio = real distance
-const float RM_radio = 0.265624709472974f;//0.32075f;//34:106 //motor_angle * radio = real angle
+const float RM_radio = 0.265625f;//0.32075f;//34:128 //motor_angle * radio = real angle
 const float RM_angle_min = 3.0f;
-const float RM_angle_max = 63.0f;
+const float RM_angle_max = 70.0f;
 
 const float Half_Length = 275.0f;
 const float Half_Width = 310.0f;
+const float Aluminum_Tube_Width = 25.0f;
 
 
 	 
 	 /*相对定位坐标系*/
-const float Redline_Position_Prepare =1600.0f;//开始准备转向的位置（开始调整步距）
+const float Redline_Position_Prepare =1480.0f;//开始准备转向的位置（开始调整步距）
 const float Initial_Position_Y= 25.0f;
 const float Redline_Position_X1= -510.0f;///-630////-950//-510 //第一次转向位置X
 const float Redline_Position_Y1 =3160.0f;//1000//3160//3950 //第一次转向位置Y
@@ -26,8 +27,8 @@ const float Column_Position_Y2 =4500.0f;
 const float Column_Position_Y3 =6000.0f; 
 const float First_line_restart_X =-680.0f;
 const float First_line_restart_Y =3265.0f;
-const float Second_line_restart_X =610.0f;
-const float Second_line_restart_Y =4600.0f;
+const float Second_line_restart_X =660.0f;
+const float Second_line_restart_Y =4400.0f;
 
 const float Test_position_Y_to_First_rope =890.0f;
 const float Hill_Position_Y =6425.0f;

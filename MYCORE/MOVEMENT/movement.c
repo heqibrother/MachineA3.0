@@ -8,7 +8,7 @@
 
 MotorMoveState DM_MoveInfo,RM_MoveInfo;
 MovementStyle movement_style;
-TimePoint time_point_for_speed,time_point_for_location;
+TimePoint time_point;
 Obstacle obstacle1,obstacle2;
 
 bool ExecutePlan()
@@ -17,7 +17,7 @@ bool ExecutePlan()
 	{
 		case kSpeedFirst:
 			SpeedFirstMode();
-		  if(time_point_for_speed == kAllDone)
+		  if(time_point == kAllDone)
 			{
 				return true;
 			}
@@ -25,7 +25,23 @@ bool ExecutePlan()
 		
 		case kLocationFirst:
 			LocationFirstMode();
-			if(time_point_for_location == kAllDone)
+			if(time_point == kAllDone)
+			{
+				return true;
+			}
+			break;
+			
+		case kClamberPrepare:
+			ClamberPrepareMode();
+			if(time_point == kAllDone)
+			{
+				return true;
+			}
+			break;
+			
+		case kClamberWorking:
+			ClamberWorkingMode();
+			if(time_point == kAllDone)
 			{
 				return true;
 			}
@@ -37,21 +53,21 @@ bool ExecutePlan()
 	return false;
 }
 
-void SpeedFirstMode()
+void ClamberWorkingMode()
 {
-	switch(time_point_for_speed)
+	switch(time_point)
 	{
 		case kBeforeFurtherPlan:
 			CalculateFurtherMovementData();
-		  time_point_for_speed = kBeforeRecoverLeg;
+		  time_point = kBeforeRecoverLeg;
 			//break;
 		
 		case kBeforeRecoverLeg:
 			MoveDM();
-		  MoveRM();
 		  if(DetectLegRecoverPosition())
 			{
-				time_point_for_speed = kBeforeRiseItself;
+				 MoveRM();
+				time_point = kBeforeRiseItself;
 				LegModeChange();//在这一阶段执行，避免反复置位
 			}
 			else break;
@@ -61,7 +77,139 @@ void SpeedFirstMode()
 		  MoveRM();
 		  if(LegPartAnswer())
 			{
-				time_point_for_speed = kBeforeLayDownLegs;
+				time_point = kBeforeSelfCorrection;
+				//LegModeChange();//在这一阶段执行，避免反复置位
+			}
+			else break;
+			
+			case kBeforeSelfCorrection:
+			MoveDM();
+		  MoveRM();
+		  if(LegPartAnswer())
+			{
+				time_point = kBeforeLayDownLegs;
+				//LegModeChange();//在这一阶段执行，避免反复置位
+			}
+			else break;
+			
+		case kBeforeLayDownLegs:
+			MoveDM();
+		  MoveRM();
+			if(TimeToLayDown())
+			{
+				LayDown();
+				time_point = kBeforeDMPosition;
+			}
+			else break;
+		
+		case kBeforeDMPosition:
+			MoveDM();
+		  MoveRM();
+		  if(DM_MoveInfo.motor_position&&RM_MoveInfo.motor_position)
+			{
+				time_point = kBeforeLegTouchGround;
+			}
+			else break;
+			
+		case kBeforeLegTouchGround:
+				kLegState = ChangeLegState(kLegState);
+			   SetSpeedDirection();
+				time_point = kAllDone;
+		
+		case kAllDone:
+				obstacle1.obstacle_exist = false;
+		    obstacle2.obstacle_exist = false;
+			break;
+		
+		default:
+			break;
+	}
+}
+
+void ClamberPrepareMode()
+{
+	switch(time_point)
+	{
+		case kBeforeFurtherPlan:
+			CalMovementDataForClamberMode();
+		  time_point = kBeforeRecoverLeg;
+			//break;
+		
+		case kBeforeRecoverLeg:
+			FlexibleMoveDM();
+		  if(DetectLegRecoverPosition())
+			{
+				 MoveRM();
+				time_point = kBeforeRiseItself;
+				LegModeChange();//在这一阶段执行，避免反复置位
+			}
+			else break;
+		
+		case kBeforeRiseItself:
+			FlexibleMoveDM();
+		  MoveRM();
+		  if(LegPartAnswer())
+			{
+				time_point = kBeforeDMPosition;
+			}
+			else break;
+		
+		case kBeforeDMPosition:
+			FlexibleMoveDM();
+		  MoveRM();
+		  if(DM_MoveInfo.motor_position&&RM_MoveInfo.motor_position
+				&&(DetectLegAllPosition()))//确保腿已经缩到位
+			{
+				time_point = kBeforeLegTouchGround;
+				HighlegLift();
+				kLegState = kLowLegMove;//因为实际腿状态切换为高腿在上，所以只有把状态切换为矮腿，才能执行下面的是否到位判断
+			}
+			else break;
+			
+		case kBeforeLegTouchGround:
+				if(LegPartAnswer()&&DetectLegLayDownPosition())//确保腿站稳
+				{ 
+					kLegState = kHighLegMove;
+					SetSpeedDirection();
+					time_point = kAllDone;
+				}
+				else break;
+		
+		case kAllDone:
+				obstacle1.obstacle_exist = false;
+		    obstacle2.obstacle_exist = false;
+			break;
+		
+		default:
+			break;
+	}
+}
+
+void SpeedFirstMode()
+{
+	switch(time_point)
+	{
+		case kBeforeFurtherPlan:
+			CalculateFurtherMovementData();
+		  time_point = kBeforeRecoverLeg;
+			//break;
+		
+		case kBeforeRecoverLeg:
+			MoveDM();
+		  if(DetectLegRecoverPosition())
+			{
+				MoveRM();
+				time_point = kBeforeRiseItself;
+				LegModeChange();//在这一阶段执行，避免反复置位
+			}
+			else break;
+		
+		case kBeforeRiseItself:
+			MoveDM();
+		  MoveRM();
+		  if(LegPartAnswer())
+			{
+				time_point = kBeforeLayDownLegs;
 			}
 			else break;
 		
@@ -71,7 +219,7 @@ void SpeedFirstMode()
 			if(TimeToLayDown())
 			{
 				LayDown();
-				time_point_for_speed = kBeforeDMPosition;
+				time_point = kBeforeDMPosition;
 			}
 			else break;
 		
@@ -80,14 +228,14 @@ void SpeedFirstMode()
 		  MoveRM();
 		  if(DM_MoveInfo.motor_position&&RM_MoveInfo.motor_position)
 			{
-				time_point_for_speed = kBeforeLegTouchGround;
+				time_point = kBeforeLegTouchGround;
 			}
 			else break;
 			
 		case kBeforeLegTouchGround:
 				kLegState = ChangeLegState(kLegState);
 			   SetSpeedDirection();
-				time_point_for_speed = kAllDone;
+				time_point = kAllDone;
 		
 		case kAllDone:
 				obstacle1.obstacle_exist = false;
@@ -101,42 +249,38 @@ void SpeedFirstMode()
 		
 void LocationFirstMode()
 {
-	switch(time_point_for_location)
+	switch(time_point)
 	{
 		case kBeforeFurtherPlan:
 			CalculateFurtherMovementData();
-		  time_point_for_location = kBeforeRecoverLeg;
+		  time_point = kBeforeRecoverLeg;
 			//break;
 		
 		case kBeforeRecoverLeg:
 		  if(SafeToMoveBeforeRecover())
 			{
 				MoveDM();
-		    MoveRM();
 			}
 			if(DetectLegRecoverPosition())
 			{
-				time_point_for_location = kBeforeRiseItself;
+				MoveRM();
+				time_point = kBeforeRiseItself;
 				LegModeChange();//在这一阶段执行，避免反复置位
 			}
 			else break;
 		
 		case kBeforeRiseItself:
-			if(SafeToMoveBeforeRecover())
-			{
 				MoveDM();
-		    MoveRM();
-			}
-		  
-		  if(LegPartAnswer())
+		    MoveRM(); 
+		  if(LegPartAnswer()&&LegCrossOtherLeg())
 			{
-				time_point_for_location = kBeforeSelfCorrection;
+				time_point = kBeforeSelfCorrection;
 			}
 			else break;
 			
 		case kBeforeSelfCorrection:
 			SelfCorrection();
-			time_point_for_location = kBeforeLayDownLegs;
+			time_point = kBeforeLayDownLegs;
 			//break;
 			
 		case kBeforeLayDownLegs:
@@ -145,7 +289,7 @@ void LocationFirstMode()
 			if(SafeToLayDownBeforePosition()&&TimeToLayDown())
 			{
 				LayDown();
-				time_point_for_location = kBeforeDMPosition;
+				time_point = kBeforeDMPosition;
 			}
 			else break;
 		
@@ -154,7 +298,7 @@ void LocationFirstMode()
 		  MoveRM();
 		  if(DM_MoveInfo.motor_position&&RM_MoveInfo.motor_position)
 			{
-				time_point_for_location = kBeforeLegTouchGround;
+				time_point = kBeforeLegTouchGround;
 			}
 			else break;
 			
@@ -163,7 +307,7 @@ void LocationFirstMode()
 			{
 				kLegState = ChangeLegState(kLegState);
 					SetSpeedDirection();
-				time_point_for_location = kAllDone;
+				time_point = kAllDone;
 			}
 			else break;
 		
@@ -184,6 +328,7 @@ void CalculateFurtherMovementData()
 
 	RM_MoveInfo.position_data.finish_decelerate_position = RotateMotor.PositionMeasure + RM_MoveInfo.speed_data.speed_direction 
 	                                                        * (leg_angle.target_yaw - leg_angle.suspendleg_yaw) / RM_radio;
+	DM_MoveInfo.position_data.start_position = DriveMotor.PositionMeasure;
 	//DM运动部分详细参数计算
   RefreshMovementDataEveryBegining();
 	CalMovementSpeed();
@@ -191,6 +336,24 @@ void CalculateFurtherMovementData()
 	if(2*DM_MoveInfo.speed_data.target_position_speed<400)
 	{
 		RM_speed_limit = (int)(2.0f*DM_MoveInfo.speed_data.target_position_speed);
+	}
+	else
+	{
+		RM_speed_limit = 400;
+	}
+}
+
+void CalMovementDataForClamberMode()
+{	
+	SetSpeedDirection();
+	RM_MoveInfo.position_data.finish_decelerate_position = RM_MoveInfo.position_data.initial_position;
+	//DM运动部分详细参数计算
+  RefreshMovementDataEveryBegining();
+	CalMovementSpeed();
+	CalMovementPosition(&DM_MoveInfo);
+	if(2*DM_MoveInfo.speed_data.target_position_speed<400)
+	{
+		RM_speed_limit = (int)(2.0f*DM_MoveInfo.speed_data.target_position_speed)*DM_MoveInfo.speed_data.speed_direction;
 	}
 	else
 	{
@@ -238,4 +401,13 @@ void SetObstacleLocation(float obstacleposition,float obstaclewidth,Obstacle *ta
 void RefreshMovementData()
 {
 	RefreshLegYaw();
+}
+
+bool LegCrossOtherLeg()
+{
+	if((DriveMotor.PositionMeasure-DM_MoveInfo.position_data.initial_position)*DM_radio*DM_MoveInfo.speed_data.speed_direction > 0)//Aluminum_Tube_Width/2)
+	{
+		return true;
+	}
+	return false;
 }

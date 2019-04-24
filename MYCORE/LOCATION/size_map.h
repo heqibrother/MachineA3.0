@@ -12,6 +12,7 @@ extern const float RM_angle_max;
 
 extern const float Half_Length;
 extern const float Half_Width;
+extern const float Aluminum_Tube_Width;
 
 extern const float Redline_Position_Prepare ;
 extern const float Initial_Position_Y;

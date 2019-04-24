@@ -75,6 +75,53 @@ bool DetectLegLayDownPosition()
 		}
 	return false;
 }
+
+bool DetectLegAllPosition()
+{
+				if(kLegState == kHighLegMove)
+		{
+			if((leg_data_feedback.leg_state_[0] == 1|| leg_data_feedback.leg_state_[0] == 9)
+				 &&(leg_data_feedback.leg_state_[1] == 0|| leg_data_feedback.leg_state_[1] == 8)
+				 &&(leg_data_feedback.leg_state_[2] == 1|| leg_data_feedback.leg_state_[2] == 9)
+			   &&(leg_data_feedback.leg_state_[3] == 0|| leg_data_feedback.leg_state_[3] == 8))
+			{
+				return true;
+			}
+		}
+		else if(kLegState==kLowLegMove)
+		{
+					if((leg_data_feedback.leg_state_[0] == 0|| leg_data_feedback.leg_state_[0] == 8)
+				 &&(leg_data_feedback.leg_state_[1] == 1|| leg_data_feedback.leg_state_[1] == 9)
+				 &&(leg_data_feedback.leg_state_[2] == 0|| leg_data_feedback.leg_state_[2] == 8)
+			   &&(leg_data_feedback.leg_state_[3] == 1|| leg_data_feedback.leg_state_[3] == 9))
+			{
+				return true;
+			}
+		}
+	return false;
+}
+
+LegState DetectLegState()
+{
+		
+			if((leg_data_feedback.leg_state_[0] == 1|| leg_data_feedback.leg_state_[0] == 9)
+				 &&(leg_data_feedback.leg_state_[1] == 0|| leg_data_feedback.leg_state_[1] == 8)
+				 &&(leg_data_feedback.leg_state_[2] == 1|| leg_data_feedback.leg_state_[2] == 9)
+			   &&(leg_data_feedback.leg_state_[3] == 0|| leg_data_feedback.leg_state_[3] == 8))
+			{
+				return kHighLegMove;
+			}
+		else 	if((leg_data_feedback.leg_state_[0] == 0|| leg_data_feedback.leg_state_[0] == 8)
+				 &&(leg_data_feedback.leg_state_[1] == 1|| leg_data_feedback.leg_state_[1] == 9)
+				 &&(leg_data_feedback.leg_state_[2] == 0|| leg_data_feedback.leg_state_[2] == 8)
+			   &&(leg_data_feedback.leg_state_[3] == 1|| leg_data_feedback.leg_state_[3] == 9))
+			{
+				return kLowLegMove;
+			}
+
+	return kAnyLegMove;
+}
+
 bool LegPartAnswer()
 {
 	if(!leg_data_feedback.send_leg_change_flag)
@@ -97,6 +144,13 @@ void HighlegLift()
 	leg_state_data.leg_state_command = 0x1010;
   SendLegCommand();
 }
+
+void ClamberModeLeg()
+{
+	leg_state_data.leg_state_command = 0x1000;
+  SendLegCommand();
+}
+
 void LowlegLift()
 {
 	leg_state_data.leg_state_command = 0x0101;
@@ -213,6 +267,52 @@ void TaskLEGCOMMUNICATION(void *p_arg)
 				//SendLegChange(1,2,3,4);
 				SendLegChange(leg_state_data.leg_state_command,leg_state_data.leg_target_state_time,leg_state_data.leg_state_number,leg_state_data.leg_safe_to_laydown);
 			}
+			if(leg_data_feedback.send_leg_height_change_flag == true)
+			{
+				//SendLegChange(1,2,3,4);
+				SendLegPos(leg_state_data.leglength_low.right_front,
+									 leg_state_data.leglength_low.left_front,
+									 leg_state_data.leglength_low.left_behind,
+									 leg_state_data.leglength_low.right_behind);
+			}
 	  	OSTimeDlyHMSM(0, 0, 0, 5, OS_OPT_TIME_HMSM_STRICT, &err);
 	  }
+}
+
+void LegPrepareForClamber()
+{
+	if(leg_state_data.leg_state_number != 9)
+	{
+	 
+	 leg_state_data.leg_state_number = 9;
+	 SetLegLengthLow(90,50,11,50);
+	 SendLegCommand();
+	 ClamberModeLeg();
+	}
+}
+
+void SetLegLengthHigh(int16_t legrightfront,int16_t legleftfront,int16_t legleftbehind,int16_t legrightbehind)
+{
+	leg_state_data.leglength_high_pre.right_front = legrightfront;
+	leg_state_data.leglength_high_pre.left_front = legleftfront;
+	leg_state_data.leglength_high_pre.left_behind = legleftbehind;
+	leg_state_data.leglength_high_pre.right_behind = legrightbehind;
+	//SendLegLength();
+}
+void SetLegLengthLow(int16_t legrightfront,int16_t legleftfront,int16_t legleftbehind,int16_t legrightbehind)
+{
+	leg_state_data.leglength_low_pre.right_front = legrightfront;
+	leg_state_data.leglength_low_pre.left_front = legleftfront;
+	leg_state_data.leglength_low_pre.left_behind = legleftbehind;
+	leg_state_data.leglength_low_pre.right_behind = legrightbehind;
+	//SendLegLength();
+}
+
+void SendLegLength()
+{
+	leg_state_data.leglength_low.right_front = leg_state_data.leglength_low_pre.right_front;
+	leg_state_data.leglength_low.left_front = leg_state_data.leglength_low_pre.left_front;
+	leg_state_data.leglength_low.left_behind = leg_state_data.leglength_low_pre.left_behind;
+	leg_state_data.leglength_low.right_behind = leg_state_data.leglength_low_pre.right_behind;
+	leg_data_feedback.send_leg_height_change_flag = true;
 }

@@ -48,17 +48,20 @@ bool ConsideStepDistance(float *result,float obstacle_distance,float distance_ho
 	if(obstacle_distance + warning_distance_after_obstacle < distance_hope)//判断是否足以跨绳
 	{
 		*result = distance_hope;
-		return true;
+		return false;
 	}
 	else
 	{
 		if(obstacle_distance - warning_distance_before_obstacle < distance_hope)//判断是否会跃进危险区
 		{
 		  *result = obstacle_distance - warning_distance_before_obstacle;
+			return false;
 		}
 		else 
+		{
 			*result = distance_hope;//不会跃进危险区，保持原状
-		return false;
+		  return true;
+		}
 	}
 	return false;
 }
@@ -68,6 +71,7 @@ float DoubleJudgeCrossRope(float distance_hope,float rope_position1,float rope_p
 	float result = 0;
 	result = CrossRope(distance_hope,rope_position1,ground_leg_position,suspend_leg_position,&obstacle1);
 	result = CrossRope(result,rope_position2,ground_leg_position,suspend_leg_position,&obstacle2);
-	result = CrossRope(result,rope_position1,ground_leg_position,suspend_leg_position,&obstacle1);//用新的步距更新obstacle1标志
+	result = CrossRope(result,rope_position1,ground_leg_position,suspend_leg_position,&obstacle1);//确认可以走的最大步距，更新obstacle1标志
+	result = CrossRope(result,rope_position2,ground_leg_position,suspend_leg_position,&obstacle2);//用新的步距更新obstacle2标志
 	return result;
 }

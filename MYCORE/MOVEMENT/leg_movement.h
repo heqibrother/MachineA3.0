@@ -12,6 +12,7 @@ extern LegState ChangeLegState(LegState klegstate);
 /*********Function declaration*******/
 bool DetectLegRecoverPosition();
 bool DetectLegLayDownPosition();
+bool DetectLegAllPosition();
 bool LegPartAnswer();
 bool TimeToLayDown();
 
@@ -24,4 +25,10 @@ void LowlegLift();
 void LegPartInit();
 int32_t GetTimeLayDownAdvance();
 void SendLegCommand();
+void LegPrepareForClamber();
+void SetLegLengthHigh(int16_t legrightfront,int16_t legleftfront,int16_t legleftbehind,int16_t legrightbehind);
+void SetLegLengthLow(int16_t legrightfront,int16_t legleftfront,int16_t legleftbehind,int16_t legrightbehind);
+void SendLegLength();
+void ClamberModeLeg();
+LegState DetectLegState();
 #endif

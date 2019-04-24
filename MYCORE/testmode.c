@@ -94,10 +94,25 @@ void TestMode()
 
 void TestFirstRedLine()
 {
-	location_data.current_position.lowleg_y = Redline_Position_X1;
+	location_data.current_position.lowleg_x = Redline_Position_X1;
 	location_data.current_position.lowleg_y = Redline_Position_Y1;
 	kMachineAState = kTurnLeft;
 	ChangePositionRecord(kLegState,&location_data.current_position,&DM_MoveInfo);
 	ChangePositionRecord(kLegState,&location_data.motor_position,&DM_MoveInfo);
 	RecordLocation();
+	leg_angle.initial_yaw = leg_angle.original_yaw ;//- 45*field_direction;
+	RefreshLegYaw();
+}
+
+void TestSecondRedLine()
+{
+	location_data.current_position.lowleg_x = Second_line_restart_X;
+	location_data.current_position.lowleg_y = Second_line_restart_Y;
+	kMachineAState = kBeforeTurnRight;
+	leg_state_data.leg_state_number_pre = 7;
+	ChangePositionRecord(kLegState,&location_data.current_position,&DM_MoveInfo);
+	ChangePositionRecord(kLegState,&location_data.motor_position,&DM_MoveInfo);
+	RecordLocation();
+	leg_angle.initial_yaw = leg_angle.original_yaw - 45*field_direction;
+	RefreshLegYaw();
 }

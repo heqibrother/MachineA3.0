@@ -9,6 +9,7 @@ void LegYawInit()
 	leg_angle.lowleg_yaw = 0;
 	leg_angle.target_yaw = 0;
 	leg_angle.initial_yaw = leg_angle.original_yaw;
+	RefreshLegYaw();
 }
 
 float CalYaw()

@@ -32,7 +32,7 @@ void JudgeMovement()
 		machineA_general_data.plan_isok = false;
 		//DMStopMove();//
 		//RMStopMove();
-		kMachineAGeneralState = kNeedToRestart;
+		//kMachineAGeneralState = kWaitCommand;
 	}
 }
 
@@ -71,7 +71,8 @@ void CompetitionInit()
 	MyDelayms(500);
 	kMachineAGeneralState = kWaitToStart;//kWaitDebug;
 	kMachineAState = kBeforeStart;
-	TestFirstRedLine();
+//	TestFirstRedLine();
+	TestSecondRedLine();
 	machineA_general_data.stage_step_number = 1;
 	machineA_general_data.total_step_number = 0;
 }
