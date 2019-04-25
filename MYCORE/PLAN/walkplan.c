@@ -43,7 +43,7 @@ void WalkPlan()
 	  case kBeforeTurnLeft:
        if(location_data.current_position.ground_leg_y<Redline_Position_Y1-50)
 			 {
-         SetBasicMotionParameters(CalStepDistance(Redline_Position_Y1,location_data.current_position.ground_leg_y,300,kLowLegMove)
+         SetBasicMotionParameters(CalStepDistance(Redline_Position_Y1,location_data.current_position.ground_leg_y,300,RedFieldLeg(kLowLegMove))
 				  ,100,0,kBothUnStablity,kSpeedFirst);   
 				 break;
 			 }				 
@@ -112,7 +112,7 @@ void WalkPlan()
      if(location_data.current_position.ground_leg_x<Oblique_PositionTurn_X-50)
 		 {
 			   SetBasicMotionParameters(CalStepDistance(Oblique_PositionTurn_X,location_data.current_position.ground_leg_x,
-			                                             300*arm_cos_f32(60*angle_to_radian_radio),kHighLegMove)/arm_cos_f32(60*angle_to_radian_radio)
+			                                             300*arm_cos_f32(60*angle_to_radian_radio),RedFieldLeg(kHighLegMove))/arm_cos_f32(60*angle_to_radian_radio)
 				  ,100,60*field_direction,kBothUnStablity,kSpeedFirst);   
 				 break;
 		 }

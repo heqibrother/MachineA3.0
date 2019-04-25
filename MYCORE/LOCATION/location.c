@@ -2,7 +2,7 @@
    Responsible for overall locationing
 */
 #include "location.h"
-LocationData location_data;
+LocationData location_data,location_data_test;
 int16_t laser_radar_message[4] = {0};
 
 void RefreshLocation()

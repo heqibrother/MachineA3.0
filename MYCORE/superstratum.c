@@ -81,6 +81,7 @@ void CheckState()
 
 void StateInit()
 {
+	OrgansInit();
 	LegPartInit();
 	LegYawInit();
 	RMPartInit();
@@ -98,7 +99,7 @@ void CompetitionInit()
 	StateInit();
 	leg_state_data.leg_state_number = 2;
 	leg_state_data.leg_safe_to_laydown =1 ;
-	HighlegLift();
+	RedFieldLegLift(kHighLegMove);
 	MyDelayms(500);
 	kMachineAGeneralState = kWaitToStart;//kWaitDebug;
 	kMachineAState = kBeforeStart;

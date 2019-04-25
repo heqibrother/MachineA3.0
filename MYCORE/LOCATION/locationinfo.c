@@ -7,7 +7,8 @@ void RefreshCurrentPosition()
 		case kBeforeStart:
     case kStart:               
     case kBeforeLaserDetect:   
-	  case kBeforeTurnLeft:      
+	  case kBeforeTurnLeft:  
+       GetRelativeLocation(&location_data);			
 	  case kTurnLeft:   
        break;			
 		
@@ -19,14 +20,19 @@ void RefreshCurrentPosition()
 	  case kStepUp:             
 	  case kClimbOverTheStep:      
 	  case kBeforeTurnRight:      
-	  case kTurnRight:       
+	  case kTurnRight:    
+      break;			
+		
 	  case kBothLegTurnRight:     
 	  case kBeforeCrossTheFirstRope:
 	  case kCrossTheFirstRope:  
 	  case kBeforeCrossTheSecondRope:
 	  case kCrossTheSecondRope:
 	  case kArriveThePost:          
-	  case kStopAtPost:           
+	  case kStopAtPost:  
+			GetLaser1Location(&location_data);
+      break;
+		
 		default:
 			break;
 	}

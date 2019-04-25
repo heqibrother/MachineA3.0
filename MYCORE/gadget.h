@@ -15,5 +15,7 @@ extern Organs organ;
 /*********Function declaration*******/
 void OrgansInit();
 void OrganCommand();
+LegState RedFieldLeg(LegState target_leg_state);
+void RedFieldLegLift(LegState target_leg_state);
 
 #endif

@@ -189,7 +189,7 @@ void LegPartInit()
 	leg_state_data.leg_target_state_time = 0;
 	leg_state_data.leg_safe_to_laydown = 1;
 	leg_state_data.leg_state_number = 0;
-	kLegState = kHighLegMove;
+	kLegState = RedFieldLeg(kHighLegMove);
 }
 
 int32_t GetTimeLayDownAdvance()

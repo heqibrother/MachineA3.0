@@ -48,7 +48,7 @@ typedef struct
 	float suspend_leg_before_step;
 }LocationData;
 
-extern LocationData location_data;
+extern LocationData location_data,location_data_test;
 
 #include "size_map.h"
 #include "locationinfo.h"

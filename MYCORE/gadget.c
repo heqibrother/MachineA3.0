@@ -24,3 +24,42 @@ void OrganCommand()
 {
 	SendOrganCommand(organ.take_token_state,organ.take_token_state,0,0);
 }
+
+LegState RedFieldLeg(LegState target_leg_state)
+{
+	if(target_leg_state == kHighLegMove)
+	{
+	   if(field_direction>0)
+	    return kHighLegMove;
+	  else
+		  return kLowLegMove;
+	}
+	else if(target_leg_state == kLowLegMove)
+	{
+		if(field_direction>0)
+	    return kLowLegMove;
+	  else
+		  return kHighLegMove;
+	}
+	kMachineAGeneralState = kMachineError;
+	return kAnyLegMove;
+}
+
+void RedFieldLegLift(LegState target_leg_state)
+{
+		if(target_leg_state == kHighLegMove)
+	{
+	   if(field_direction>0)
+	    HighlegLift();
+	  else
+		  LowlegLift();
+	}
+	else if(target_leg_state == kLowLegMove)
+	{
+		if(field_direction>0)
+	    LowlegLift();
+	  else
+		  HighlegLift();
+	}
+}
+
