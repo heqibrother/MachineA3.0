@@ -22,7 +22,8 @@ typedef enum
   kOnlyAccelerateStability,//只延长加速段
 	kOnlyDecelerateStability,//只延长减速段
 	kBothStability,          //加速段减速段都延长
-	kBothUnStablity          //正常，都不延长
+	kBothUnStablity,          //正常，都不延长
+	kClamberSpecialCurve
 }SpeedMode;//决定加减速时间
 
 /***电机运动位置数据（角度为单位）***/
@@ -232,5 +233,6 @@ void CalMovementDataForClamberMode();
 void ClamberWorkingMode();
 void ClamberPrepareMode();
 bool LegCrossOtherLeg();
+void CalculateClamberMovementData();
 
 #endif

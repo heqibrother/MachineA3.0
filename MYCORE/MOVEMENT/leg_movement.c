@@ -104,17 +104,11 @@ bool DetectLegAllPosition()
 LegState DetectLegState()
 {
 		
-			if((leg_data_feedback.leg_state_[0] == 1|| leg_data_feedback.leg_state_[0] == 9)
-				 &&(leg_data_feedback.leg_state_[1] == 0|| leg_data_feedback.leg_state_[1] == 8)
-				 &&(leg_data_feedback.leg_state_[2] == 1|| leg_data_feedback.leg_state_[2] == 9)
-			   &&(leg_data_feedback.leg_state_[3] == 0|| leg_data_feedback.leg_state_[3] == 8))
+			if(leg_state_data.leg_state_command==0x1010)
 			{
 				return kHighLegMove;
 			}
-		else 	if((leg_data_feedback.leg_state_[0] == 0|| leg_data_feedback.leg_state_[0] == 8)
-				 &&(leg_data_feedback.leg_state_[1] == 1|| leg_data_feedback.leg_state_[1] == 9)
-				 &&(leg_data_feedback.leg_state_[2] == 0|| leg_data_feedback.leg_state_[2] == 8)
-			   &&(leg_data_feedback.leg_state_[3] == 1|| leg_data_feedback.leg_state_[3] == 9))
+		else 	if(leg_state_data.leg_state_command==0x0101)
 			{
 				return kLowLegMove;
 			}
@@ -148,6 +142,12 @@ void HighlegLift()
 void ClamberModeLeg()
 {
 	leg_state_data.leg_state_command = 0x1000;
+  SendLegCommand();
+}
+
+void SteadyLegMode()
+{
+	leg_state_data.leg_state_command = 0x1111;
   SendLegCommand();
 }
 
@@ -275,6 +275,10 @@ void TaskLEGCOMMUNICATION(void *p_arg)
 									 leg_state_data.leglength_low.left_behind,
 									 leg_state_data.leglength_low.right_behind);
 			}
+			if(organ.organ_message_send_flag==true)
+			{
+				SendOrganCommand(organ.take_token_state,organ.take_token_state,0,0);
+			}
 	  	OSTimeDlyHMSM(0, 0, 0, 5, OS_OPT_TIME_HMSM_STRICT, &err);
 	  }
 }
@@ -283,10 +287,11 @@ void LegPrepareForClamber()
 {
 	if(leg_state_data.leg_state_number != 9)
 	{
-	 
+	 MyDelayms(200);
 	 leg_state_data.leg_state_number = 9;
-	 SetLegLengthLow(90,50,11,50);
-	 SendLegCommand();
+		leg_state_data.leg_state_number_pre = 9;
+	 SetLegLengthLow(100,50,20,50);
+	 SendLegLength();
 	 ClamberModeLeg();
 	}
 }

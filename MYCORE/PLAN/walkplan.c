@@ -238,11 +238,11 @@ void WalkPlan()
 			  SetBasicMotionParameters(0,100,0,kBothUnStablity,kClamberPrepare);
 				if(kLegState == kHighLegMove)
 				{
-					DM_MoveInfo.distance_data.target_distance = (Aluminum_Tube_Width/2 + 15)/DM_radio;
+					DM_MoveInfo.distance_data.target_distance = (Aluminum_Tube_Width/2 + 5)/DM_radio;
 				}
 				else
 				{
-					DM_MoveInfo.distance_data.target_distance = -(Aluminum_Tube_Width/2 + 15)/DM_radio;
+					DM_MoveInfo.distance_data.target_distance = -(Aluminum_Tube_Width/2 + 5)/DM_radio;
 				}
 				break;
 			}
@@ -251,11 +251,63 @@ void WalkPlan()
 			
 		case kClamberReady:     
       kMachineAGeneralState = kClamberModeWaiting;	
+		  machineA_general_data.stage_step_number = 1;
 		break;
 		
-	  case kClamber:          
-	  case kReachSummit:         
-		
+	  case kClamber:  
+      if(machineA_general_data.stage_step_number == 1)
+			{
+				 leg_state_data.leg_state_number_pre = 9;
+				SetLegLengthLow(100,75,20,70);
+			  SetBasicMotionParameters(340,150,0,kBothUnStablity,kClamberWorking);
+				break;
+			}
+		 	if(machineA_general_data.stage_step_number == 2)
+			{
+				SetLegLengthLow(60,80,100,50);
+			  SetBasicMotionParameters(300,150,0,kClamberSpecialCurve,kClamberWorking);
+				break;
+			}			
+			if(machineA_general_data.stage_step_number == 3)
+			{
+        SetLegLengthLow(60,60,70,60);
+			  SetBasicMotionParameters(300,150,0,kClamberSpecialCurve,kClamberWorking);
+				break;
+			}
+			if(machineA_general_data.stage_step_number == 4)
+			{
+								leg_state_data.leg_state_number_pre = 5;
+				SetLegLengthLow(50,50,50,50);
+			  SetBasicMotionParameters(300,180,0,kClamberSpecialCurve,kClamberWorking);
+				break;
+			}
+			if(machineA_general_data.stage_step_number == 5)
+			{
+			  SetBasicMotionParameters(300,220,0,kClamberSpecialCurve,kClamberWorking);
+				break;
+			}
+			if(fabs(leg_angle.original_pitch)<4)
+			{
+				kMachineAState = kReachSummit;
+				machineA_general_data.stage_step_number = 1;
+			} 
+			else
+			{
+				SetBasicMotionParameters(300,250,0,kClamberSpecialCurve,kClamberWorking);
+				break;
+			}
+			
+	  case kReachSummit: 
+			if(machineA_general_data.stage_step_number == 1)
+			{
+			  SetBasicMotionParameters(100,100,0,kClamberSpecialCurve,kSpeedFirst);
+				break;
+			}
+        leg_state_data.leg_state_number_pre = 6;
+			  leg_state_data.leg_state_number = 6;
+			  SteadyLegMode();
+			  LegModeChange();	
+        kMachineAGeneralState = kMachineError;			
 		default:
 			break;
 	}

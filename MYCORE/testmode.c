@@ -116,3 +116,16 @@ void TestSecondRedLine()
 	leg_angle.initial_yaw = leg_angle.original_yaw - 45*field_direction;
 	RefreshLegYaw();
 }
+
+void TestClamberMode()
+{
+	location_data.current_position.lowleg_x = Hill_Position_Y+100;
+	location_data.current_position.lowleg_y = Hill_Position_Y+100;
+	kMachineAState = kClamberMode;
+	leg_state_data.leg_state_number_pre = 7;
+	ChangePositionRecord(kLegState,&location_data.current_position,&DM_MoveInfo);
+	ChangePositionRecord(kLegState,&location_data.motor_position,&DM_MoveInfo);
+	RecordLocation();
+	leg_angle.initial_yaw = leg_angle.original_yaw;
+	RefreshLegYaw();
+}

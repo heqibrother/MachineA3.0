@@ -31,4 +31,5 @@ void SetLegLengthLow(int16_t legrightfront,int16_t legleftfront,int16_t legleftb
 void SendLegLength();
 void ClamberModeLeg();
 LegState DetectLegState();
+void SteadyLegMode();
 #endif

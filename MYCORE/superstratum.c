@@ -40,12 +40,42 @@ void CheckState()
 {
 	if(!IsDOORTouched(DOOR1))
 	{
-    kMachineATestItem = kTestFunctionCrossRope;
-		kMachineAGeneralState = kNormalWalk;
+     if(kMachineAState == kArriveThePost)
+		 {
+			 machineA_general_data.plan_isok = false;
+	     DMStopMove();
+		   RMStopMove();
+			 time_point = kAllDone;
+			 kMachineAState = kClamberMode;
+			 kLegState =  DetectLegState();
+			 if(kLegState == kAnyLegMove)kMachineAGeneralState = kMachineError;
+			 machineA_general_data.stage_step_number = 1;
+		 }
 	}
 	if(!IsDOORTouched(DOOR2))
 	{
+		if(kMachineAGeneralState == kWaitToStart)
+		{
+      kMachineATestItem = kTestFunctionCrossRope;
+		  kMachineAGeneralState = kNormalWalk;
+		}
+	}
 
+	if(!IsDOORTouched(DOOR3))
+	{
+		if(kMachineAGeneralState == kClamberModeWaiting&&kMachineAState == kClamberReady)
+		{
+			kMachineAGeneralState = kNormalWalk;
+			kMachineAState = kClamber;
+			time_point = kAllDone; 
+			
+		}
+	}
+	if(!IsDOORTouched(DOOR4))
+	{
+		DMStopMove();
+		RMStopMove();
+		kMachineAGeneralState = kMachineError;
 	}
 }
 
@@ -56,6 +86,7 @@ void StateInit()
 	RMPartInit();
 	DMPartInit();
 	PositionInit();
+	OrgansInit();
 	machineA_general_data.plan_isok = false;
 	leg_data_feedback.crossed_step = false;
 	leg_data_feedback.send_leg_change_flag = false;
@@ -72,7 +103,8 @@ void CompetitionInit()
 	kMachineAGeneralState = kWaitToStart;//kWaitDebug;
 	kMachineAState = kBeforeStart;
 //	TestFirstRedLine();
-	TestSecondRedLine();
+//	TestSecondRedLine();
+	TestClamberMode();
 	machineA_general_data.stage_step_number = 1;
 	machineA_general_data.total_step_number = 0;
 }

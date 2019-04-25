@@ -58,7 +58,7 @@ void ClamberWorkingMode()
 	switch(time_point)
 	{
 		case kBeforeFurtherPlan:
-			CalculateFurtherMovementData();
+			CalculateClamberMovementData();
 		  time_point = kBeforeRecoverLeg;
 			//break;
 		
@@ -68,7 +68,7 @@ void ClamberWorkingMode()
 			{
 				 MoveRM();
 				time_point = kBeforeRiseItself;
-				LegModeChange();//在这一阶段执行，避免反复置位
+				//LegModeChange();//在这一阶段执行，避免反复置位
 			}
 			else break;
 		
@@ -85,10 +85,11 @@ void ClamberWorkingMode()
 			case kBeforeSelfCorrection:
 			MoveDM();
 		  MoveRM();
-		  if(LegPartAnswer())
+		  if(LegPartAnswer()&&LegCrossOtherLeg())
 			{
 				time_point = kBeforeLayDownLegs;
-				//LegModeChange();//在这一阶段执行，避免反复置位
+				LegModeChange();//在这一阶段执行，避免反复置位
+				SendLegLength();
 			}
 			else break;
 			
@@ -321,6 +322,28 @@ void LocationFirstMode()
 	}
 }
 
+
+void CalculateClamberMovementData()
+{
+		SetSpeedDirection();
+	JudgeMovementSafiety();
+
+	RM_MoveInfo.position_data.finish_decelerate_position = RotateMotor.PositionMeasure + RM_MoveInfo.speed_data.speed_direction 
+	                                                        * (leg_angle.target_yaw - leg_angle.suspendleg_yaw) / RM_radio;
+	DM_MoveInfo.position_data.start_position = DriveMotor.PositionMeasure;
+	//DM运动部分详细参数计算
+  RefreshMovementDataEveryBegining();
+	CalMovementSpeed(600);
+	CalMovementPosition(&DM_MoveInfo);
+	if(2*DM_MoveInfo.speed_data.target_position_speed<400)
+	{
+		RM_speed_limit = (int)(2.0f*DM_MoveInfo.speed_data.target_position_speed);
+	}
+	else
+	{
+		RM_speed_limit = 400;
+	}
+}
 void CalculateFurtherMovementData()
 {	
 	SetSpeedDirection();
@@ -331,7 +354,7 @@ void CalculateFurtherMovementData()
 	DM_MoveInfo.position_data.start_position = DriveMotor.PositionMeasure;
 	//DM运动部分详细参数计算
   RefreshMovementDataEveryBegining();
-	CalMovementSpeed();
+	CalMovementSpeed(400);
 	CalMovementPosition(&DM_MoveInfo);
 	if(2*DM_MoveInfo.speed_data.target_position_speed<400)
 	{
@@ -349,7 +372,7 @@ void CalMovementDataForClamberMode()
 	RM_MoveInfo.position_data.finish_decelerate_position = RM_MoveInfo.position_data.initial_position;
 	//DM运动部分详细参数计算
   RefreshMovementDataEveryBegining();
-	CalMovementSpeed();
+	CalMovementSpeed(400);
 	CalMovementPosition(&DM_MoveInfo);
 	if(2*DM_MoveInfo.speed_data.target_position_speed<400)
 	{

@@ -12,6 +12,7 @@ typedef struct
 	float target_yaw;
 	float initial_yaw;//陀螺仪初始绝对角度
 	float original_yaw;//陀螺仪的值
+	float original_pitch;
 }LegAngle;
 
 extern LegAngle leg_angle;

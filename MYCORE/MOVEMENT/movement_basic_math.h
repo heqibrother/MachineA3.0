@@ -43,10 +43,11 @@ void CalMovementPosition(MotorMoveState *motor);
 
 /**
  * @brief: Correction of Expected Speed Based on Step Spacing
+ * @param: max speed expected
  * @return: none
  * @status: 2019.4.21
  */
-void CalMovementSpeed();
+void CalMovementSpeed(int speed_max);
 
 /**
  * @brief: Modification of Angles and Steps Based on Vehicle Size

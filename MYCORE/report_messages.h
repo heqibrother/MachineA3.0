@@ -36,4 +36,5 @@ void ReportLegState();
 void ReportLegStateYaw();
 void ReportStepPosition();
 void ReportPositionX();
+void ReportClamberLegState();
 #endif

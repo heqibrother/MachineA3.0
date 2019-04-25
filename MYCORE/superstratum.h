@@ -13,6 +13,7 @@
 #include "report_messages.h"
 #include "testmode.h"
 #include "securitydetection.h"
+#include "gadget.h"
 
 /***A车宏观状态***/
 typedef enum
@@ -22,7 +23,7 @@ typedef enum
 	kClamberModeWaiting,//处于上坡前的等待模式，等待启动
 	kNeedToRestart,//触发了急停，恢复重启姿态
 	kWaitToRestart,//已经恢复重启姿态，等待触发启动
-	kWaitCommand,//等待指令
+	kWaitCommand = 5,//等待指令
 	kTestMode,//测试模式
 	kMachineError,//报错
 }MachineAGeneralState;

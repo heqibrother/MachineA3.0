@@ -146,6 +146,15 @@ void CalMovementPosition(MotorMoveState *motor)
 																								+ (*speed).speed_direction * CalRealPosition((*distance).distance_all);
 			break;
 		
+		case kClamberSpecialCurve:
+					(*position).finish_accelerate_position = (*position).start_position 
+																								+ (*speed).speed_direction * CalRealPosition((*distance).distance_all /2);
+				 (*position).finish_keepspeed_position = (*position).start_position 
+																							  + (*speed).speed_direction * CalRealPosition((*distance).distance_all  *1/2);
+				 (*position).finish_decelerate_position = (*position).start_position 
+																								+ (*speed).speed_direction * CalRealPosition((*distance).distance_all);
+			break;
+		
 		default:
 			break;
 	}
@@ -156,10 +165,10 @@ void CalMovementPosition(MotorMoveState *motor)
 	(*distance).distance_decelerate = CalRealDistance(fabs((*position).finish_decelerate_position - (*position).finish_keepspeed_position));
 }
 
-void CalMovementSpeed()
+void CalMovementSpeed(int speed_max)
 {
 	float speed_limmit;
-	speed_limmit = DM_MoveInfo.distance_data.distance_all / 600 * 400;//参考60cm可以速度到400不打脚
+	speed_limmit = DM_MoveInfo.distance_data.distance_all / 600 * speed_max;//参考60cm可以速度到400不打脚
 	if(speed_limmit<DM_MoveInfo.speed_data.target_position_speed)
 	{
 	  DM_MoveInfo.speed_data.target_position_speed = speed_limmit;
