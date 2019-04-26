@@ -93,4 +93,6 @@ float CalDMMinSafeDistance();
  * @status: 2019.4.21
  */
 float CalDMMaxSafeDistance();
+float FloatSafeDivision(float divisor);
+int32_t Int32_tSafeDivision(int32_t divisor);//dividend/divisor
 #endif

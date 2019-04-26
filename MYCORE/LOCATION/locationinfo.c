@@ -6,9 +6,11 @@ void RefreshCurrentPosition()
 	{
 		case kBeforeStart:
     case kStart:               
-    case kBeforeLaserDetect:   
+    case kBeforeLaserDetect:  
+      break;
+		
 	  case kBeforeTurnLeft:  
-       GetRelativeLocation(&location_data);			
+       GetLaser1Location(&location_data);			
 	  case kTurnLeft:   
        break;			
 		
@@ -30,7 +32,7 @@ void RefreshCurrentPosition()
 	  case kCrossTheSecondRope:
 	  case kArriveThePost:          
 	  case kStopAtPost:  
-			GetLaser1Location(&location_data);
+			GetRelativeLocation(&location_data);
       break;
 		
 		default:
@@ -47,7 +49,7 @@ void GetRelativeLocation(LocationData *locationdata)
 	PositionDataType *position =&(*locationdata).current_position;
 	(*location).x = field_direction * (*locationdata).relative_data_x - Camera_System_x  -field_direction*CalOpositionX(Rplidar_position_X,Rplidar_position_Y,kHighLegMove);
 	(*location).y =  (*locationdata).relative_data_y - Camera_System_y  -field_direction*CalOpositionY(Rplidar_position_X,Rplidar_position_Y,kHighLegMove);
-	if(kLegState == kHighLegMove)
+	if(kLegState == kLowLegMove)
 	{
 		if((*location).ShouldBeTrusted)
 		{
@@ -56,13 +58,13 @@ void GetRelativeLocation(LocationData *locationdata)
 			(*location).ShouldBeTrusted = false;
 		}
 	}
-	else if(kLegState == kLowLegMove)
+	else if(kLegState == kHighLegMove)
 	{
 				if((*location).ShouldBeTrusted)
 		{
 		  (*position).highleg_y = (*location).y;
 		  (*position).highleg_x =  (*location).x;
-		  ChangePositionRecord(kHighLegMove,position,&DM_MoveInfo);
+		  ChangePositionRecord(kLowLegMove,position,&DM_MoveInfo);
 			(*location).ShouldBeTrusted = false;
 		}
 	}
@@ -74,7 +76,7 @@ void GetLaser1Location(LocationData *locationdata)
 	LocationDataType *location =&(*locationdata).laser1_position;
 	PositionDataType *position =&(*locationdata).current_position;
 	(*location).y = Hill_Position_Y - (*locationdata).laser1_data -CalOpositionY(Rplidar_position_X,Rplidar_position_Y,kHighLegMove);
-	if(kLegState == kHighLegMove)
+	if(kLegState == kLowLegMove)
 	{
 		if((*location).ShouldBeTrusted)
 		{
@@ -83,13 +85,13 @@ void GetLaser1Location(LocationData *locationdata)
 			(*location).ShouldBeTrusted = false;
 		}
 	}
-	else if(kLegState == kLowLegMove)
+	else if(kLegState == kHighLegMove)
 	{
 				if((*location).ShouldBeTrusted)
 		{
 		  (*position).highleg_y = (*location).y;
 		  (*position).highleg_x = field_direction * (*location).x;
-		  ChangePositionRecord(kHighLegMove,position,&DM_MoveInfo);
+		  ChangePositionRecord(kLowLegMove,position,&DM_MoveInfo);
 			(*location).ShouldBeTrusted = false;
 		}
 	}
@@ -100,7 +102,7 @@ void GetLaserRadarLocation(LocationData *locationdata)
 	LocationDataType *location =&(*locationdata).laser_radar_position;
 	PositionDataType *position =&(*locationdata).current_position;
 	(*location).y = Hill_Position_Y - (*locationdata).laser_radar_data_y -CalOpositionY(Rplidar_position_X,Rplidar_position_Y,kHighLegMove);
-	if(kLegState == kHighLegMove)
+	if(kLegState == kLowLegMove)
 	{
 		if((*location).ShouldBeTrusted)
 		{
@@ -108,12 +110,12 @@ void GetLaserRadarLocation(LocationData *locationdata)
 			(*location).ShouldBeTrusted = false;
 		}
 	}
-	else if(kLegState == kLowLegMove)
+	else if(kLegState == kHighLegMove)
 	{
 				if((*location).ShouldBeTrusted)
 		{
 		  (*position).highleg_y = (*location).y;
-		  ChangePositionRecord(kHighLegMove,position,&DM_MoveInfo);
+		  ChangePositionRecord(kLowLegMove,position,&DM_MoveInfo);
 			(*location).ShouldBeTrusted = false;
 		}
 	}

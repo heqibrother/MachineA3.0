@@ -7,6 +7,10 @@ void MakePlan()
 {
 	switch(kMachineAGeneralState)
 	{
+		case kStartingPre:
+			StartPreMode();
+			break;
+		
 		case kNormalWalk:
 			if(LastWalkOver())
 			{
@@ -30,7 +34,7 @@ void MakePlan()
 
 void SetBasicMotionParameters(float targetpositiondistance,float targetpositionspeed,float targetyaw,SpeedMode speedmode,MovementStyle movementstyle)
 {
-	DM_MoveInfo.distance_data.target_distance = targetpositiondistance/2;
+	DM_MoveInfo.distance_data.target_distance = targetpositiondistance/2.0f;
 	DM_MoveInfo.speed_data.target_position_speed = targetpositionspeed;
 	leg_angle.target_yaw = targetyaw;
 	DM_MoveInfo.speed_data.speed_mode = speedmode;

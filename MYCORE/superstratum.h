@@ -19,6 +19,7 @@
 typedef enum
 {
   kWaitToStart,//没有任何触发
+	kStartingPre,
 	kNormalWalk,//正常行走
 	kClamberModeWaiting,//处于上坡前的等待模式，等待启动
 	kNeedToRestart,//触发了急停，恢复重启姿态
@@ -27,6 +28,17 @@ typedef enum
 	kTestMode,//测试模式
 	kMachineError,//报错
 }MachineAGeneralState;
+
+/***划分阶段***/
+typedef enum
+{
+  kStage1,
+  kStage2,
+	kStage3,
+	kStage4,
+	kStage5,
+	kStage6,
+}Stage;
 
 /***A车行进阶段***/
 typedef enum{        //A车状态
@@ -64,6 +76,8 @@ typedef struct
 	int total_step_number;//记录行动总步数
 	int stage_step_number;//记录行走的每一个阶段的步数
 	bool plan_isok;
+	int32_t start_time;
+	Stage stage;
 }MachineAGeneralData;
 
 extern MachineAGeneralState kMachineAGeneralState;
@@ -111,4 +125,6 @@ void CompetitionInit();
  * @status: 2019.4.22
  */
 void CompetitionMode();
+
+void FormalStart();
 #endif

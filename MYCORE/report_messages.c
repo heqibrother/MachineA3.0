@@ -2,9 +2,9 @@
 
 void ReportMessage()
 {
-	ReportCurve();
+	//ReportCurve();
   //ReportPositionX();
-	//ReportPositionY();
+	ReportPositionY();
 //	ReportClamberLegState();
 	//ReportLegStateYaw();
 	//ReportStepPosition();
@@ -25,7 +25,7 @@ void ReportPositionY()
 	SendFrame.Data.floats_ts[2] = location_data.current_position.ground_leg_y;//relative_position_y;
 	SendFrame.Data.floats_ts[3] = location_data.current_position.suspend_leg_y;		
 	SendFrame.Data.floats_ts[4] = kMachineAState;
-	SendFrame.Data.floats_ts[5] = leg_data_feedback.leg_state_[0];
+	SendFrame.Data.floats_ts[5] = DM_MoveInfo.distance_data.target_distance;
 	SendFrame.Data.floats_ts[6] = leg_state_data.leg_state_number;
 	SendFrame.Data.floats_ts[7] = leg_state_data.leg_state_number_pre;	
 	SendFrame.Data.floats_ts[8] =  leg_data_feedback.send_leg_height_change_flag;	

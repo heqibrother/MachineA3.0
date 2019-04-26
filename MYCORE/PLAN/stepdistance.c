@@ -28,14 +28,14 @@ float CalStepDistance(float targetposition,float currentposition,float distanceh
 		required_step_number = CalStepNumber(distance_all,distancehope,0,&resultbuf2);
 		result = CompareMax(resultbuf1,resultbuf2);
 	}
-	if(targetleg == kLegState)
+	if(targetleg != kLegState)//注意，此时悬空腿是还未走的，所以与目标落地腿相差偶数腿数
 	{
-		if(targetposition - currentposition<CalDMMaxSafeDistance())return (targetposition - currentposition);
+		if(targetposition - currentposition<350)return (targetposition - currentposition);
 	  required_step_number = CalStepNumber(distance_all,distancehope,0,&result);
 	}
 	else
 	{
-		if(targetposition - currentposition<CalDMMaxSafeDistance())return (targetposition - currentposition);
+		if(targetposition - currentposition<350)return (targetposition - currentposition);
 		required_step_number = CalStepNumber(distance_all,distancehope,1,&result);
 	}
 	return result;

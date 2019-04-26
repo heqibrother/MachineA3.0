@@ -47,6 +47,7 @@ void WalkPlan()
 				  ,100,0,kBothUnStablity,kSpeedFirst);   
 				 break;
 			 }				 
+			  kMachineAGeneralState = kMachineError;
 			 	kMachineAState = kTurnLeft;
 				machineA_general_data.stage_step_number = 1;
 			 

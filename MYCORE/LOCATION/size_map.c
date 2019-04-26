@@ -1,6 +1,6 @@
 #include "size_map.h"
 
-const float field_direction = 1.0f;
+const float field_direction = -1.0f;
 
 const float DM_radio = 0.57596f;//   66pi（3.141592654）/360  //motor_angle * radio = real distance
 const float RM_radio = 0.265625f;//0.32075f;//34:128 //motor_angle * radio = real angle
@@ -10,7 +10,7 @@ const float RM_angle_max = 70.0f;
 const float Half_Length = 275.0f;
 const float Half_Width = 310.0f;
 const float Aluminum_Tube_Width = 25.0f;
-
+const float laser_radio = 1.625;  //6.5:4
 
 	 
 	 /*相对定位坐标系*/
@@ -48,4 +48,4 @@ const float Rplidar_position_Y =610.0f;//圆心
 const float Rplidar_diameter =70.0f;
 
 const float camera_position_x = 0.0f;
-const float camera_position_y = -50.0f;
+const float camera_position_y = -20.0f;

@@ -87,6 +87,12 @@ void TestMode()
 		  kMachineATestItem = kWaitDebug;
 			break;
 		
+		case kTestCommuniction:
+			SendOrganCommand(test_value[0],test_value[1],test_value[2],0);
+		  organ.organ_message_send_flag = true;
+			kMachineATestItem = kWaitDebug;
+			break;
+		
 		default:
 			break;
 	}
@@ -94,6 +100,7 @@ void TestMode()
 
 void TestFirstRedLine()
 {
+		leg_state_data.leg_state_number = 2;
 	location_data.current_position.lowleg_x = Redline_Position_X1;
 	location_data.current_position.lowleg_y = Redline_Position_Y1;
 	kMachineAState = kTurnLeft;
@@ -106,6 +113,7 @@ void TestFirstRedLine()
 
 void TestSecondRedLine()
 {
+		leg_state_data.leg_state_number = 7;
 	location_data.current_position.lowleg_x = Second_line_restart_X;
 	location_data.current_position.lowleg_y = Second_line_restart_Y;
 	kMachineAState = kBeforeTurnRight;
@@ -119,10 +127,11 @@ void TestSecondRedLine()
 
 void TestClamberMode()
 {
-	location_data.current_position.lowleg_x = Hill_Position_Y+100;
+		leg_state_data.leg_state_number = 2;
+	location_data.current_position.lowleg_x = Hill_Position_X+100;
 	location_data.current_position.lowleg_y = Hill_Position_Y+100;
-	kMachineAState = kClamberMode;
-	leg_state_data.leg_state_number_pre = 7;
+	kMachineAState = kBeforeStart;
+	leg_state_data.leg_state_number_pre = 2;
 	ChangePositionRecord(kLegState,&location_data.current_position,&DM_MoveInfo);
 	ChangePositionRecord(kLegState,&location_data.motor_position,&DM_MoveInfo);
 	RecordLocation();

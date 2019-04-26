@@ -264,6 +264,7 @@ void LocationFirstMode()
 			}
 			if(DetectLegRecoverPosition())
 			{
+				MoveDM();
 				MoveRM();
 				time_point = kBeforeRiseItself;
 				LegModeChange();//在这一阶段执行，避免反复置位
@@ -393,8 +394,9 @@ bool SafeToMoveBeforeRecover()
 
 bool SafeToLayDownBeforePosition()
 {
-	if((2*(DM_MoveInfo.distance_data.distance_all - DM_MoveInfo.distance_data.distance_left)>obstacle1.obstacle_location||!obstacle1.obstacle_exist)
-		&&(2*(DM_MoveInfo.distance_data.distance_all - DM_MoveInfo.distance_data.distance_left)>obstacle2.obstacle_location||!obstacle2.obstacle_exist))return true;
+	if(DM_MoveInfo.motor_position)return true;
+//	if((2*(DM_MoveInfo.distance_data.distance_all - DM_MoveInfo.distance_data.distance_left)>obstacle1.obstacle_location||!obstacle1.obstacle_exist)
+//		&&(2*(DM_MoveInfo.distance_data.distance_all - DM_MoveInfo.distance_data.distance_left)>obstacle2.obstacle_location||!obstacle2.obstacle_exist))return true;
 	return false;
 }
 

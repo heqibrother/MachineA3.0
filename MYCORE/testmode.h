@@ -12,7 +12,8 @@ typedef enum
 	kTestMotorLocation,//测试电机定位
 	kTestStepDistanceCal,//测试定位步距计算是否准确
 	kTestFunctionCalStepDistance,//测试函数
-	kTestFunctionCrossRope,
+	kTestFunctionCrossRope = 5,
+	kTestCommuniction,
 }MachineATestItem;
 
 extern MachineATestItem kMachineATestItem;

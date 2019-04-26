@@ -54,10 +54,11 @@ void CheckState()
 	}
 	if(!IsDOORTouched(DOOR2))
 	{
-		if(kMachineAGeneralState == kWaitToStart)
-		{
+		if(kMachineAGeneralState == kWaitToStart&&kMachineAGeneralState != kStartingPre)
+		{			
+			machineA_general_data.stage = kStage1;
       kMachineATestItem = kTestFunctionCrossRope;
-		  kMachineAGeneralState = kNormalWalk;
+		  kMachineAGeneralState = kStartingPre;
 		}
 	}
 
@@ -81,6 +82,7 @@ void CheckState()
 
 void StateInit()
 {
+  //MotorOff(CAN2);
 	OrgansInit();
 	LegPartInit();
 	LegYawInit();
@@ -91,21 +93,76 @@ void StateInit()
 	machineA_general_data.plan_isok = false;
 	leg_data_feedback.crossed_step = false;
 	leg_data_feedback.send_leg_change_flag = false;
-	
+	leg_state_data.leg_safe_to_laydown =1 ;
 }
 
 void CompetitionInit()
 {
 	StateInit();
-	leg_state_data.leg_state_number = 2;
-	leg_state_data.leg_safe_to_laydown =1 ;
-	RedFieldLegLift(kHighLegMove);
-	MyDelayms(500);
 	kMachineAGeneralState = kWaitToStart;//kWaitDebug;
-	kMachineAState = kBeforeStart;
 //	TestFirstRedLine();
 //	TestSecondRedLine();
-	TestClamberMode();
+	FormalStart();
+//	TestClamberMode();
 	machineA_general_data.stage_step_number = 1;
 	machineA_general_data.total_step_number = 0;
+}
+
+void FormalStart()
+{
+	leg_state_data.leg_state_number = 2;
+	SteadyLegMode();
+	location_data.current_position.lowleg_x = Redline_Position_X1;
+	location_data.current_position.lowleg_y = 0;
+	location_data.current_position.highleg_x = Redline_Position_X1;
+	location_data.current_position.highleg_y = 35;
+	kMachineAState = kBeforeStart;
+	leg_state_data.leg_state_number_pre = 2;
+	ChangePositionRecord(kLegState,&location_data.current_position,&DM_MoveInfo);
+	ChangePositionRecord(kLegState,&location_data.motor_position,&DM_MoveInfo);
+	RecordLocation();
+	leg_angle.initial_yaw = leg_angle.original_yaw;
+	RefreshLegYaw();
+}
+
+void StartPreMode()
+{
+	switch(machineA_general_data.stage)
+	{
+		case kStage1:
+		 leg_state_data.leg_state_number = 2;
+	   SteadyLegMode();
+		 machineA_general_data.start_time = MyGetTime();
+		 machineA_general_data.stage = kStage2;
+		
+		case kStage2:
+			if(MyGetTime() - machineA_general_data.start_time>200)
+			{
+				TakeToken();
+				machineA_general_data.stage = kStage3;
+				machineA_general_data.start_time = MyGetTime();
+			}
+			else break;
+				
+		case kStage3:
+			if(MyGetTime() - machineA_general_data.start_time>200)
+			{
+				machineA_general_data.stage = kStage4;
+				RedFieldLegLift(kHighLegMove);
+				machineA_general_data.start_time = MyGetTime();
+			}
+			else break;
+		
+		case kStage4:
+			//HighlegLift();
+		if(DetectLegRecoverPosition())
+		{
+		  machineA_general_data.stage = kStage5;
+			kMachineAGeneralState = kNormalWalk;
+		}
+			break;
+		
+		default:
+			break;
+	}
 }

@@ -104,10 +104,10 @@ float SuitableAccelerateSpeed()
 	int32_t time_walked = 0;
 	time_walked = LookUpDMTimeTable(DM_MoveInfo.distance_data.distance_walked/DM_MoveInfo.distance_data.distance_accelerate)*DM_MoveInfo.time_data.accelerate_time;
 	if(DM_MoveInfo.time_data.accelerate_time!=0)
-	result = DM_MoveInfo.speed_data.target_position_speed * LookUpDMSpeedTable((float)time_walked/DM_MoveInfo.time_data.accelerate_time);
+	result = DM_MoveInfo.speed_data.target_position_speed * LookUpDMSpeedTable((float)time_walked/(float)Int32_tSafeDivision(DM_MoveInfo.time_data.accelerate_time));
 	
-	if(result<DM_MoveInfo.speed_data.target_position_speed/20)
-	return DM_MoveInfo.speed_data.target_position_speed/20;
+	if(result<DM_MoveInfo.speed_data.target_position_speed/20.0f)
+	return DM_MoveInfo.speed_data.target_position_speed/20.0f;
 	return result;
 }
 
@@ -117,9 +117,9 @@ float SuitableDecelerateSpeed()
 	int32_t time_left = 0;
 	time_left = LookUpDMTimeTable(DM_MoveInfo.distance_data.distance_left/DM_MoveInfo.distance_data.distance_decelerate)*DM_MoveInfo.time_data.decelerate_time;
 	if(DM_MoveInfo.time_data.decelerate_time!=0)
-	result = DM_MoveInfo.speed_data.target_position_speed * LookUpDMSpeedTable((float)time_left/DM_MoveInfo.time_data.decelerate_time);
-		if(result<DM_MoveInfo.speed_data.target_position_speed/20)
-	return DM_MoveInfo.speed_data.target_position_speed/20;
+	result = DM_MoveInfo.speed_data.target_position_speed * LookUpDMSpeedTable((float)time_left/(float)Int32_tSafeDivision(DM_MoveInfo.time_data.decelerate_time));
+		if(result<DM_MoveInfo.speed_data.target_position_speed/20.0f)
+	return DM_MoveInfo.speed_data.target_position_speed/20.0f;
 	return result;
 }
 
@@ -139,17 +139,17 @@ int32_t GetTimeLeft()
 	int32_t result;
 	if(DM_MoveInfo.distance_data.distance_walked>DM_MoveInfo.distance_data.distance_all-DM_MoveInfo.distance_data.distance_decelerate)
 	{//¼õËÙÇø
-		result = (int32_t)(LookUpDMTimeTable(DM_MoveInfo.distance_data.distance_left/DM_MoveInfo.distance_data.distance_decelerate)*DM_MoveInfo.time_data.decelerate_time);
+		result = (int32_t)(LookUpDMTimeTable(DM_MoveInfo.distance_data.distance_left/FloatSafeDivision(DM_MoveInfo.distance_data.distance_decelerate))*DM_MoveInfo.time_data.decelerate_time);
 	}
 	else if(DM_MoveInfo.distance_data.distance_walked>DM_MoveInfo.distance_data.distance_accelerate)
 	{
 		result = (int32_t)((DM_MoveInfo.distance_data.distance_all-DM_MoveInfo.distance_data.distance_decelerate - DM_MoveInfo.distance_data.distance_walked)
-		          /CalRealSpeed(DM_MoveInfo.speed_data.target_position_speed));
+		          /FloatSafeDivision(CalRealSpeed(DM_MoveInfo.speed_data.target_position_speed)));
 		result = result + DM_MoveInfo.time_data.decelerate_time;
 	}
 	else
 	{
-		result = (int32_t)((1.0f-LookUpDMTimeTable(DM_MoveInfo.distance_data.distance_walked/DM_MoveInfo.distance_data.distance_accelerate))*DM_MoveInfo.time_data.accelerate_time);
+		result = (int32_t)((1.0f-LookUpDMTimeTable(DM_MoveInfo.distance_data.distance_walked/FloatSafeDivision(DM_MoveInfo.distance_data.distance_accelerate)))*DM_MoveInfo.time_data.accelerate_time);
 		result = result + DM_MoveInfo.time_data.keepspeed_time + DM_MoveInfo.time_data.decelerate_time;
 	}
 	return result;
@@ -160,7 +160,7 @@ void DMPartInit()
 	DM_MoveInfo.distance_data.target_distance = 0;
 	DM_MoveInfo.speed_data.target_position_speed = 0;
 	SetSpeedDirection();
-	DM_MoveInfo.position_data.initial_position =  + 12.5 / DM_radio ;
+	DM_MoveInfo.position_data.initial_position =  + 12.5f / FloatSafeDivision(DM_radio) ;
 	DM_speed_stage = kStopMove;
 	DM_MoveInfo.motor_position = true;
 }

@@ -277,7 +277,7 @@ void TaskLEGCOMMUNICATION(void *p_arg)
 			}
 			if(organ.organ_message_send_flag==true)
 			{
-				SendOrganCommand(organ.take_token_state,organ.take_token_state,0,0);
+				SendOrganCommand(organ.take_token_state,organ.lift_token_state,organ.camera_angle,0);
 			}
 	  	OSTimeDlyHMSM(0, 0, 0, 5, OS_OPT_TIME_HMSM_STRICT, &err);
 	  }

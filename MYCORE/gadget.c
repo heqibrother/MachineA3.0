@@ -17,12 +17,32 @@ void OrgansInit()
 {
 	organ.take_token_state = 0;
 	organ.lift_token_state = 0;
+	organ.camera_angle = 145;
 	organ.organ_message_send_flag = false;
+}
+
+void SetCamera(int16_t set_angle)
+{
+	organ.camera_angle = set_angle;
+	OrganCommand();
+}
+
+void TakeToken()
+{
+	organ.take_token_state = 1;
+	OrganCommand();
+}
+
+void LiftToken()
+{
+	organ.lift_token_state = 1;
+	OrganCommand();
 }
 
 void OrganCommand()
 {
-	SendOrganCommand(organ.take_token_state,organ.take_token_state,0,0);
+	SendOrganCommand(organ.take_token_state,organ.lift_token_state,organ.camera_angle,0);
+	organ.organ_message_send_flag = true;
 }
 
 LegState RedFieldLeg(LegState target_leg_state)

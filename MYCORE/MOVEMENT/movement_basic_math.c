@@ -34,7 +34,7 @@ float LookUpDMTimeTable(float value_distance) {//已走距离比例
 			{
 				return ((float)i+
             (value_distance - DM_time_left_table[i] ) /
-                (DM_time_left_table[i+1] - DM_time_left_table[i]))/100.0;
+                FloatSafeDivision(DM_time_left_table[i+1] - DM_time_left_table[i]))/100.0f;
 			}
 		}
 	}
@@ -46,7 +46,7 @@ float LookUpDMTimeTable(float value_distance) {//已走距离比例
 			{
 				return ((float)i+
             (value_distance - DM_time_left_table[i] ) /
-                (DM_time_left_table[i+1] - DM_time_left_table[i]))/100.0;
+                FloatSafeDivision(DM_time_left_table[i+1] - DM_time_left_table[i]))/100.0f;
 			}
 		}
 	}
@@ -111,9 +111,9 @@ void CalMovementPosition(MotorMoveState *motor)
 	{
 		case kOnlyAccelerateStability:
 				 (*position).finish_accelerate_position = (*position).start_position 
-																								+ (*speed).speed_direction * CalRealPosition((*distance).distance_all /3);
+																								+ (*speed).speed_direction * CalRealPosition((*distance).distance_all *1.0f/3.0f);
 				 (*position).finish_keepspeed_position = (*position).start_position 
-																							  + (*speed).speed_direction * CalRealPosition((*distance).distance_all *4/5);
+																							  + (*speed).speed_direction * CalRealPosition((*distance).distance_all *4.0f/5.0f);
 				 (*position).finish_decelerate_position = (*position).start_position 
 																								+ (*speed).speed_direction * CalRealPosition((*distance).distance_all);
 				 
@@ -121,36 +121,36 @@ void CalMovementPosition(MotorMoveState *motor)
 		
 		case kOnlyDecelerateStability:
 					(*position).finish_accelerate_position = (*position).start_position 
-																								+ (*speed).speed_direction * CalRealPosition((*distance).distance_all /5);
+																								+ (*speed).speed_direction * CalRealPosition((*distance).distance_all *1.0f/5.0f);
 				 (*position).finish_keepspeed_position = (*position).start_position 
-																							  + (*speed).speed_direction * CalRealPosition((*distance).distance_all *2/3);
+																							  + (*speed).speed_direction * CalRealPosition((*distance).distance_all *2.0f/3.0f);
 				 (*position).finish_decelerate_position = (*position).start_position 
 																								+ (*speed).speed_direction * CalRealPosition((*distance).distance_all);
 			break;
 																	
 		case kBothStability:
 				 (*position).finish_accelerate_position = (*position).start_position 
-																								+ (*speed).speed_direction * CalRealPosition((*distance).distance_all /3);
+																								+ (*speed).speed_direction * CalRealPosition((*distance).distance_all *1.0f/3.0f);
 				 (*position).finish_keepspeed_position = (*position).start_position 
-																							  + (*speed).speed_direction * CalRealPosition((*distance).distance_all *2/3);
+																							  + (*speed).speed_direction * CalRealPosition((*distance).distance_all *2.0f/3.0f);
 				 (*position).finish_decelerate_position = (*position).start_position 
 																								+ (*speed).speed_direction * CalRealPosition((*distance).distance_all);
 			break;
 																																
 		case kBothUnStablity:
 				 (*position).finish_accelerate_position = (*position).start_position 
-																								+ (*speed).speed_direction * CalRealPosition((*distance).distance_all /5);
+																								+ (*speed).speed_direction * CalRealPosition((*distance).distance_all *1.0f/5.0f);
 				 (*position).finish_keepspeed_position = (*position).start_position 
-																							  + (*speed).speed_direction * CalRealPosition((*distance).distance_all *6/7);
+																							  + (*speed).speed_direction * CalRealPosition((*distance).distance_all *6.0f/7.0f);
 				 (*position).finish_decelerate_position = (*position).start_position 
 																								+ (*speed).speed_direction * CalRealPosition((*distance).distance_all);
 			break;
 		
 		case kClamberSpecialCurve:
 					(*position).finish_accelerate_position = (*position).start_position 
-																								+ (*speed).speed_direction * CalRealPosition((*distance).distance_all /2);
+																								+ (*speed).speed_direction * CalRealPosition((*distance).distance_all *1.0f/2.0f);
 				 (*position).finish_keepspeed_position = (*position).start_position 
-																							  + (*speed).speed_direction * CalRealPosition((*distance).distance_all  *1/2);
+																							  + (*speed).speed_direction * CalRealPosition((*distance).distance_all  *1.0f/2.0f);
 				 (*position).finish_decelerate_position = (*position).start_position 
 																								+ (*speed).speed_direction * CalRealPosition((*distance).distance_all);
 			break;
@@ -158,9 +158,9 @@ void CalMovementPosition(MotorMoveState *motor)
 		default:
 			break;
 	}
-	(*time).accelerate_time = (int32_t)(fabs((*position).finish_accelerate_position - (*position).start_position) / ((*speed).target_position_speed*360.0f / 60.0f /1000.0f)/speed_curve_area_radio);
-	(*time).keepspeed_time = (int32_t)(fabs((*position).finish_keepspeed_position - (*position).finish_accelerate_position) / ((*speed).target_position_speed*360.0f / 60.0f/1000.0f));
-	(*time).decelerate_time = (int32_t)(fabs((*position).finish_decelerate_position -(*position).finish_keepspeed_position) / ((*speed).target_position_speed*360.0f / 60.0f/1000.0f)/speed_curve_area_radio);
+	(*time).accelerate_time = (int32_t)(fabs((*position).finish_accelerate_position - (*position).start_position) / FloatSafeDivision((*speed).target_position_speed*360.0f / 60.0f /1000.0f)/speed_curve_area_radio);
+	(*time).keepspeed_time = (int32_t)fabs(((*position).finish_keepspeed_position - (*position).finish_accelerate_position) / FloatSafeDivision((*speed).target_position_speed*360.0f / 60.0f/1000.0f));
+	(*time).decelerate_time = (int32_t)((fabs((*position).finish_decelerate_position -(*position).finish_keepspeed_position) / FloatSafeDivision((*speed).target_position_speed*360.0f / 60.0f/1000.0f)/speed_curve_area_radio));
 	(*distance).distance_accelerate = CalRealDistance(fabs((*position).finish_accelerate_position - (*position).start_position));
 	(*distance).distance_decelerate = CalRealDistance(fabs((*position).finish_decelerate_position - (*position).finish_keepspeed_position));
 }
@@ -168,7 +168,7 @@ void CalMovementPosition(MotorMoveState *motor)
 void CalMovementSpeed(int speed_max)
 {
 	float speed_limmit;
-	speed_limmit = DM_MoveInfo.distance_data.distance_all / 600 * speed_max;//参考60cm可以速度到400不打脚
+	speed_limmit = DM_MoveInfo.distance_data.distance_all / 600.0f * FloatSafeDivision((float)speed_max);//参考60cm可以速度到400不打脚
 	if(speed_limmit<DM_MoveInfo.speed_data.target_position_speed)
 	{
 	  DM_MoveInfo.speed_data.target_position_speed = speed_limmit;
@@ -234,7 +234,7 @@ void JudgeMovementSafiety()
 float CalRealSpeed(float speed)
 {
 	float result = 0;
-	result = speed/60.0f/1000.0f*(360.0f*DM_radio);
+	result = speed/60.0f/1000.0f*(360.0f*FloatSafeDivision(DM_radio));
 	return result;
 }
 
@@ -248,7 +248,7 @@ float CalRealDistance(float position_D_value)
 float CalRealPosition(float distance_D_value)
 {
 	float result = 0;
-	result = distance_D_value/DM_radio;
+	result = distance_D_value/FloatSafeDivision(DM_radio);
 	return result;
 }
 
@@ -270,7 +270,7 @@ float CalDMMaxSafeDistance()
 		}
 		else
 		{
-	    result = (Half_Length-70) - Half_Width / tan((90 - 0.5*fabs(leg_angle.target_yaw - leg_angle.lowleg_yaw))*angle_to_radian_radio);
+	    result = (Half_Length-70) - Half_Width / FloatSafeDivision(tan((90 - 0.5*fabs(leg_angle.target_yaw - leg_angle.lowleg_yaw))*angle_to_radian_radio));
 		}
 	}
 	else if(kLegState == kLowLegMove)
@@ -281,8 +281,29 @@ float CalDMMaxSafeDistance()
 		}
 		else
 		{
-		  result = (Half_Length-70)  - Half_Width / tan((90 - 0.5*fabs(leg_angle.target_yaw - leg_angle.highleg_yaw))*angle_to_radian_radio);
+		  result = (Half_Length-70)  - Half_Width / FloatSafeDivision(tan((90 - 0.5*fabs(leg_angle.target_yaw - leg_angle.highleg_yaw))*angle_to_radian_radio));
 		}
 	}
 	return result;
+}
+
+float FloatSafeDivision(float divisor)//dividend/divisor
+{
+	if(fabs(divisor)<=0.000001f)
+	{
+		if(divisor>0)
+		divisor = 0.000001f;
+		else
+		divisor = -0.000001f;
+	}
+	return divisor;
+}
+
+int32_t Int32_tSafeDivision(int32_t divisor)//dividend/divisor
+{
+	if(divisor==0)
+	{
+    divisor = 1;
+	}
+	return divisor;
 }

@@ -1,7 +1,16 @@
 #include "localcomputing.h"
 void ChangePositionRecord(LegState klegstate,PositionDataType *position,MotorMoveState *motorstate)
 {
-	float DM_direction = (*motorstate).speed_data.speed_direction;
+	float DM_direction = 0.0f;
+		
+	if(klegstate==kHighLegMove)
+	{
+		DM_direction = -1.0f;
+	}
+	else if(klegstate == kLowLegMove)
+	{
+		DM_direction = +1.0f;
+	}
 	if(klegstate==kHighLegMove)
 	{
 		float highleg_position_x1,highleg_position_x2,highleg_position_x3,
