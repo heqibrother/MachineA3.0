@@ -22,4 +22,6 @@ void LiftToken();
 void TakeToken();
 void SetCameraAngle(int16_t set_angle);
 
+void SetCamera(int16_t set_angle);
+
 #endif

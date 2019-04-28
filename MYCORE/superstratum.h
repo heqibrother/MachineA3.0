@@ -127,4 +127,6 @@ void CompetitionInit();
 void CompetitionMode();
 
 void FormalStart();
+
+void StartPreMode();
 #endif

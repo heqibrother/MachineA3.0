@@ -49,6 +49,7 @@ typedef struct
 }LocationData;
 
 extern LocationData location_data,location_data_test;
+extern int16_t laser_radar_message[4];
 
 #include "size_map.h"
 #include "locationinfo.h"

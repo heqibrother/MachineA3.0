@@ -12,7 +12,7 @@ void WalkPlan()
 			  SetBasicMotionParameters(300,100,0,kBothUnStablity,kSpeedFirst);
 				break;
 			}
-			else 	if(machineA_general_data.stage_step_number == 2)
+			else if(machineA_general_data.stage_step_number == 2)
 			{
 			  SetBasicMotionParameters(300,100,0,kBothUnStablity,kSpeedFirst);
 				break;
@@ -32,7 +32,7 @@ void WalkPlan()
       			
 			
     case kBeforeLaserDetect:
-			if(location_data.current_position.ground_leg_y<Redline_Position_Prepare)
+			if(location_data.current_position.ground_leg_y<current_field.first_line_pre_position.y)
 			{
 			  SetBasicMotionParameters(300,100,0,kBothUnStablity,kSpeedFirst);
 				break;
@@ -41,9 +41,9 @@ void WalkPlan()
 				machineA_general_data.stage_step_number = 1;
 
 	  case kBeforeTurnLeft:
-       if(location_data.current_position.ground_leg_y<Redline_Position_Y1-50)
+       if(location_data.current_position.ground_leg_y<current_field.first_line_pre_position.y-50)
 			 {
-         SetBasicMotionParameters(CalStepDistance(Redline_Position_Y1,location_data.current_position.ground_leg_y,300,RedFieldLeg(kLowLegMove))
+         SetBasicMotionParameters(CalStepDistance(current_field.first_line_pre_position.y,location_data.current_position.ground_leg_y,300,RedFieldLeg(kLowLegMove))
 				  ,100,0,kBothUnStablity,kSpeedFirst);   
 				 break;
 			 }				 
@@ -110,9 +110,9 @@ void WalkPlan()
 			{
 				leg_state_data.leg_state_number_pre = 7;
 			}
-     if(location_data.current_position.ground_leg_x<Oblique_PositionTurn_X-50)
+     if(location_data.current_position.ground_leg_x<current_field.second_turn_position.x-50)
 		 {
-			   SetBasicMotionParameters(CalStepDistance(Oblique_PositionTurn_X,location_data.current_position.ground_leg_x,
+			   SetBasicMotionParameters(CalStepDistance(current_field.second_turn_position.x,location_data.current_position.ground_leg_x,
 			                                             300*arm_cos_f32(60*angle_to_radian_radio),RedFieldLeg(kHighLegMove))/arm_cos_f32(60*angle_to_radian_radio)
 				  ,100,60*field_direction,kBothUnStablity,kSpeedFirst);   
 				 break;
@@ -131,7 +131,7 @@ void WalkPlan()
 			machineA_general_data.stage_step_number = 1;
 			
 	  case kBothLegTurnRight:   
-       if(machineA_general_data.stage_step_number == 1&&(location_data.current_position.ground_leg_y<Rope_Psition_Y1 - 100-400))
+       if(machineA_general_data.stage_step_number == 1&&(location_data.current_position.ground_leg_y<current_field.first_rope_position.y -2*Half_Length- 100-400))
 			{
 			  SetBasicMotionParameters(100,100,0,kBothUnStablity,kLocationFirst);
 				break;
@@ -140,9 +140,9 @@ void WalkPlan()
 			machineA_general_data.stage_step_number = 1;			
 			
 	  case kBeforeCrossTheFirstRope:
-			 if(location_data.current_position.ground_leg_y<Rope_Psition_Y1 - 120-50)
+			 if(location_data.current_position.ground_leg_y<current_field.first_rope_position.y-2*Half_Length - 120-50)
 			 {
-				 SetBasicMotionParameters(CalStepDistance(Rope_Psition_Y1 - 120,location_data.current_position.ground_leg_y,300,kAnyLegMove)
+				 SetBasicMotionParameters(CalStepDistance(current_field.first_rope_position.y-2*Half_Length - 120,location_data.current_position.ground_leg_y,300,kAnyLegMove)
 				  ,100,0,kBothUnStablity,kLocationFirst);     
 				 break;
 			 }
@@ -152,7 +152,7 @@ void WalkPlan()
 	  case kCrossTheFirstRope:  
 			if(machineA_general_data.stage_step_number == 1)
 			{
-			  SetBasicMotionParameters(CrossRope(300,Rope_Psition_Y1,location_data.current_position.ground_leg_y,location_data.current_position.suspend_leg_y,&obstacle1)
+			  SetBasicMotionParameters(CrossRope(300,current_field.first_rope_position.y-2*Half_Length,location_data.current_position.ground_leg_y,location_data.current_position.suspend_leg_y,&obstacle1)
 				                          ,100,0,kBothUnStablity,kLocationFirst);	
 				break;
 			}
@@ -160,17 +160,17 @@ void WalkPlan()
 			machineA_general_data.stage_step_number = 1;
 			
 	  case kBeforeCrossTheSecondRope:
-			 if(location_data.current_position.ground_leg_y<Rope_Psition_Y2 - 120-100)
+			 if(location_data.current_position.ground_leg_y<current_field.second_rope_position.y-2*Half_Length - 120-100)
 			{
-					if(location_data.current_position.ground_leg_y>Rope_Psition_Y2 - 100-350)
+					if(location_data.current_position.ground_leg_y>current_field.second_rope_position.y-2*Half_Length  - 100-350)
 					{
-						SetBasicMotionParameters(CrossRope(Rope_Psition_Y2 - 120-location_data.current_position.ground_leg_y,
-						                        Rope_Psition_Y1,location_data.current_position.ground_leg_y,location_data.current_position.suspend_leg_y,&obstacle1)
+						SetBasicMotionParameters(CrossRope(current_field.second_rope_position.y-2*Half_Length  - 90-location_data.current_position.ground_leg_y,
+						                        current_field.first_rope_position.y-2*Half_Length ,location_data.current_position.ground_leg_y,location_data.current_position.suspend_leg_y,&obstacle1)
 				                          ,100,0,kBothUnStablity,kLocationFirst);	
 					}
 					else
 					{
-					SetBasicMotionParameters(CrossRope(350,Rope_Psition_Y1,location_data.current_position.ground_leg_y,location_data.current_position.suspend_leg_y,&obstacle1)
+					SetBasicMotionParameters(CrossRope(350,current_field.first_rope_position.y,location_data.current_position.ground_leg_y,location_data.current_position.suspend_leg_y,&obstacle1)
 																		,100,0,kBothUnStablity,kLocationFirst);	
 					}
 			}
@@ -180,7 +180,7 @@ void WalkPlan()
 	  case kCrossTheSecondRope:
 			if(machineA_general_data.stage_step_number == 1)
 			{
-			  SetBasicMotionParameters(DoubleJudgeCrossRope(300,Rope_Psition_Y1,Rope_Psition_Y2,location_data.current_position.ground_leg_y,location_data.current_position.suspend_leg_y)
+			  SetBasicMotionParameters(DoubleJudgeCrossRope(300,current_field.first_rope_position.y-2*Half_Length,current_field.second_rope_position.y-2*Half_Length,location_data.current_position.ground_leg_y,location_data.current_position.suspend_leg_y)
 				                          ,100,0,kBothUnStablity,kLocationFirst);	
 				break;
 			}
@@ -188,44 +188,44 @@ void WalkPlan()
 			machineA_general_data.stage_step_number = 1;
 			
 	  case kArriveThePost:  
-				if((location_data.current_position.highleg_y>=Hill_Position_Y||location_data.current_position.lowleg_y>=Hill_Position_Y)&&machineA_general_data.stage_step_number<6)
+				if((location_data.current_position.highleg_y>=current_field.hill_position.y||location_data.current_position.lowleg_y>=current_field.hill_position.y)&&machineA_general_data.stage_step_number<6)
 			{
 				machineA_general_data.stage_step_number = 6;
 			}	
 		
 		 	if(machineA_general_data.stage_step_number == 1)
 			{
-			  SetBasicMotionParameters(CrossRope(350,Rope_Psition_Y2,location_data.current_position.ground_leg_y,location_data.current_position.suspend_leg_y,&obstacle1)
+			  SetBasicMotionParameters(CrossRope(350,current_field.second_rope_position.y-2*Half_Length,location_data.current_position.ground_leg_y,location_data.current_position.suspend_leg_y,&obstacle1)
 				                        ,100,0,kBothUnStablity,kSpeedFirst);
 				break;
 			}
 			else 	if(machineA_general_data.stage_step_number == 2)
 			{
-				SetBasicMotionParameters(CrossRope(350,Rope_Psition_Y2,location_data.current_position.ground_leg_y,location_data.current_position.suspend_leg_y,&obstacle1)
+				SetBasicMotionParameters(CrossRope(350,current_field.second_rope_position.y-2*Half_Length,location_data.current_position.ground_leg_y,location_data.current_position.suspend_leg_y,&obstacle1)
 												,100,0,kBothUnStablity,kSpeedFirst);
 				break;
 			} 			
 			else 	if(machineA_general_data.stage_step_number == 3)
 			{
-			  SetBasicMotionParameters(CrossRope(350,Rope_Psition_Y2,location_data.current_position.ground_leg_y,location_data.current_position.suspend_leg_y,&obstacle1)
+			  SetBasicMotionParameters(CrossRope(350,current_field.second_rope_position.y-2*Half_Length,location_data.current_position.ground_leg_y,location_data.current_position.suspend_leg_y,&obstacle1)
 				                        ,100,0,kBothUnStablity,kSpeedFirst);
 				break;
 			}
 			else 	if(machineA_general_data.stage_step_number == 4)
 			{
-			  SetBasicMotionParameters(CrossRope(350,Rope_Psition_Y2,location_data.current_position.ground_leg_y,location_data.current_position.suspend_leg_y,&obstacle1)
+			  SetBasicMotionParameters(CrossRope(350,current_field.second_rope_position.y-2*Half_Length,location_data.current_position.ground_leg_y,location_data.current_position.suspend_leg_y,&obstacle1)
 				                        ,100,0,kBothUnStablity,kSpeedFirst);
 				break;
 			}
 			else 	if(machineA_general_data.stage_step_number == 5)
 			{
-			  SetBasicMotionParameters(CrossRope(350,Rope_Psition_Y2,location_data.current_position.ground_leg_y,location_data.current_position.suspend_leg_y,&obstacle1)
+			  SetBasicMotionParameters(CrossRope(350,current_field.second_rope_position.y-2*Half_Length,location_data.current_position.ground_leg_y,location_data.current_position.suspend_leg_y,&obstacle1)
 				                        ,100,0,kBothUnStablity,kSpeedFirst);
 				break;
 			}
 			else 	if(machineA_general_data.stage_step_number == 6)
 			{
-			  SetBasicMotionParameters(CrossRope(100,Rope_Psition_Y2,location_data.current_position.ground_leg_y,location_data.current_position.suspend_leg_y,&obstacle1)
+			  SetBasicMotionParameters(CrossRope(100,current_field.second_rope_position.y-2*Half_Length,location_data.current_position.ground_leg_y,location_data.current_position.suspend_leg_y,&obstacle1)
 				                        ,100,0,kBothUnStablity,kSpeedFirst);
 				break;
 			}

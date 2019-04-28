@@ -227,7 +227,8 @@ void SpeedFirstMode()
 		case kBeforeDMPosition:
 			MoveDM();
 		  MoveRM();
-		  if(DM_MoveInfo.motor_position&&RM_MoveInfo.motor_position)
+		  if(DM_MoveInfo.motor_position
+				&&RM_MoveInfo.motor_position)
 			{
 				time_point = kBeforeLegTouchGround;
 			}
@@ -394,9 +395,10 @@ bool SafeToMoveBeforeRecover()
 
 bool SafeToLayDownBeforePosition()
 {
-	if(DM_MoveInfo.motor_position)return true;
-//	if((2*(DM_MoveInfo.distance_data.distance_all - DM_MoveInfo.distance_data.distance_left)>obstacle1.obstacle_location||!obstacle1.obstacle_exist)
-//		&&(2*(DM_MoveInfo.distance_data.distance_all - DM_MoveInfo.distance_data.distance_left)>obstacle2.obstacle_location||!obstacle2.obstacle_exist))return true;
+	//if(DM_MoveInfo.motor_position||(!obstacle1.obstacle_exist&&!!obstacle2.obstacle_exist))return true;
+	if(((2*(DM_MoveInfo.distance_data.distance_all - DM_MoveInfo.distance_data.distance_left)>obstacle1.obstacle_location-50||!obstacle1.obstacle_exist)
+		&&(2*(DM_MoveInfo.distance_data.distance_all - DM_MoveInfo.distance_data.distance_left)>obstacle2.obstacle_location-50||!obstacle2.obstacle_exist))
+	||DM_MoveInfo.motor_position)return true;
 	return false;
 }
 

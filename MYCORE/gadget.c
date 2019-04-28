@@ -17,7 +17,7 @@ void OrgansInit()
 {
 	organ.take_token_state = 0;
 	organ.lift_token_state = 0;
-	organ.camera_angle = 145;
+	organ.camera_angle = 165 - field_direction*10;
 	organ.organ_message_send_flag = false;
 }
 

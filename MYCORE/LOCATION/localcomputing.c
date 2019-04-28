@@ -85,3 +85,17 @@ float CalOpositionY(float rela_x,float rela_y,int which_turn)
 
 	return result_a;
 }
+
+void SetLegsInitialPosition(set_x,set_y)//再确认腿状态和方向后使用准确
+{
+	if(field_direction>0)
+	{
+		location_data.current_position.lowleg_x = set_x;
+		location_data.current_position.lowleg_y = set_y;
+	}
+	else
+	{
+		location_data.current_position.highleg_x = set_x;
+		location_data.current_position.highleg_y = set_y;
+	}
+}

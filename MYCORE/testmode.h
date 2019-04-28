@@ -34,4 +34,5 @@ void TestMode();
 void TestFirstRedLine();
 void TestSecondRedLine();
 void TestClamberMode();
+void RestartSecondRedLine();
 #endif

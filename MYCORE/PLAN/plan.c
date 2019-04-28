@@ -27,6 +27,14 @@ void MakePlan()
 			
 			break;
 		
+		case kWaitCommand:
+			if(LastWalkOver())
+			{
+				WalkPlan();
+				machineA_general_data.plan_isok = true;
+			}
+			break;
+		
 		default:
 			break;
 	}

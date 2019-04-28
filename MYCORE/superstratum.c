@@ -12,15 +12,15 @@ void CompetitionMode()
 {
 	UpdateInformation();
 	JudgeMovement();
-	ReportMessage();
+	//ReportMessage();
 }
 
 void UpdateInformation()
 {
-	CheckState();
 	RefreshLocation();
 	RefreshMovementData();
 	MakePlan();
+	CheckState();
 }
 
 void JudgeMovement()
@@ -30,9 +30,9 @@ void JudgeMovement()
 		machineA_general_data.stage_step_number++;
 		machineA_general_data.total_step_number++;
 		machineA_general_data.plan_isok = false;
-		//DMStopMove();//
-		//RMStopMove();
-		//kMachineAGeneralState = kWaitCommand;
+		DMStopMove();//
+		RMStopMove();
+		kMachineAGeneralState = kWaitCommand;
 	}
 }
 
@@ -40,16 +40,17 @@ void CheckState()
 {
 	if(!IsDOORTouched(DOOR1))
 	{
-     if(kMachineAState == kArriveThePost)
+		kMachineAGeneralState = kNormalWalk;
+ //    if(kMachineAState == kArriveThePost)
 		 {
-			 machineA_general_data.plan_isok = false;
-	     DMStopMove();
-		   RMStopMove();
-			 time_point = kAllDone;
-			 kMachineAState = kClamberMode;
-			 kLegState =  DetectLegState();
-			 if(kLegState == kAnyLegMove)kMachineAGeneralState = kMachineError;
-			 machineA_general_data.stage_step_number = 1;
+//			 machineA_general_data.plan_isok = false;
+//	     DMStopMove();
+//		   RMStopMove();
+//			 time_point = kAllDone;
+//			 kMachineAState = kClamberMode;
+//			 kLegState =  DetectLegState();
+//			 if(kLegState == kAnyLegMove)kMachineAGeneralState = kMachineError;
+//			 machineA_general_data.stage_step_number = 1;
 		 }
 	}
 	if(!IsDOORTouched(DOOR2))
@@ -83,6 +84,7 @@ void CheckState()
 void StateInit()
 {
   //MotorOff(CAN2);
+	FieldParaInit();
 	OrgansInit();
 	LegPartInit();
 	LegYawInit();
@@ -101,8 +103,8 @@ void CompetitionInit()
 	StateInit();
 	kMachineAGeneralState = kWaitToStart;//kWaitDebug;
 //	TestFirstRedLine();
-//	TestSecondRedLine();
-	FormalStart();
+	TestSecondRedLine();
+//	FormalStart();
 //	TestClamberMode();
 	machineA_general_data.stage_step_number = 1;
 	machineA_general_data.total_step_number = 0;
@@ -112,10 +114,10 @@ void FormalStart()
 {
 	leg_state_data.leg_state_number = 2;
 	SteadyLegMode();
-	location_data.current_position.lowleg_x = Redline_Position_X1;
-	location_data.current_position.lowleg_y = 0;
-	location_data.current_position.highleg_x = Redline_Position_X1;
-	location_data.current_position.highleg_y = 35;
+	location_data.current_position.lowleg_x = current_field.initial_position.x;
+	location_data.current_position.lowleg_y = current_field.initial_position.y;
+	location_data.current_position.highleg_x = current_field.initial_position.x;
+	location_data.current_position.highleg_y = current_field.initial_position.y+Aluminum_Tube_Width;
 	kMachineAState = kBeforeStart;
 	leg_state_data.leg_state_number_pre = 2;
 	ChangePositionRecord(kLegState,&location_data.current_position,&DM_MoveInfo);
@@ -154,7 +156,6 @@ void StartPreMode()
 			else break;
 		
 		case kStage4:
-			//HighlegLift();
 		if(DetectLegRecoverPosition())
 		{
 		  machineA_general_data.stage = kStage5;

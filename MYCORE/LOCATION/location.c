@@ -7,7 +7,7 @@ int16_t laser_radar_message[4] = {0};
 
 void RefreshLocation()
 {
-	SendLocationInfo();
+	
 	RefreshCurrentPosition();
 }
 
@@ -39,8 +39,8 @@ void RecordLocation()
 
 void SendLocationInfo()
 {
-	laser_radar_message[0] =  -1*field_direction*(Column_Position_X - location_data.motor_position.highleg_x);;
-	laser_radar_message[1] = Hill_Position_Y - CalOpositionY(Rplidar_position_X,Rplidar_position_Y,kHighLegMove) - location_data.motor_position.highleg_y;
+	laser_radar_message[0] =  -1*field_direction*(current_field.first_column.x - location_data.motor_position.highleg_x);;
+	laser_radar_message[1] = current_field.hill_position.y - CalOpositionY(installation.rplidar_position.x,installation.rplidar_position.y,kHighLegMove) - location_data.motor_position.highleg_y;
 	laser_radar_message[2] = leg_angle.highleg_yaw;
 	SendPCData1((short)laser_radar_message[0],(short)laser_radar_message[1],(short)laser_radar_message[2],(short)field_direction);
 	SendPCData2((short)kMachineAState,(short)kLegState,(short)location_data.current_position.highleg_y,(short)location_data.current_position.lowleg_y);
@@ -48,6 +48,6 @@ void SendLocationInfo()
 
 void PositionInit()
 {
-	location_data.current_position.lowleg_x = Redline_Position_X1;
+	location_data.current_position.lowleg_x = current_field.initial_position.x;
 	location_data.current_position.lowleg_y = 0;
 }

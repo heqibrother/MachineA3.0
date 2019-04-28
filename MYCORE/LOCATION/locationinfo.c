@@ -10,6 +10,7 @@ void RefreshCurrentPosition()
       break;
 		
 	  case kBeforeTurnLeft:  
+			GetLaserRadarLocation(&location_data);
        GetLaser1Location(&location_data);			
 	  case kTurnLeft:   
        break;			
@@ -47,8 +48,8 @@ void GetRelativeLocation(LocationData *locationdata)
 {
 	LocationDataType *location =&(*locationdata).relative_position;
 	PositionDataType *position =&(*locationdata).current_position;
-	(*location).x = field_direction * (*locationdata).relative_data_x - Camera_System_x  -field_direction*CalOpositionX(Rplidar_position_X,Rplidar_position_Y,kHighLegMove);
-	(*location).y =  (*locationdata).relative_data_y - Camera_System_y  -field_direction*CalOpositionY(Rplidar_position_X,Rplidar_position_Y,kHighLegMove);
+	//(*location).x = field_direction * (*locationdata).relative_data_x - installation.camera_position.x  -field_direction*CalOpositionX(Rplidar_position_X,Rplidar_position_Y,kHighLegMove);
+	(*location).y =  (*locationdata).relative_data_y - installation.camera_position.y ; //-field_direction*CalOpositionY(installation.rplidar_position.x,installation.rplidar_position.y,kHighLegMove);
 	if(kLegState == kLowLegMove)
 	{
 		if((*location).ShouldBeTrusted)
@@ -72,11 +73,15 @@ void GetRelativeLocation(LocationData *locationdata)
 
 void GetLaser1Location(LocationData *locationdata)
 {
-	GetLaserRadarLocation(locationdata);
+	//GetLaserRadarLocation(locationdata);
 	LocationDataType *location =&(*locationdata).laser1_position;
 	PositionDataType *position =&(*locationdata).current_position;
-	(*location).y = Hill_Position_Y - (*locationdata).laser1_data -CalOpositionY(Rplidar_position_X,Rplidar_position_Y,kHighLegMove);
-	if(kLegState == kLowLegMove)
+	(*location).y = current_field.hill_position.y - (*locationdata).laser1_data -CalOpositionY(installation.rplidar_position.x,installation.rplidar_position.y,kHighLegMove);
+	if(fabs(location_data.laser_radar_position.y - (*location).y )<500)
+	{
+		location_data.laser1_position.ShouldBeTrusted = true;
+	}
+		if(kLegState == kLowLegMove)
 	{
 		if((*location).ShouldBeTrusted)
 		{
@@ -101,7 +106,7 @@ void GetLaserRadarLocation(LocationData *locationdata)
 {
 	LocationDataType *location =&(*locationdata).laser_radar_position;
 	PositionDataType *position =&(*locationdata).current_position;
-	(*location).y = Hill_Position_Y - (*locationdata).laser_radar_data_y -CalOpositionY(Rplidar_position_X,Rplidar_position_Y,kHighLegMove);
+	(*location).y = current_field.hill_position.y - (*locationdata).laser_radar_data_y -CalOpositionY(installation.rplidar_position.x,installation.rplidar_position.y,kHighLegMove);
 	if(kLegState == kLowLegMove)
 	{
 		if((*location).ShouldBeTrusted)
@@ -129,7 +134,7 @@ void GetStepLocationData()
 		if(kLegState == kHighLegMove)
 		{
 			location_data.ground_leg_after_step = fabs(DM_MoveInfo.position_data.finish_decelerate_position - DriveMotor.PositionMeasure)*DM_radio * 2 
-                                      			/ arm_cos_f32((45 - leg_angle.highleg_yaw)*angle_to_radian_radio);
+                                      			/ FloatSafeDivision(arm_cos_f32((45 - leg_angle.highleg_yaw)*angle_to_radian_radio));
 			location_data.ground_leg_before_step = 2*Half_Length - location_data.ground_leg_after_step;
 			location_data.suspend_leg_before_step = fabs(DriveMotor.PositionMeasure - DM_MoveInfo.position_data.initial_position)*DM_radio * 2
 			                                       *arm_cos_f32((45 - leg_angle.highleg_yaw)*angle_to_radian_radio);
@@ -137,7 +142,7 @@ void GetStepLocationData()
 		else
 		{
 			location_data.ground_leg_after_step = fabs(DM_MoveInfo.position_data.finish_decelerate_position - DriveMotor.PositionMeasure)*DM_radio * 2 
-                                      			/ arm_cos_f32((45 - leg_angle.lowleg_yaw)*angle_to_radian_radio);
+                                      			/ FloatSafeDivision(arm_cos_f32((45 - leg_angle.lowleg_yaw)*angle_to_radian_radio));
 			location_data.ground_leg_before_step = 2*Half_Length - location_data.ground_leg_after_step;
 			location_data.suspend_leg_before_step = fabs(DriveMotor.PositionMeasure - DM_MoveInfo.position_data.initial_position)*DM_radio * 2
 			                                       *arm_cos_f32((45 - leg_angle.lowleg_yaw)*angle_to_radian_radio);

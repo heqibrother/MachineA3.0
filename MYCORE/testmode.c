@@ -101,8 +101,11 @@ void TestMode()
 void TestFirstRedLine()
 {
 		leg_state_data.leg_state_number = 2;
-	location_data.current_position.lowleg_x = Redline_Position_X1;
-	location_data.current_position.lowleg_y = Redline_Position_Y1;
+		SteadyLegMode();
+	location_data.current_position.lowleg_x = current_field.first_redline_test.x;
+	location_data.current_position.lowleg_y = current_field.first_redline_test.y;
+	location_data.current_position.highleg_x = current_field.first_redline_test.x;
+	location_data.current_position.highleg_y = current_field.first_redline_test.y;
 	kMachineAState = kTurnLeft;
 	ChangePositionRecord(kLegState,&location_data.current_position,&DM_MoveInfo);
 	ChangePositionRecord(kLegState,&location_data.motor_position,&DM_MoveInfo);
@@ -113,9 +116,30 @@ void TestFirstRedLine()
 
 void TestSecondRedLine()
 {
-		leg_state_data.leg_state_number = 7;
-	location_data.current_position.lowleg_x = Second_line_restart_X;
-	location_data.current_position.lowleg_y = Second_line_restart_Y;
+	SetCamera(165 - field_direction*10);
+	leg_state_data.leg_state_number = 2;
+	leg_state_data.leg_state_number_pre = 8;
+	SteadyLegMode();
+	location_data.current_position.lowleg_x = current_field.second_redline_test.x;
+	location_data.current_position.lowleg_y = current_field.second_redline_test.y+fabs(1.0f-field_direction)*Aluminum_Tube_Width/2;
+	location_data.current_position.highleg_x = current_field.second_redline_test.x;
+	location_data.current_position.highleg_y = current_field.second_redline_test.y+fabs(-1.0f-field_direction)*Aluminum_Tube_Width/2;
+	kMachineAState = kBeforeCrossTheFirstRope;
+	ChangePositionRecord(kLegState,&location_data.current_position,&DM_MoveInfo);
+	ChangePositionRecord(kLegState,&location_data.motor_position,&DM_MoveInfo);
+	RecordLocation();
+	leg_angle.initial_yaw = leg_angle.original_yaw ;//- 45*field_direction;
+	RefreshLegYaw();
+}
+
+void RestartSecondRedLine()
+{
+	leg_state_data.leg_state_number = 2;
+	SteadyLegMode();
+	location_data.current_position.lowleg_x = current_field.second_line_restart.x;
+	location_data.current_position.lowleg_y = current_field.second_line_restart.y;
+	location_data.current_position.highleg_x = current_field.second_line_restart.x;
+	location_data.current_position.highleg_y = current_field.second_line_restart.y;
 	kMachineAState = kBeforeTurnRight;
 	leg_state_data.leg_state_number_pre = 7;
 	ChangePositionRecord(kLegState,&location_data.current_position,&DM_MoveInfo);
@@ -128,8 +152,8 @@ void TestSecondRedLine()
 void TestClamberMode()
 {
 		leg_state_data.leg_state_number = 2;
-	location_data.current_position.lowleg_x = Hill_Position_X+100;
-	location_data.current_position.lowleg_y = Hill_Position_Y+100;
+	location_data.current_position.lowleg_x = current_field.hill_position.x;
+	location_data.current_position.lowleg_y = current_field.hill_position.y+100;
 	kMachineAState = kBeforeStart;
 	leg_state_data.leg_state_number_pre = 2;
 	ChangePositionRecord(kLegState,&location_data.current_position,&DM_MoveInfo);

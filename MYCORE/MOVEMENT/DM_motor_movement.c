@@ -160,9 +160,11 @@ void DMPartInit()
 	DM_MoveInfo.distance_data.target_distance = 0;
 	DM_MoveInfo.speed_data.target_position_speed = 0;
 	SetSpeedDirection();
-	DM_MoveInfo.position_data.initial_position =  + 12.5f / FloatSafeDivision(DM_radio) ;
+	DM_MoveInfo.position_data.initial_position =  field_direction * 12.5f / FloatSafeDivision(DM_radio) ;
 	DM_speed_stage = kStopMove;
 	DM_MoveInfo.motor_position = true;
+	obstacle1.obstacle_exist = false;
+	obstacle2.obstacle_exist = false;
 }
 
 void SetSpeedDirection()
