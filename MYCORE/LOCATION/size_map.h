@@ -14,8 +14,8 @@ typedef struct
 {
 	PointPosition initial_position;
 	PointPosition first_line_pre_position;
-	PointPosition first_line_postition;
-	PointPosition first_redline_postition;
+	PointPosition first_line_position;
+	PointPosition first_redline_position;
 	PointPosition first_line_restart;
 	PointPosition second_line_restart;
 	PointPosition first_rope_position;

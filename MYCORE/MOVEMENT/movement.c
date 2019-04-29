@@ -46,6 +46,14 @@ bool ExecutePlan()
 				return true;
 			}
 			break;
+			
+		case kRestartPrepare:
+			RestartPrepareMode();
+			if(time_point == kAllDone)
+			{
+				return true;
+			}
+			break;
 		
 		default:
 			break;
@@ -116,6 +124,65 @@ void ClamberWorkingMode()
 				kLegState = ChangeLegState(kLegState);
 			   SetSpeedDirection();
 				time_point = kAllDone;
+		
+		case kAllDone:
+				obstacle1.obstacle_exist = false;
+		    obstacle2.obstacle_exist = false;
+			break;
+		
+		default:
+			break;
+	}
+}
+
+void RestartPrepareMode()
+{
+	switch(time_point)
+	{
+		case kBeforeFurtherPlan:
+			CalMovementDataForClamberMode();
+		  time_point = kBeforeRecoverLeg;
+			//break;
+		
+		case kBeforeRecoverLeg:
+			FlexibleMoveDM();
+		  if(DetectLegRecoverPosition())
+			{
+				 MoveRM();
+				time_point = kBeforeRiseItself;
+				LegModeChange();//在这一阶段执行，避免反复置位
+			}
+			else break;
+		
+		case kBeforeRiseItself:
+			FlexibleMoveDM();
+		  MoveRM();
+		  if(LegPartAnswer())
+			{
+				time_point = kBeforeDMPosition;
+			}
+			else break;
+		
+		case kBeforeDMPosition:
+			FlexibleMoveDM();
+		  MoveRM();
+		  if(DM_MoveInfo.motor_position&&RM_MoveInfo.motor_position
+				&&(DetectLegAllPosition()))//确保腿已经缩到位
+			{
+				time_point = kBeforeLegTouchGround;
+				RedFieldLegLift(kHighLegMove);
+				kLegState = RedFieldLeg(kLowLegMove);//因为实际腿状态切换为高腿在上，所以只有把状态切换为矮腿，才能执行下面的是否到位判断
+			}
+			else break;
+			
+		case kBeforeLegTouchGround:
+				if(LegPartAnswer()&&DetectLegLayDownPosition())//确保腿站稳
+				{ 
+					kLegState = kHighLegMove;
+					SetSpeedDirection();
+					time_point = kAllDone;
+				}
+				else break;
 		
 		case kAllDone:
 				obstacle1.obstacle_exist = false;

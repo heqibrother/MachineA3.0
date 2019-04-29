@@ -14,6 +14,7 @@
 #include "testmode.h"
 #include "securitydetection.h"
 #include "gadget.h"
+#include "handlecontrol.h"
 
 /***A车宏观状态***/
 typedef enum
@@ -23,8 +24,8 @@ typedef enum
 	kNormalWalk,//正常行走
 	kClamberModeWaiting,//处于上坡前的等待模式，等待启动
 	kNeedToRestart,//触发了急停，恢复重启姿态
-	kWaitToRestart,//已经恢复重启姿态，等待触发启动
-	kWaitCommand = 5,//等待指令
+	kWaitToRestart= 5,//已经恢复重启姿态，等待触发启动
+	kWaitCommand ,//等待指令
 	kTestMode,//测试模式
 	kMachineError,//报错
 }MachineAGeneralState;
@@ -66,8 +67,8 @@ typedef enum{        //A车状态
 	  kReachSummit,            //登顶
 		kStop,                   //停车
 		kFault,                   //故障状态，准备重启
-		kRestartPrepare,          //重启状态准备
-		kWaitToBeAwaken =25           //等待重启准备
+		kRestartPrepareMode =25,          //重启状态准备
+		kWaitToBeAwaken ,           //等待重启准备
 }MachineAState;
 
 /***A车总体数据***/

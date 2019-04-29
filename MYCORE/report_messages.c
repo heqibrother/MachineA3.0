@@ -46,9 +46,9 @@ void ReportPositionXY()
 		
 		case 2:
 		SendFrame.Data.floats_ts[0] =  location_data.current_position.ground_leg_y;	
-  	SendFrame.Data.floats_ts[1] =  location_data.laser_radar_data_y;	
+  	SendFrame.Data.floats_ts[1] =  location_data.current_position.suspend_leg_y;	
 	  SendFrame.Data.floats_ts[2] = location_data.relative_data_y;
- 		SendFrame.Data.floats_ts[3] = location_data.relative_data_x;
+ 		SendFrame.Data.floats_ts[3] = location_data.laser_radar_data_y;
 		messager_mark = 3;	
 			break;
 		

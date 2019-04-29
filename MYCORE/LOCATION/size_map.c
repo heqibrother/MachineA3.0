@@ -2,7 +2,7 @@
 
 FieldPara current_field;
 InstallationLocation installation;
-const float field_direction = -1.0f;
+const float field_direction = +1.0f;
 
 const float DM_radio = 0.57596f;//   66pi£¨3.141592654£©/360  //motor_angle * radio = real distance
 const float RM_radio = 0.265625f;//0.32075f;//34:128 //motor_angle * radio = real angle
@@ -74,8 +74,8 @@ void RedFieldParaInit()
 	FieldPara *red_field = &current_field;
 	SetFieldPara(&(*red_field).initial_position,-680.0f,0.0f);
 	SetFieldPara(&(*red_field).first_line_pre_position,-680.0f,2160.0f);
-	SetFieldPara(&(*red_field).first_line_postition,-680.0f,3160.0f);
-	SetFieldPara(&(*red_field).first_redline_postition,-680.0f,3400.0f);
+	SetFieldPara(&(*red_field).first_line_position,-680.0f,3160.0f);
+	SetFieldPara(&(*red_field).first_redline_position,-680.0f,3400.0f);
 	SetFieldPara(&(*red_field).first_line_restart,-680.0f,3265.0f);
 	SetFieldPara(&(*red_field).second_line_restart,660.0f,4400.0f);
 	SetFieldPara(&(*red_field).first_rope_position,0.0f,5550.0f);
@@ -94,16 +94,16 @@ void RedFieldParaInit()
 void BlueFieldParaInit()
 {
 	FieldPara *blue_field = &current_field;
-	SetFieldPara(&(*blue_field).initial_position,-680.0f,0.0f);
-	SetFieldPara(&(*blue_field).first_line_pre_position,-680.0f,2160.0f);
-	SetFieldPara(&(*blue_field).first_line_postition,-680.0f,3160.0f);
-	SetFieldPara(&(*blue_field).first_redline_postition,-680.0f,3400.0f);
+	SetFieldPara(&(*blue_field).initial_position,-520.0f,0.0f);
+	SetFieldPara(&(*blue_field).first_line_pre_position,-520.0f,2160.0f);
+	SetFieldPara(&(*blue_field).first_line_position,-680.0f,3120.0f);
+	SetFieldPara(&(*blue_field).first_redline_position,-680.0f,3400.0f);
 	SetFieldPara(&(*blue_field).first_line_restart,-680.0f,3265.0f);
 	SetFieldPara(&(*blue_field).second_line_restart,660.0f,4400.0f);
-	SetFieldPara(&(*blue_field).first_rope_position,0.0f,5560.0f);
-	SetFieldPara(&(*blue_field).second_rope_position,0.0f,6330.0f);
+	SetFieldPara(&(*blue_field).first_rope_position,0.0f,5580.0f);
+	SetFieldPara(&(*blue_field).second_rope_position,0.0f,6340.0f);
 	SetFieldPara(&(*blue_field).second_turn_position,950.0f,0);
-	SetFieldPara(&(*blue_field).hill_position,-1280.0f,6425.0f);
+	SetFieldPara(&(*blue_field).hill_position,-1280.0f,6420.0f);
 	
 	SetFieldPara(&(*blue_field).first_redline_test,950.0f,3265.0f);
 	SetFieldPara(&(*blue_field).second_redline_test,950.0f,current_field.first_rope_position.y - 1000.0f);

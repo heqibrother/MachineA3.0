@@ -14,6 +14,7 @@ typedef enum
 	kLocationFirst,//定位优先模式，确保稳定性，用于踩准步伐，跨绳，台阶等
 	kClamberPrepare,//上坡前的预备动作
 	kClamberWorking,//攀登状态
+	kRestartPrepare,
 }MovementStyle;
 
 /***运动模式的类型***/
@@ -232,6 +233,7 @@ void RefreshMovementData();
 void CalMovementDataForClamberMode();
 void ClamberWorkingMode();
 void ClamberPrepareMode();
+void RestartPrepareMode();
 bool LegCrossOtherLeg();
 void CalculateClamberMovementData();
 

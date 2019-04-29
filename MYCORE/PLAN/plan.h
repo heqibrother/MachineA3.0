@@ -29,4 +29,10 @@ void SetBasicMotionParameters(float targetpositiondistance,float targetpositions
  */
 bool LastWalkOver();
 
+void RestartModePlan();
+void Restart();
+void BeforeStartInitialize();
+void BeforeStepUpInitialize();
+void BeforeTurnRightInitialize();
+void ClamberModeInitialize();
 #endif

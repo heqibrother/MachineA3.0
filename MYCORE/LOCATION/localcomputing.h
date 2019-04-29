@@ -29,4 +29,5 @@ float CalOpositionX(float rela_x,float rela_y,int which_turn);
  * @status: 2019.4.21
  */
 float CalOpositionY(float rela_x,float rela_y,int which_turn);
+void SetLegsInitialPosition(float set_x,float set_y);
 #endif

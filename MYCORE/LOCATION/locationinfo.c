@@ -55,7 +55,7 @@ void GetRelativeLocation(LocationData *locationdata)
 		if((*location).ShouldBeTrusted)
 		{
 			(*position).highleg_y = (*location).y;
-			(*position).highleg_x = (*location).x;
+			//(*position).highleg_x = (*location).x;
 			(*location).ShouldBeTrusted = false;
 		}
 	}
@@ -64,7 +64,7 @@ void GetRelativeLocation(LocationData *locationdata)
 				if((*location).ShouldBeTrusted)
 		{
 		  (*position).highleg_y = (*location).y;
-		  (*position).highleg_x =  (*location).x;
+		  //(*position).highleg_x =  (*location).x;
 		  ChangePositionRecord(kLowLegMove,position,&DM_MoveInfo);
 			(*location).ShouldBeTrusted = false;
 		}
@@ -86,7 +86,7 @@ void GetLaser1Location(LocationData *locationdata)
 		if((*location).ShouldBeTrusted)
 		{
 			(*position).highleg_y = (*location).y;
-			(*position).highleg_x = field_direction * (*location).x;
+			//(*position).highleg_x = field_direction * (*location).x;
 			(*location).ShouldBeTrusted = false;
 		}
 	}
@@ -95,7 +95,7 @@ void GetLaser1Location(LocationData *locationdata)
 				if((*location).ShouldBeTrusted)
 		{
 		  (*position).highleg_y = (*location).y;
-		  (*position).highleg_x = field_direction * (*location).x;
+		  //(*position).highleg_x = field_direction * (*location).x;
 		  ChangePositionRecord(kLowLegMove,position,&DM_MoveInfo);
 			(*location).ShouldBeTrusted = false;
 		}
@@ -147,9 +147,6 @@ void GetStepLocationData()
 			location_data.suspend_leg_before_step = fabs(DriveMotor.PositionMeasure - DM_MoveInfo.position_data.initial_position)*DM_radio * 2
 			                                       *arm_cos_f32((45 - leg_angle.lowleg_yaw)*angle_to_radian_radio);
 		}
-		
-
-		
 	}
 }
 

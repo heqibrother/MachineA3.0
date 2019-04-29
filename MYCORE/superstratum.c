@@ -30,9 +30,9 @@ void JudgeMovement()
 		machineA_general_data.stage_step_number++;
 		machineA_general_data.total_step_number++;
 		machineA_general_data.plan_isok = false;
-		DMStopMove();//
-		RMStopMove();
-		kMachineAGeneralState = kWaitCommand;
+//		DMStopMove();//
+//		RMStopMove();
+//		kMachineAGeneralState = kWaitCommand;
 	}
 }
 
@@ -69,15 +69,21 @@ void CheckState()
 		{
 			kMachineAGeneralState = kNormalWalk;
 			kMachineAState = kClamber;
+			leg_angle.initial_yaw = leg_angle.original_yaw;
+	    RefreshLegYaw();
 			time_point = kAllDone; 
 			
 		}
 	}
-	if(!IsDOORTouched(DOOR4))
+	
+	if(!IsDOORTouched(DOOR4)
+		&&(kMachineAGeneralState != kWaitToRestart&&kMachineAGeneralState != kNeedToRestart)
+	&&(handle_command.hRestartCommand == kCommonState))//&&handle_command.hRestartCommand != kCommonState)
 	{
 		DMStopMove();
 		RMStopMove();
-		kMachineAGeneralState = kMachineError;
+		kMachineAGeneralState = kWaitCommand;
+		//kMachineAGeneralState = kMachineError;
 	}
 }
 
@@ -103,8 +109,8 @@ void CompetitionInit()
 	StateInit();
 	kMachineAGeneralState = kWaitToStart;//kWaitDebug;
 //	TestFirstRedLine();
-	TestSecondRedLine();
-//	FormalStart();
+//	TestSecondRedLine();
+	FormalStart();
 //	TestClamberMode();
 	machineA_general_data.stage_step_number = 1;
 	machineA_general_data.total_step_number = 0;
@@ -112,12 +118,9 @@ void CompetitionInit()
 
 void FormalStart()
 {
-	leg_state_data.leg_state_number = 2;
+	leg_state_data.leg_state_number = 1;
 	SteadyLegMode();
-	location_data.current_position.lowleg_x = current_field.initial_position.x;
-	location_data.current_position.lowleg_y = current_field.initial_position.y;
-	location_data.current_position.highleg_x = current_field.initial_position.x;
-	location_data.current_position.highleg_y = current_field.initial_position.y+Aluminum_Tube_Width;
+	SetLegsInitialPosition(current_field.initial_position.x,current_field.initial_position.y);
 	kMachineAState = kBeforeStart;
 	leg_state_data.leg_state_number_pre = 2;
 	ChangePositionRecord(kLegState,&location_data.current_position,&DM_MoveInfo);
@@ -150,16 +153,19 @@ void StartPreMode()
 			if(MyGetTime() - machineA_general_data.start_time>200)
 			{
 				machineA_general_data.stage = kStage4;
+				kLegState = RedFieldLeg(kHighLegMove);
 				RedFieldLegLift(kHighLegMove);
 				machineA_general_data.start_time = MyGetTime();
 			}
 			else break;
 		
 		case kStage4:
-		if(DetectLegRecoverPosition())
+		if(DetectLegRecoverPosition()&&MyGetTime() - machineA_general_data.start_time>50)
 		{
+				//kLegState = RedFieldLeg(kHighLegMove);
 		  machineA_general_data.stage = kStage5;
 			kMachineAGeneralState = kNormalWalk;
+			machineA_general_data.stage_step_number = 1;//非常重要，保证中间没有累加
 		}
 			break;
 		
