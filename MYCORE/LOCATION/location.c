@@ -41,6 +41,7 @@ void SendLocationInfo()
 {
 	laser_radar_message[0] =  -1*field_direction*(current_field.first_column.x - location_data.motor_position.highleg_x);;
 	laser_radar_message[1] = current_field.hill_position.y - CalOpositionY(installation.rplidar_position.x,installation.rplidar_position.y,kHighLegMove) - location_data.motor_position.highleg_y;
+//laser_radar_message[1] = location_data.laser1_data;
 	laser_radar_message[2] = leg_angle.highleg_yaw;
 	SendPCData1((short)laser_radar_message[0],(short)laser_radar_message[1],(short)laser_radar_message[2],(short)field_direction);
 	SendPCData2((short)kMachineAState,(short)kMachineAGeneralState,(short)machineA_general_data.stage_step_number,(short)kLegState);

@@ -137,7 +137,7 @@ bool JugdeStageTool(float value_a,float value_b)
 int32_t GetTimeLeft()
 {
 	int32_t result;
-	if(DM_MoveInfo.distance_data.distance_walked>DM_MoveInfo.distance_data.distance_all-DM_MoveInfo.distance_data.distance_decelerate)
+	if(DM_MoveInfo.distance_data.distance_left<DM_MoveInfo.distance_data.distance_decelerate)
 	{//¼õËÙÇø
 		result = (int32_t)(LookUpDMTimeTable(DM_MoveInfo.distance_data.distance_left/FloatSafeDivision(DM_MoveInfo.distance_data.distance_decelerate))*DM_MoveInfo.time_data.decelerate_time);
 	}

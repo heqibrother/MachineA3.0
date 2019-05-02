@@ -49,7 +49,9 @@ void RMStopMove()
 {
 	securityitem.sMotorState.refresh_flag = true;
 		RotateMotor.State = PIDPOSITION;
-		RotateMotor.PositionExpected = RM_MoveInfo.position_data.finish_decelerate_position;
+	if(RM_MoveInfo.motor_position)RotateMotor.PositionExpected = RM_MoveInfo.position_data.finish_decelerate_position;
+   else
+		RotateMotor.PositionExpected = RotateMotor.PositionMeasure;//RM_MoveInfo.position_data.finish_decelerate_position;
 }
 
 void RMAccelerate()

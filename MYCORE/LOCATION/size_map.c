@@ -65,23 +65,26 @@ void FieldParaInit()
 	}
 	
 	InstallationLocation *IL = &installation;
-	SetFieldPara(&(*IL).camera_position,0.0f,0.0f);
-	SetFieldPara(&(*IL).rplidar_position,0.0f,610.0f);
+	SetFieldPara(&(*IL).camera_position,-40.0f,0.0f);
+	SetFieldPara(&(*IL).rplidar_position,0.0f,560.0f);
+	SetFieldPara(&(*IL).laser_position,-110.0f,590.0f);
+	(*IL).LaserRedAngle = -7;
+	(*IL).LaserBlueAngle = 11;
 }
 
 void RedFieldParaInit()
 {
 	FieldPara *red_field = &current_field;
-	SetFieldPara(&(*red_field).initial_position,-680.0f,0.0f);
-	SetFieldPara(&(*red_field).first_line_pre_position,-680.0f,2160.0f);
-	SetFieldPara(&(*red_field).first_line_position,-680.0f,3160.0f);
+	SetFieldPara(&(*red_field).initial_position,-570.0f,0.0f);
+	SetFieldPara(&(*red_field).first_line_pre_position,-520.0f,2160.0f);
+	SetFieldPara(&(*red_field).first_line_position,-680.0f,3140.0f);
 	SetFieldPara(&(*red_field).first_redline_position,-680.0f,3400.0f);
-	SetFieldPara(&(*red_field).first_line_restart,-680.0f,3265.0f);
+	SetFieldPara(&(*red_field).first_line_restart,-600.0f,3200.0f);
 	SetFieldPara(&(*red_field).second_line_restart,660.0f,4400.0f);
-	SetFieldPara(&(*red_field).first_rope_position,0.0f,5550.0f);
-	SetFieldPara(&(*red_field).second_rope_position,0.0f,6310.0f);
-	SetFieldPara(&(*red_field).second_turn_position,950.0f,0.0f);
-	SetFieldPara(&(*red_field).hill_position,-1280.0f,6425.0f);
+	SetFieldPara(&(*red_field).first_rope_position,0.0f,5565.0f);
+	SetFieldPara(&(*red_field).second_rope_position,0.0f,6335.0f);
+	SetFieldPara(&(*red_field).second_turn_position,1000.0f,0.0f);
+	SetFieldPara(&(*red_field).hill_position,-1280.0f,6455.0f);
 	
 	SetFieldPara(&(*red_field).first_redline_test,950.0f,3265.0f);
 	SetFieldPara(&(*red_field).second_redline_test,950.0f,current_field.first_rope_position.y - 1000.0f);
@@ -103,7 +106,7 @@ void BlueFieldParaInit()
 	SetFieldPara(&(*blue_field).first_rope_position,0.0f,5580.0f);
 	SetFieldPara(&(*blue_field).second_rope_position,0.0f,6340.0f);
 	SetFieldPara(&(*blue_field).second_turn_position,950.0f,0);
-	SetFieldPara(&(*blue_field).hill_position,-1280.0f,6420.0f);
+	SetFieldPara(&(*blue_field).hill_position,-1280.0f,6450.0f);
 	
 	SetFieldPara(&(*blue_field).first_redline_test,950.0f,3265.0f);
 	SetFieldPara(&(*blue_field).second_redline_test,950.0f,current_field.first_rope_position.y - 1000.0f);

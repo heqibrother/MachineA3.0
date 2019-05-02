@@ -15,6 +15,9 @@ typedef enum
 	kClamberPrepare,//上坡前的预备动作
 	kClamberWorking,//攀登状态
 	kRestartPrepare,
+	kRisingTurn,
+	kCrossStep,
+	kCrossedStep,//关于旋转电机运动时机不同
 }MovementStyle;
 
 /***运动模式的类型***/
@@ -24,6 +27,8 @@ typedef enum
 	kOnlyDecelerateStability,//只延长减速段
 	kBothStability,          //加速段减速段都延长
 	kBothUnStablity,          //正常，都不延长
+	kFlexibleAccelerate,
+	kFlexibleSteady,
 	kClamberSpecialCurve
 }SpeedMode;//决定加减速时间
 
@@ -103,6 +108,7 @@ typedef enum{                //全部时点标志位
 	  kBeforeDMPosition=5,      //直行电机未到位
 	  kBeforeRMPosition,      //旋转电机未到位
 	  kBeforeLegTouchGround,  //放腿触地
+	  kWaitRealSteady,
 	  kAllDone                //所有操作均已完成
 }TimePoint;
 
@@ -134,6 +140,9 @@ typedef struct
 	LegLength leglength_low;
 	LegLength leglength_high_pre;
 	LegLength leglength_low_pre;
+	
+	bool force_time_lay_down_flag;
+	int32_t force_time_lay_down;
 }LegStateData;
 
 /***运动中腿返回的数据***/
@@ -236,5 +245,7 @@ void ClamberPrepareMode();
 void RestartPrepareMode();
 bool LegCrossOtherLeg();
 void CalculateClamberMovementData();
-
+void RisingTurnMode();
+void CrossStepMode();
+void CrossedStepMode();
 #endif

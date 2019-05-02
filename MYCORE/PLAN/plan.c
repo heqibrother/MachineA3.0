@@ -14,8 +14,9 @@ void MakePlan()
 		case kNormalWalk:
 			if(LastWalkOver())
 			{
-				WalkPlan();
 				machineA_general_data.plan_isok = true;
+				WalkPlan();
+				
 			}
 			break;
 			
@@ -30,7 +31,6 @@ void MakePlan()
 		case kWaitToRestart:
 			if(IsDOORTouched(DOOR4))
 			{
-				
 			 RestartModePlan();
 		   kMachineAGeneralState = kNormalWalk;
 				handle_command.hRestartCommand = kCommonState;//必须在完成重启初始化后重置
@@ -42,7 +42,7 @@ void MakePlan()
 //			if(LastWalkOver())
 			{
 				WalkPlan();
-				machineA_general_data.plan_isok = true;
+				//machineA_general_data.plan_isok = true;
 			}
 			break;
 		
@@ -155,6 +155,7 @@ void Restart()
 		case kClamberPositionRestart:
    leg_state_data.leg_state_number_pre = 2;
 			kMachineAState = kClamberMode;
+		handle_command.hRestartCommand = kCommonState;
 	//kMachineAGeneralState = kNormalWalk;
 	//	handle_command.hRestartCommand = kCommonState;
 			break;

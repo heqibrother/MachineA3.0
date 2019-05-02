@@ -32,4 +32,5 @@ void SendLegLength();
 void ClamberModeLeg();
 LegState DetectLegState();
 void SteadyLegMode();
+bool DetectLegSteadyosition();
 #endif

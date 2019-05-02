@@ -50,7 +50,7 @@ float CompareMin(float value1,float value2);
  * @return: number of steps
  * @status: 2019.4.21
  */
-int CalStepNumber(float alldistance,float distancehope,int required_remainder,float *step_distance);
+int CalStepNumber(float alldistance,float distancehope,int required_remainder,float *step_distance,float deviation);
 
 /**
  * @brief: Macroscopically Plan Distacne of Steps
@@ -58,5 +58,6 @@ int CalStepNumber(float alldistance,float distancehope,int required_remainder,fl
  * @return: step_distance
  * @status: 2019.4.21
  */
-float CalStepDistance(float targetposition,float currentposition,float distancehope,LegState targetleg);
+float CalStepDistance(float targetposition,float currentposition,float distancehope,LegState targetleg,int *step_number_left,float safe_distance);
+
 #endif

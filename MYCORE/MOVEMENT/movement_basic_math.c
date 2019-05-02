@@ -109,6 +109,33 @@ void CalMovementPosition(MotorMoveState *motor)
   MotorSpeedData *speed = &(*motor).speed_data;
 	switch(DM_MoveInfo.speed_data.speed_mode)
 	{
+		case kFlexibleAccelerate:
+			if(kLegState == kHighLegMove)
+			{
+				DM_MoveInfo.speed_data.speed_mode = kOnlyAccelerateStability;
+			}
+			else if(kLegState == kLowLegMove)
+			{
+				DM_MoveInfo.speed_data.speed_mode = kBothUnStablity;
+			}
+			break;
+			
+		case kFlexibleSteady:
+				if(kLegState == kHighLegMove)
+			{
+				DM_MoveInfo.speed_data.speed_mode = kBothStability;
+			}
+			else if(kLegState == kLowLegMove)
+			{
+					DM_MoveInfo.speed_data.speed_mode = kBothUnStablity;
+			}
+			break;
+		
+		default:
+			break;
+	}
+	switch(DM_MoveInfo.speed_data.speed_mode)
+	{
 		case kOnlyAccelerateStability:
 				 (*position).finish_accelerate_position = (*position).start_position 
 																								+ (*speed).speed_direction * CalRealPosition((*distance).distance_all *1.0f/3.0f);
@@ -148,9 +175,9 @@ void CalMovementPosition(MotorMoveState *motor)
 		
 		case kClamberSpecialCurve:
 					(*position).finish_accelerate_position = (*position).start_position 
-																								+ (*speed).speed_direction * CalRealPosition((*distance).distance_all *1.0f/2.0f);
+																								+ (*speed).speed_direction * CalRealPosition((*distance).distance_all *1.0f/4.0f);
 				 (*position).finish_keepspeed_position = (*position).start_position 
-																							  + (*speed).speed_direction * CalRealPosition((*distance).distance_all  *1.0f/2.0f);
+																							  + (*speed).speed_direction * CalRealPosition((*distance).distance_all  *3.0f/4.0f);
 				 (*position).finish_decelerate_position = (*position).start_position 
 																								+ (*speed).speed_direction * CalRealPosition((*distance).distance_all);
 			break;
@@ -168,7 +195,7 @@ void CalMovementPosition(MotorMoveState *motor)
 void CalMovementSpeed(int speed_max)
 {
 	float speed_limmit;
-	speed_limmit = DM_MoveInfo.distance_data.distance_all / 600.0f * FloatSafeDivision((float)speed_max);//参考60cm可以速度到400不打脚
+	speed_limmit = DM_MoveInfo.distance_data.distance_all / 300.0f * FloatSafeDivision((float)speed_max);//参考60cm可以速度到400不打脚
 	if(speed_limmit<DM_MoveInfo.speed_data.target_position_speed)
 	{
 	  DM_MoveInfo.speed_data.target_position_speed = speed_limmit;

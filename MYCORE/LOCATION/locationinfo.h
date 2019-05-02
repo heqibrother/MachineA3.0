@@ -38,4 +38,5 @@ void RefreshCurrentPosition();
  * @status: 2019.4.22
  */
 void GetStepLocationData();
+float GetLaseFieldAngle();
 #endif

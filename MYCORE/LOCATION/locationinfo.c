@@ -5,12 +5,11 @@ void RefreshCurrentPosition()
 	switch(kMachineAState)
 	{
 		case kBeforeStart:
-    case kStart:               
-    case kBeforeLaserDetect:  
-      break;
-		
+    case kStart:            
+     // break;			
+    case kBeforeLaserDetect: 			
 	  case kBeforeTurnLeft:  
-			GetLaserRadarLocation(&location_data);
+		//	GetLaserRadarLocation(&location_data);
        GetLaser1Location(&location_data);			
 	  case kTurnLeft:   
        break;			
@@ -49,7 +48,7 @@ void GetRelativeLocation(LocationData *locationdata)
 	LocationDataType *location =&(*locationdata).relative_position;
 	PositionDataType *position =&(*locationdata).current_position;
 	//(*location).x = field_direction * (*locationdata).relative_data_x - installation.camera_position.x  -field_direction*CalOpositionX(Rplidar_position_X,Rplidar_position_Y,kHighLegMove);
-	(*location).y =  (*locationdata).relative_data_y - installation.camera_position.y ; //-field_direction*CalOpositionY(installation.rplidar_position.x,installation.rplidar_position.y,kHighLegMove);
+	(*location).y =  (*locationdata).relative_data_y - CalOpositionY(installation.camera_position.x,installation.camera_position.y,kHighLegMove) ; //-field_direction*CalOpositionY(installation.rplidar_position.x,installation.rplidar_position.y,kHighLegMove);
 	if(kLegState == kLowLegMove)
 	{
 		if((*location).ShouldBeTrusted)
@@ -65,7 +64,7 @@ void GetRelativeLocation(LocationData *locationdata)
 		{
 		  (*position).highleg_y = (*location).y;
 		  //(*position).highleg_x =  (*location).x;
-		  ChangePositionRecord(kLowLegMove,position,&DM_MoveInfo);
+		  ChangePositionRecordY(kLowLegMove,position,&DM_MoveInfo);
 			(*location).ShouldBeTrusted = false;
 		}
 	}
@@ -73,13 +72,21 @@ void GetRelativeLocation(LocationData *locationdata)
 
 void GetLaser1Location(LocationData *locationdata)
 {
-	//GetLaserRadarLocation(locationdata);
+//GetLaserRadarLocation(locationdata);
 	LocationDataType *location =&(*locationdata).laser1_position;
 	PositionDataType *position =&(*locationdata).current_position;
-	(*location).y = current_field.hill_position.y - (*locationdata).laser1_data -CalOpositionY(installation.rplidar_position.x,installation.rplidar_position.y,kHighLegMove);
-	if(fabs(location_data.laser_radar_position.y - (*location).y )<500)
+	(*location).y = (*locationdata).laser1_data * arm_cos_f32(GetLaseFieldAngle()*angle_to_radian_radio);
+	(*location).y = CalOpositionY(installation.laser_position.x,installation.laser_position.y,kHighLegMove);
+	(*location).y = current_field.hill_position.y - (*locationdata).laser1_data * arm_cos_f32(GetLaseFieldAngle()*angle_to_radian_radio)
+      	-CalOpositionY(installation.laser_position.x,installation.laser_position.y,kHighLegMove);
+	//if(fabs(location_data.laser_radar_position.y - (*location).y )<500&&(*locationdata).laser1_data!=0)
+	if((*locationdata).laser1_data > 500&&fabs((*location).y-location_data.motor_position.highleg_y)<800)
 	{
 		location_data.laser1_position.ShouldBeTrusted = true;
+	}
+	else
+	{
+		location_data.laser1_position.ShouldBeTrusted = false;
 	}
 		if(kLegState == kLowLegMove)
 	{
@@ -96,10 +103,11 @@ void GetLaser1Location(LocationData *locationdata)
 		{
 		  (*position).highleg_y = (*location).y;
 		  //(*position).highleg_x = field_direction * (*location).x;
-		  ChangePositionRecord(kLowLegMove,position,&DM_MoveInfo);
+		  ChangePositionRecordY(kLowLegMove,position,&DM_MoveInfo);
 			(*location).ShouldBeTrusted = false;
 		}
 	}
+
 }
 
 void GetLaserRadarLocation(LocationData *locationdata)
@@ -107,11 +115,12 @@ void GetLaserRadarLocation(LocationData *locationdata)
 	LocationDataType *location =&(*locationdata).laser_radar_position;
 	PositionDataType *position =&(*locationdata).current_position;
 	(*location).y = current_field.hill_position.y - (*locationdata).laser_radar_data_y -CalOpositionY(installation.rplidar_position.x,installation.rplidar_position.y,kHighLegMove);
+	
 	if(kLegState == kLowLegMove)
 	{
 		if((*location).ShouldBeTrusted)
 		{
-			(*position).highleg_y = (*location).y;
+			//(*position).highleg_y = (*location).y;
 			(*location).ShouldBeTrusted = false;
 		}
 	}
@@ -119,8 +128,8 @@ void GetLaserRadarLocation(LocationData *locationdata)
 	{
 				if((*location).ShouldBeTrusted)
 		{
-		  (*position).highleg_y = (*location).y;
-		  ChangePositionRecord(kLowLegMove,position,&DM_MoveInfo);
+		 // (*position).highleg_y = (*location).y;
+		 // ChangePositionRecord(kLowLegMove,position,&DM_MoveInfo);
 			(*location).ShouldBeTrusted = false;
 		}
 	}
@@ -148,5 +157,16 @@ void GetStepLocationData()
 			                                       *arm_cos_f32((45 - leg_angle.lowleg_yaw)*angle_to_radian_radio);
 		}
 	}
+}
+
+float GetLaseFieldAngle()
+{
+	float laser_angle = 0;
+	if(field_direction >0)
+	  laser_angle = leg_angle.highleg_yaw +  installation.LaserRedAngle;
+	else
+		laser_angle = leg_angle.highleg_yaw +  installation.LaserBlueAngle;
+	
+	return laser_angle;
 }
 

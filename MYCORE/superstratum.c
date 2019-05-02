@@ -30,6 +30,7 @@ void JudgeMovement()
 		machineA_general_data.stage_step_number++;
 		machineA_general_data.total_step_number++;
 		machineA_general_data.plan_isok = false;
+		leg_state_data.force_time_lay_down_flag = false; 
 //		DMStopMove();//
 //		RMStopMove();
 //		kMachineAGeneralState = kWaitCommand;
@@ -40,18 +41,17 @@ void CheckState()
 {
 	if(!IsDOORTouched(DOOR1))
 	{
+		if(kMachineAGeneralState==kMachineError)
 		kMachineAGeneralState = kNormalWalk;
- //    if(kMachineAState == kArriveThePost)
-		 {
-//			 machineA_general_data.plan_isok = false;
-//	     DMStopMove();
-//		   RMStopMove();
-//			 time_point = kAllDone;
-//			 kMachineAState = kClamberMode;
-//			 kLegState =  DetectLegState();
-//			 if(kLegState == kAnyLegMove)kMachineAGeneralState = kMachineError;
-//			 machineA_general_data.stage_step_number = 1;
-		 }
+		
+		if(kMachineAGeneralState==kNormalWalk&&kMachineAState == kArriveThePost)
+		{
+			DMStopMove();
+		  RMStopMove();
+			handle_command.hRestartCommand=kClamberPositionRestart;
+		  kMachineAGeneralState = kNeedToRestart;
+		}
+
 	}
 	if(!IsDOORTouched(DOOR2))
 	{
@@ -60,10 +60,12 @@ void CheckState()
 			machineA_general_data.stage = kStage1;
       kMachineATestItem = kTestFunctionCrossRope;
 		  kMachineAGeneralState = kStartingPre;
+//			leg_angle.initial_yaw = leg_angle.original_yaw;
+//	    RefreshLegYaw();
 		}
 	}
 
-	if(!IsDOORTouched(DOOR3))
+	if(!IsDOORTouched(DOOR3)&&IsDOORTouched(DOOR1)&&IsDOORTouched(DOOR4))
 	{
 		if(kMachineAGeneralState == kClamberModeWaiting&&kMachineAState == kClamberReady)
 		{
@@ -83,6 +85,7 @@ void CheckState()
 		DMStopMove();
 		RMStopMove();
 		kMachineAGeneralState = kWaitCommand;
+		
 		//kMachineAGeneralState = kMachineError;
 	}
 }
@@ -93,8 +96,8 @@ void StateInit()
 	FieldParaInit();
 	OrgansInit();
 	LegPartInit();
-	LegYawInit();
 	RMPartInit();
+	LegYawInit();
 	DMPartInit();
 	PositionInit();
 	OrgansInit();
@@ -112,8 +115,10 @@ void CompetitionInit()
 //	TestSecondRedLine();
 	FormalStart();
 //	TestClamberMode();
+	//TestFirstRedLine();
 	machineA_general_data.stage_step_number = 1;
 	machineA_general_data.total_step_number = 0;
+	SetCamera(-(int)(60*field_direction));
 }
 
 void FormalStart()

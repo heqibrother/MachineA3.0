@@ -52,6 +52,44 @@ void ChangePositionRecord(LegState klegstate,PositionDataType *position,MotorMov
 	}
 }
 
+void ChangePositionRecordY(LegState klegstate,PositionDataType *position,MotorMoveState *motorstate)
+{
+	float DM_direction = 0.0f;
+		
+	if(klegstate==kHighLegMove)
+	{
+		DM_direction = -1.0f;
+	}
+	else if(klegstate == kLowLegMove)
+	{
+		DM_direction = +1.0f;
+	}
+	if(klegstate==kHighLegMove)
+	{
+		float  highleg_position_y1,highleg_position_y2,highleg_position_y3;
+		
+		  highleg_position_y1 = (*position).lowleg_y ;
+		  highleg_position_y2= +2*(DriveMotor.PositionMeasure - DM_MoveInfo.position_data.initial_position)* DM_direction * DM_radio* cos(leg_angle.lowleg_yaw*angle_to_radian_radio);//非转动部分造成的y变化
+		  highleg_position_y3= +(Half_Length - 2*(DriveMotor.PositionMeasure - DM_MoveInfo.position_data.initial_position)* DM_direction * DM_radio)
+		                       *(cos(leg_angle.lowleg_yaw*angle_to_radian_radio)-cos(leg_angle.highleg_yaw*angle_to_radian_radio));//高腿转动部分造成的y变化
+	    	(*position).highleg_y = highleg_position_y1 + highleg_position_y2 +highleg_position_y3;
+
+	}
+	else if(klegstate == kLowLegMove)
+	{
+				float  lowleg_position_y1,lowleg_position_y2,lowleg_position_y3;
+		
+		  lowleg_position_y1 = (*position).highleg_y ;
+		  lowleg_position_y2= +2*(DriveMotor.PositionMeasure - DM_MoveInfo.position_data.initial_position)*  DM_direction * DM_radio
+		                      * cos(leg_angle.highleg_yaw*angle_to_radian_radio);//非转动部分造成的y变化
+		  lowleg_position_y3= +(Half_Length - 2*(DriveMotor.PositionMeasure - DM_MoveInfo.position_data.initial_position)* DM_direction * DM_radio)
+		                      *(cos(leg_angle.highleg_yaw*angle_to_radian_radio)-cos(leg_angle.lowleg_yaw*angle_to_radian_radio));//高腿转动部分造成的y变化
+
+		    (*position).lowleg_y = lowleg_position_y1 + lowleg_position_y2 + lowleg_position_y3;
+
+	}
+}
+
 float CalOpositionX(float rela_x,float rela_y,int which_turn)//输入以红场正负为标准，
 {
 	float result_a;

@@ -79,6 +79,8 @@ typedef struct
 	bool plan_isok;
 	int32_t start_time;
 	Stage stage;
+	int step_number_left;
+	float target_distance;
 }MachineAGeneralData;
 
 extern MachineAGeneralState kMachineAGeneralState;

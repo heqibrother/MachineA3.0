@@ -30,4 +30,5 @@ float CalOpositionX(float rela_x,float rela_y,int which_turn);
  */
 float CalOpositionY(float rela_x,float rela_y,int which_turn);
 void SetLegsInitialPosition(float set_x,float set_y);
+void ChangePositionRecordY(LegState klegstate,PositionDataType *position,MotorMoveState *motorstate);
 #endif

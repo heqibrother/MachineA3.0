@@ -54,11 +54,249 @@ bool ExecutePlan()
 				return true;
 			}
 			break;
+			
+		case kRisingTurn:
+			RisingTurnMode();
+			if(time_point == kAllDone)
+			{
+				return true;
+			}
+			break;
+			
+		case kCrossStep:
+			CrossStepMode();
+			if(time_point == kAllDone)
+			{
+				return true;
+			}
+			break;
+			
+		case kCrossedStep:
+			CrossedStepMode();
+			if(time_point == kAllDone)
+			{
+				return true;
+			}
+			break;
 		
 		default:
 			break;
 	}
 	return false;
+}
+
+void CrossedStepMode()
+{
+	switch(time_point)
+	{
+		case kBeforeFurtherPlan:
+			CalculateFurtherMovementData();
+		  time_point = kBeforeRecoverLeg;
+			//break;
+		
+		case kBeforeRecoverLeg:
+				MoveDM();
+				MoveRM();
+			if(DetectLegRecoverPosition())
+			{
+				MoveDM();
+				MoveRM();
+
+				time_point = kBeforeSelfCorrection;
+			}
+			else break;
+			
+		case kBeforeSelfCorrection:
+			  MoveDM();
+				MoveRM();
+			 if(LegCrossOtherLeg())
+			 {
+					LegModeChange();
+			   time_point = kBeforeLayDownLegs;
+			 }
+			else break;
+			
+		case kBeforeLayDownLegs:
+			MoveDM();
+		  MoveRM();
+			if(TimeToLayDown())
+			{
+				LayDown();
+				time_point = kBeforeDMPosition;
+			}
+			else break;
+		
+		case kBeforeDMPosition:
+			MoveDM();
+      RMStopMove();
+		  if(DM_MoveInfo.motor_position)
+			{
+				time_point = kBeforeLegTouchGround;
+			}
+			else break;
+			
+		case kBeforeLegTouchGround:
+			if(DetectLegLayDownPosition())
+			{
+				kLegState = ChangeLegState(kLegState);
+					SetSpeedDirection();
+				time_point = kAllDone;
+			}
+			else break;
+		
+		case kAllDone:
+				obstacle1.obstacle_exist = false;
+		    obstacle2.obstacle_exist = false;
+			break;
+		
+		default:
+			break;
+	}
+}
+
+void CrossStepMode()
+{
+	switch(time_point)
+	{
+		case kBeforeFurtherPlan:
+			CalculateFurtherMovementData();
+		  time_point = kBeforeRecoverLeg;
+			//break;
+		
+		case kBeforeRecoverLeg:
+			if(DetectLegRecoverPosition())
+			{
+				MoveDM();
+				//MoveRM();
+				time_point = kBeforeRiseItself;
+				LegModeChange();//在这一阶段执行，避免反复置位
+			}
+			else break;
+		
+		case kBeforeRiseItself:
+				MoveDM();
+		    //MoveRM(); 
+		  if(LegPartAnswer())
+			{
+				time_point = kBeforeLayDownLegs;
+			}
+			else break;	
+			
+		case kBeforeLayDownLegs:
+			MoveDM();
+		  MoveRM();
+			if(TimeToLayDown()&&RM_MoveInfo.motor_position)
+			{
+				LayDown();
+				time_point = kBeforeDMPosition;
+			}
+			else break;
+		
+		case kBeforeDMPosition:
+			MoveDM();
+		  MoveRM();
+		  if(DM_MoveInfo.motor_position)
+			{
+				time_point = kBeforeLegTouchGround;
+			}
+			else break;
+			
+		case kBeforeLegTouchGround:
+			if(DetectLegLayDownPosition())
+			{
+				kLegState = ChangeLegState(kLegState);
+					SetSpeedDirection();
+				time_point = kAllDone;
+			}
+			else break;
+		
+		case kAllDone:
+				obstacle1.obstacle_exist = false;
+		    obstacle2.obstacle_exist = false;
+			break;
+		
+		default:
+			break;
+	}
+}
+
+void RisingTurnMode()
+{
+	switch(time_point)
+	{
+		case kBeforeFurtherPlan:
+			CalculateFurtherMovementData();
+		  time_point = kBeforeRecoverLeg;
+			//break;
+		
+		case kBeforeRecoverLeg:
+				MoveDM();
+		    MoveRM(); 
+			if(DetectLegRecoverPosition())
+			{
+				time_point = kBeforeSelfCorrection;
+				LegModeChange();//在这一阶段执行，避免反复置位
+			}
+			else break;	
+
+		case kBeforeSelfCorrection:
+			
+	  	LegModeChange();
+			time_point = kBeforeLayDownLegs;
+		 if(LegCrossOtherLeg())
+		 {
+			 	DMStopMove();
+				RMStopMove();
+			 time_point = kBeforeSelfCorrection;
+		 }
+		 else break;
+		
+		case kBeforeRiseItself:
+		  if(LegPartAnswer())
+			{
+				MoveDM();
+		    MoveRM(); 
+				time_point = kBeforeSelfCorrection;
+			}
+			else break;
+			
+			
+		case kBeforeLayDownLegs:
+			MoveDM();
+		  MoveRM();
+			if(SafeToLayDownBeforePosition()&&TimeToLayDown()&&RM_MoveInfo.motor_position)
+			{
+				LayDown();
+				time_point = kBeforeDMPosition;
+			}
+			else break;
+		
+		case kBeforeDMPosition:
+			MoveDM();
+		  MoveRM();
+		  if(DM_MoveInfo.motor_position&&RM_MoveInfo.motor_position)
+			{
+				time_point = kBeforeLegTouchGround;
+			}
+			else break;
+			
+		case kBeforeLegTouchGround:
+			if(DetectLegLayDownPosition())
+			{
+				kLegState = ChangeLegState(kLegState);
+					SetSpeedDirection();
+				time_point = kAllDone;
+			}
+			else break;
+		
+		case kAllDone:
+				obstacle1.obstacle_exist = false;
+		    obstacle2.obstacle_exist = false;
+			break;
+		
+		default:
+			break;
+	}
 }
 
 void ClamberWorkingMode()
@@ -78,28 +316,31 @@ void ClamberWorkingMode()
 				time_point = kBeforeRiseItself;
 				//LegModeChange();//在这一阶段执行，避免反复置位
 			}
-			else break;
+			else 
+				break;
 		
 		case kBeforeRiseItself:
 			MoveDM();
 		  MoveRM();
-		  if(LegPartAnswer())
+		  //if(LegPartAnswer())
 			{
 				time_point = kBeforeSelfCorrection;
 				//LegModeChange();//在这一阶段执行，避免反复置位
 			}
-			else break;
+			//else
+			//	break;
 			
 			case kBeforeSelfCorrection:
 			MoveDM();
 		  MoveRM();
-		  if(LegPartAnswer()&&LegCrossOtherLeg())
+		 if(LegCrossOtherLeg())
 			{
 				time_point = kBeforeLayDownLegs;
 				LegModeChange();//在这一阶段执行，避免反复置位
 				SendLegLength();
 			}
-			else break;
+			else 
+				break;
 			
 		case kBeforeLayDownLegs:
 			MoveDM();
@@ -114,9 +355,13 @@ void ClamberWorkingMode()
 		case kBeforeDMPosition:
 			MoveDM();
 		  MoveRM();
-		  if(DM_MoveInfo.motor_position&&RM_MoveInfo.motor_position)
+		  if(DM_MoveInfo.motor_position)
 			{
 				time_point = kBeforeLegTouchGround;
+				if(!RM_MoveInfo.motor_position)
+				{
+					RMStopMove();
+				}
 			}
 			else break;
 			
@@ -126,6 +371,7 @@ void ClamberWorkingMode()
 				time_point = kAllDone;
 		
 		case kAllDone:
+			leg_state_data.force_time_lay_down_flag = false; 
 				obstacle1.obstacle_exist = false;
 		    obstacle2.obstacle_exist = false;
 			break;
@@ -209,7 +455,7 @@ void ClamberPrepareMode()
 			{
 				 MoveRM();
 				time_point = kBeforeRiseItself;
-				LegModeChange();//在这一阶段执行，避免反复置位
+				
 			}
 			else break;
 		
@@ -228,20 +474,31 @@ void ClamberPrepareMode()
 		  if(DM_MoveInfo.motor_position&&RM_MoveInfo.motor_position
 				&&(DetectLegAllPosition()))//确保腿已经缩到位
 			{
+				SteadyLegMode();
+				LegModeChange();//在这一阶段执行，避免反复置位
 				time_point = kBeforeLegTouchGround;
-				HighlegLift();
-				kLegState = kLowLegMove;//因为实际腿状态切换为高腿在上，所以只有把状态切换为矮腿，才能执行下面的是否到位判断
+				//因为实际腿状态切换为高腿在上，所以只有把状态切换为矮腿，才能执行下面的是否到位判断
 			}
 			else break;
 			
 		case kBeforeLegTouchGround:
-				if(LegPartAnswer()&&DetectLegLayDownPosition())//确保腿站稳
+				if(LegPartAnswer()&&DetectLegSteadyosition())//确保腿站稳
 				{ 
-					kLegState = kHighLegMove;
+					kLegState = kLowLegMove;
+					HighlegLift();
 					SetSpeedDirection();
-					time_point = kAllDone;
+					time_point = kWaitRealSteady;
 				}
 				else break;
+				
+		case kWaitRealSteady:
+			if(LegPartAnswer()&&DetectLegLayDownPosition())
+			{
+				kLegState = kHighLegMove;
+				time_point = kAllDone;
+			}
+			
+			break;
 		
 		case kAllDone:
 				obstacle1.obstacle_exist = false;
@@ -333,7 +590,7 @@ void LocationFirstMode()
 			if(DetectLegRecoverPosition())
 			{
 				MoveDM();
-				MoveRM();
+				//MoveRM();
 				time_point = kBeforeRiseItself;
 				LegModeChange();//在这一阶段执行，避免反复置位
 			}
@@ -341,7 +598,7 @@ void LocationFirstMode()
 		
 		case kBeforeRiseItself:
 				MoveDM();
-		    MoveRM(); 
+		    //MoveRM(); 
 		  if(LegPartAnswer()&&LegCrossOtherLeg())
 			{
 				time_point = kBeforeSelfCorrection;
@@ -356,7 +613,7 @@ void LocationFirstMode()
 		case kBeforeLayDownLegs:
 			MoveDM();
 		  MoveRM();
-			if(SafeToLayDownBeforePosition()&&TimeToLayDown())
+			if(SafeToLayDownBeforePosition()&&TimeToLayDown()&&RM_MoveInfo.motor_position)
 			{
 				LayDown();
 				time_point = kBeforeDMPosition;
@@ -366,7 +623,7 @@ void LocationFirstMode()
 		case kBeforeDMPosition:
 			MoveDM();
 		  MoveRM();
-		  if(DM_MoveInfo.motor_position&&RM_MoveInfo.motor_position)
+		  if(DM_MoveInfo.motor_position)
 			{
 				time_point = kBeforeLegTouchGround;
 			}
@@ -425,13 +682,13 @@ void CalculateFurtherMovementData()
   RefreshMovementDataEveryBegining();
 	CalMovementSpeed(400);
 	CalMovementPosition(&DM_MoveInfo);
-	if(2*DM_MoveInfo.speed_data.target_position_speed<400)
+	if(DM_MoveInfo.speed_data.target_position_speed<250)
 	{
-		RM_speed_limit = (int)(2.0f*DM_MoveInfo.speed_data.target_position_speed);
+		RM_speed_limit = (int)(2.5f*DM_MoveInfo.speed_data.target_position_speed);
 	}
 	else
 	{
-		RM_speed_limit = 400;
+		RM_speed_limit = 500;
 	}
 }
 
@@ -441,7 +698,7 @@ void CalMovementDataForClamberMode()
 	RM_MoveInfo.position_data.finish_decelerate_position = RM_MoveInfo.position_data.initial_position;
 	//DM运动部分详细参数计算
   RefreshMovementDataEveryBegining();
-	CalMovementSpeed(400);
+	CalMovementSpeed(500);
 	CalMovementPosition(&DM_MoveInfo);
 	if(2*DM_MoveInfo.speed_data.target_position_speed<400)
 	{
@@ -504,4 +761,9 @@ bool LegCrossOtherLeg()
 		return true;
 	}
 	return false;
+}
+
+void CalculateCorrectionMovementData()
+{
+//	if()
 }

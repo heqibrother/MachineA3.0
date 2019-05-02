@@ -4,11 +4,11 @@ int messager_mark = 0;
 
 void ReportMessage()
 {
-	ReportPositionXY();
+	//ReportPositionXY();
 	//ReportPositionY();
-	//ReportState();
-	//ReportCurve();
-  //ReportPositionX();
+//	ReportState();
+	ReportCurve();
+ // ReportPositionX();
 	//ReportPositionY();
 //	ReportClamberLegState();
 	//ReportLegStateYaw();
@@ -17,7 +17,8 @@ void ReportMessage()
 
 void ReportCurve()
 {
-	VisualScope_Send(DriveMotor.PositionExpected,DriveMotor.PositionMeasure,DriveMotor.SpeedExpected,DriveMotor.SpeedMeasure);
+	VisualScope_Send(GetTimeLayDownAdvance(),DriveMotor.PositionMeasure,DriveMotor.SpeedExpected,DriveMotor.SpeedMeasure);
+//	 VisualScope_Send(location_data.laser1_data,location_data.current_position.lowleg_y,location_data.current_position.highleg_y,location_data.motor_position.highleg_y);
 }
 
 
@@ -100,8 +101,8 @@ void ReportPositionY()
 		
 		case 3:
 		SendFrame.Data.floats_ts[0] = DM_speed_stage;
-    SendFrame.Data.floats_ts[1] = RM_speed_stage;
-  	SendFrame.Data.floats_ts[2] = GetTimeLeft();
+    SendFrame.Data.floats_ts[1] = machineA_general_data.target_distance;
+  	SendFrame.Data.floats_ts[2] = machineA_general_data.step_number_left;
   	SendFrame.Data.floats_ts[3] = kLegState;
 		messager_mark = 0;	
 			break;
@@ -115,24 +116,45 @@ void ReportPositionY()
 void ReportPositionX()
 {
 	COM_Frame SendFrame;
-	SendFrame.Length = 64;
-	SendFrame.Prop = 20;	
-  SendFrame.Data.floats_ts[0] = location_data.current_position.highleg_x;
-	SendFrame.Data.floats_ts[1] = location_data.current_position.lowleg_x;
-	SendFrame.Data.floats_ts[2] = location_data.current_position.ground_leg_x;//relative_position_y;
-	SendFrame.Data.floats_ts[3] = location_data.current_position.suspend_leg_x;		
-	SendFrame.Data.floats_ts[4] = kMachineAState;
-	SendFrame.Data.floats_ts[5] = time_point;
-	SendFrame.Data.floats_ts[6] = leg_angle.lowleg_yaw;
-	SendFrame.Data.floats_ts[7] = DriveMotor.PositionMeasure;	
-	SendFrame.Data.floats_ts[8] =  DriveMotor.SpeedExpected;	
-	SendFrame.Data.floats_ts[9] =  DriveMotor.PositionMeasure;	
-	SendFrame.Data.floats_ts[10] = DriveMotor.PositionExpected;
-  SendFrame.Data.floats_ts[11] = DriveMotor.State;//Pi*(decelerate_distance - distance_a)/2/(float)time_all/CalRealSpeed(speed_max);
-	SendFrame.Data.floats_ts[12] = DM_speed_stage;
-	SendFrame.Data.floats_ts[13] = RM_speed_stage;
-	SendFrame.Data.floats_ts[14] = DM_MoveInfo.distance_data.target_distance;
-	SendFrame.Data.floats_ts[15] = kLegState;
+	SendFrame.Length = 16;
+	SendFrame.Prop = message_id[messager_mark];	
+	switch(messager_mark)
+	{
+		case 0:
+	  SendFrame.Data.floats_ts[0] = DM_MoveInfo.distance_data.target_distance;
+	  SendFrame.Data.floats_ts[1] = location_data.current_position.ground_leg_x;
+	  SendFrame.Data.floats_ts[2] = location_data.current_position.lowleg_x;//relative_position_y;
+	  SendFrame.Data.floats_ts[3] = location_data.current_position.highleg_x;
+    messager_mark = 1;		
+			break;
+		
+		case 1:
+		SendFrame.Data.floats_ts[0] = kMachineAState;
+	  SendFrame.Data.floats_ts[1] = kMachineAGeneralState;
+	  SendFrame.Data.floats_ts[2] = location_data.motor_position.lowleg_x;
+		SendFrame.Data.floats_ts[3] = location_data.motor_position.highleg_x;
+		messager_mark = 2;	
+			break;
+		
+		case 2:
+		SendFrame.Data.floats_ts[0] =  time_point;	
+  	SendFrame.Data.floats_ts[1] =  location_data.laser_radar_data_y;	
+	  SendFrame.Data.floats_ts[2] = DM_MoveInfo.motor_position;
+ 		SendFrame.Data.floats_ts[3] = RM_MoveInfo.motor_position;
+		messager_mark = 3;	
+			break;
+		
+		case 3:
+		SendFrame.Data.floats_ts[0] = DM_speed_stage;
+    SendFrame.Data.floats_ts[1] = RM_speed_stage;
+  	SendFrame.Data.floats_ts[2] = machineA_general_data.step_number_left;
+  	SendFrame.Data.floats_ts[3] = kLegState;
+		messager_mark = 0;	
+			break;
+		
+		default:
+			break;
+	}
 	FRAME_Send(&SendFrame,BLUETEETH_USART_MASK );
 }
 
@@ -255,24 +277,45 @@ void ReportLegStateYaw()
 
 void ReportStepPosition()
 {
-	COM_Frame SendFrame;
-	SendFrame.Length = 64;
-	SendFrame.Prop = 20;	
-  SendFrame.Data.floats_ts[0] = leg_angle.highleg_yaw;
-	SendFrame.Data.floats_ts[1] = leg_angle.lowleg_yaw;
-	SendFrame.Data.floats_ts[2] = location_data.ground_leg_after_step;//relative_position_y;
-	SendFrame.Data.floats_ts[3] = location_data.ground_leg_before_step;		
-	SendFrame.Data.floats_ts[4] = location_data.suspend_leg_before_step;
-	SendFrame.Data.floats_ts[5] = DM_MoveInfo.distance_data.target_distance;
-	SendFrame.Data.floats_ts[6] = leg_data_feedback.crossed_step;
-	SendFrame.Data.floats_ts[7] = leg_data_feedback.crossd_step_state;	
-	SendFrame.Data.floats_ts[8] = RotateMotor.State;	
-	SendFrame.Data.floats_ts[9] = 0;	
-	SendFrame.Data.floats_ts[10] = time_point;
-  SendFrame.Data.floats_ts[11] = RM_speed_stage;//Pi*(decelerate_distance - distance_a)/2/(float)time_all/CalRealSpeed(speed_max);
-	SendFrame.Data.floats_ts[12] = DM_speed_stage;
-	SendFrame.Data.floats_ts[13] = kMachineAState;
-	SendFrame.Data.floats_ts[14] = kMachineAGeneralState;
-	SendFrame.Data.floats_ts[15] = kLegState;
+COM_Frame SendFrame;
+	SendFrame.Length = 16;
+	SendFrame.Prop = message_id[messager_mark];	
+	switch(messager_mark)
+	{
+		case 0:
+	  SendFrame.Data.floats_ts[0] = DM_MoveInfo.motor_position;
+	  SendFrame.Data.floats_ts[1] = RM_MoveInfo.motor_position;
+	  SendFrame.Data.floats_ts[2] = GetTimeLeft();//relative_position_y;
+	  SendFrame.Data.floats_ts[3] = GetTimeLayDownAdvance();
+    messager_mark = 1;		
+			break;
+		
+		case 1:
+		SendFrame.Data.floats_ts[0] = kMachineAState;
+	  SendFrame.Data.floats_ts[1] = kMachineAGeneralState;
+	  SendFrame.Data.floats_ts[2] = time_point;
+		SendFrame.Data.floats_ts[3] =  DriveMotor.PositionMeasure;
+		messager_mark = 2;	
+			break;
+		
+		case 2:
+		SendFrame.Data.floats_ts[0] =  DM_MoveInfo.time_data.accelerate_time;	
+  	SendFrame.Data.floats_ts[1] =  DM_MoveInfo.time_data.keepspeed_time;	
+	  SendFrame.Data.floats_ts[2] = DM_MoveInfo.time_data.decelerate_time;
+ 		SendFrame.Data.floats_ts[3] = DriveMotor.State;//Pi*(decele
+		messager_mark = 3;	
+			break;
+		
+		case 3:
+		SendFrame.Data.floats_ts[0] = DM_speed_stage;
+    SendFrame.Data.floats_ts[1] = RM_speed_stage;
+  	SendFrame.Data.floats_ts[2] = DM_MoveInfo.speed_data.speed_direction;
+  	SendFrame.Data.floats_ts[3] = kLegState;
+		messager_mark = 0;	
+			break;
+		
+		default:
+			break;
+	}
 	FRAME_Send(&SendFrame,BLUETEETH_USART_MASK );
 }

@@ -51,6 +51,18 @@ bool DetectLegRecoverPosition()
 	return false;
 }
 
+bool DetectLegSteadyosition()
+{
+			if((leg_data_feedback.leg_state_[0] == 1|| leg_data_feedback.leg_state_[0] == 9)
+				 &&(leg_data_feedback.leg_state_[1] == 1|| leg_data_feedback.leg_state_[1] == 9)
+				 &&(leg_data_feedback.leg_state_[2] == 1|| leg_data_feedback.leg_state_[2] == 9)
+			   &&(leg_data_feedback.leg_state_[3] == 1|| leg_data_feedback.leg_state_[3] == 9))
+			{
+				return true;
+			}
+	return false;
+}
+
 bool DetectLegLayDownPosition()
 {
 				if(kLegState == kLowLegMove)
@@ -190,11 +202,57 @@ void LegPartInit()
 	leg_state_data.leg_safe_to_laydown = 1;
 	leg_state_data.leg_state_number = 0;
 	kLegState = RedFieldLeg(kHighLegMove);
+	leg_state_data.force_time_lay_down_flag = false;
 }
 
 int32_t GetTimeLayDownAdvance()
 {
 	int32_t result = 0;
+//		switch(leg_state_data.leg_state_number)//ËÙ¶È»·
+//	{
+//		case 2:
+//			result = 90;
+//			break;
+//		
+//		case 3:
+//			result = 190;
+//			break;
+//		
+//		case 4:
+//			result = 190;
+//			break;
+//		
+//		case 5:
+//			result = 110;
+//			break;
+//		
+//		case 6:
+//			result = 110;
+//			break;
+//		
+//		case 7:
+//			result = 160;
+//			break;
+//		
+//		case 8:
+//			result = 250;
+//			break;
+//		
+//		case 9:
+//			result = 190;
+//			break;
+//		
+//		case 10:
+//			result = 90;
+//			break;
+//		
+//		default:
+//			break;
+//	}
+if(leg_state_data.force_time_lay_down_flag)
+{
+	return leg_state_data.force_time_lay_down;
+}
 	switch(leg_state_data.leg_state_number)
 	{
 		case 2:
@@ -202,15 +260,15 @@ int32_t GetTimeLayDownAdvance()
 			break;
 		
 		case 3:
-			result = 190;
+			result = 220;
 			break;
 		
 		case 4:
-			result = 190;
+			result = 220;
 			break;
 		
 		case 5:
-			result = 110;
+			result = 160;//110
 			break;
 		
 		case 6:
@@ -218,19 +276,23 @@ int32_t GetTimeLayDownAdvance()
 			break;
 		
 		case 7:
-			result = 160;
+			result = 190;
 			break;
 		
 		case 8:
-			result = 250;
+			result = 280;
 			break;
 		
 		case 9:
-			result = 190;
+			result = 240;//190
 			break;
 		
 		case 10:
 			result = 90;
+			break;
+		
+		case 11:
+			result = 120;
 			break;
 		
 		default:
@@ -291,6 +353,7 @@ void LegPrepareForClamber()
 	 leg_state_data.leg_state_number = 9;
 		leg_state_data.leg_state_number_pre = 9;
 	 SetLegLengthLow(100,50,20,50);
+		//SetLegLengthLow(50,50,50,50);
 	 SendLegLength();
 	 ClamberModeLeg();
 	}

@@ -17,13 +17,15 @@ void OrgansInit()
 {
 	organ.take_token_state = 0;
 	organ.lift_token_state = 0;
-	organ.camera_angle = 165 - field_direction*10;
+	organ.camera_angle = 0;
 	organ.organ_message_send_flag = false;
 }
 
 void SetCamera(int16_t set_angle)
 {
-	organ.camera_angle = set_angle;
+	int16_t result = 0;
+	result = -1*(float)set_angle/180.0f*(220-90)*field_direction+155;
+	organ.camera_angle = result;
 	OrganCommand();
 }
 

@@ -35,6 +35,10 @@ typedef struct
 {
 	PointPosition camera_position;
 	PointPosition rplidar_position;
+	PointPosition laser_position;
+	
+	float LaserRedAngle;
+  float LaserBlueAngle;
 }InstallationLocation;
 
 extern const float field_direction ;

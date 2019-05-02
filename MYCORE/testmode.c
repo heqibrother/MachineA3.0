@@ -60,20 +60,20 @@ void TestMode()
 			{
 				 if(location_data.current_position.ground_leg_y<1000-50)
 			 {
-         SetBasicMotionParameters(CalStepDistance(1000,location_data.current_position.ground_leg_y,300,kLowLegMove)
-				  ,100,0,kBothUnStablity,kSpeedFirst);   
+//         SetBasicMotionParameters(CalStepDistance(1000,location_data.current_position.ground_leg_y,300,kLowLegMove)
+//				  ,100,0,kBothUnStablity,kSpeedFirst);   
 			 }
 				kMachineATestItem = kWaitDebug;
 			}
-			VisualScope_Send(DM_MoveInfo.distance_data.target_distance,
-								 CalStepDistance(1000,location_data.current_position.ground_leg_y,300,kLowLegMove),
-								 location_data.current_position.highleg_y,
-								 location_data.current_position.lowleg_y);
+//			VisualScope_Send(DM_MoveInfo.distance_data.target_distance,
+//								 CalStepDistance(1000,location_data.current_position.ground_leg_y,300,kLowLegMove),
+//								 location_data.current_position.highleg_y,
+//								 location_data.current_position.lowleg_y);
 			break;
 			
 		case kTestFunctionCalStepDistance:
 			//test_value[0] = 1000;
-			show_data[0] = CalStepDistance(test_value[0],location_data.current_position.ground_leg_y,300,kLowLegMove);
+			show_data[0] = CalStepDistance(test_value[0],test_value[1],test_value[2],kLowLegMove,&machineA_general_data.step_number_left,test_value[3]);
 		  kMachineATestItem = kWaitDebug;
 			break;
 		
@@ -100,23 +100,21 @@ void TestMode()
 
 void TestFirstRedLine()
 {
-		leg_state_data.leg_state_number = 2;
-		SteadyLegMode();
-	location_data.current_position.lowleg_x = current_field.first_redline_test.x;
-	location_data.current_position.lowleg_y = current_field.first_redline_test.y;
-	location_data.current_position.highleg_x = current_field.first_redline_test.x;
-	location_data.current_position.highleg_y = current_field.first_redline_test.y;
-	kMachineAState = kTurnLeft;
+	leg_state_data.leg_state_number = 3;
+	leg_state_data.leg_state_number_pre = 4;
+	RedFieldLegLift(kHighLegMove);
+	SetLegsInitialPosition(current_field.first_line_restart.x,current_field.first_line_restart.y);
+	kMachineAState = kBeforeStepUp;
 	ChangePositionRecord(kLegState,&location_data.current_position,&DM_MoveInfo);
 	ChangePositionRecord(kLegState,&location_data.motor_position,&DM_MoveInfo);
 	RecordLocation();
-	leg_angle.initial_yaw = leg_angle.original_yaw ;//- 45*field_direction;
+	leg_angle.initial_yaw = leg_angle.original_yaw - field_direction*45;
 	RefreshLegYaw();
 }
 
 void TestSecondRedLine()
 {
-	SetCamera(165 - field_direction*10);
+	SetCamera(0);
 	leg_state_data.leg_state_number = 2;
 	leg_state_data.leg_state_number_pre = 8;
 	SteadyLegMode();
