@@ -44,11 +44,25 @@ void SendLocationInfo()
 //laser_radar_message[1] = location_data.laser1_data;
 	laser_radar_message[2] = leg_angle.highleg_yaw;
 	SendPCData1((short)laser_radar_message[0],(short)laser_radar_message[1],(short)laser_radar_message[2],(short)field_direction);
-	SendPCData2((short)kMachineAState,(short)kMachineAGeneralState,(short)machineA_general_data.stage_step_number,(short)kLegState);
+	//SendPCData2((short)kMachineAState,(short)kMachineAGeneralState,(short)machineA_general_data.stage_step_number,(short)kLegState);
+	short buf = current_field.hill_position.y - location_data.laser1_data * arm_cos_f32(GetLaseFieldAngle()*angle_to_radian_radio)
+      	-CalOpositionY(installation.laser_position.x,installation.laser_position.y,kHighLegMove);//-55*(1.0f - (-1.0f)*field_direction)/2.0f;
+	SendPCData2((short)kMachineAState,(short)kMachineAGeneralState,(short)buf,(short)(location_data.laser1_data * arm_cos_f32(GetLaseFieldAngle()*angle_to_radian_radio)));
+  if(kMachineAGeneralState == kMachineError)
+	{
+		location_data.laser_correction_show = current_field.first_line_position.y - location_data.current_position.ground_leg_y;
+	}
+	else
+	{
+	  location_data.laser_correction_show = current_field.first_line_position.y - buf;
+	}
+	SendScreenData2(location_data.laser_correction_show,location_data.laser_correction,location_data.laser1_position.y,(short)MyClose(which_leg_first_clamber));
 }
 
 void PositionInit()
 {
 	location_data.current_position.lowleg_x = current_field.initial_position.x;
 	location_data.current_position.lowleg_y = 0;
+	location_data.laser_correction = 0;
+	location_data.laser_correction_show = 0;
 }

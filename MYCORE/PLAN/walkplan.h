@@ -3,6 +3,14 @@
 
 #include "plan.h"
 
+typedef enum
+{
+	kRadicalStrategy,
+  kNeutralStrategy,
+  kConservativeStrategy,
+}StrategyAttribute;
+
+extern StrategyAttribute kstrategyattribute;
 /*********Function declaration*******/
 
 /**

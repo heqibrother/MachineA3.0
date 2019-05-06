@@ -69,6 +69,7 @@ typedef enum{        //A车状态
 		kFault,                   //故障状态，准备重启
 		kRestartPrepareMode =25,          //重启状态准备
 		kWaitToBeAwaken ,           //等待重启准备
+		kMoveRedFieldTurnLeft,
 }MachineAState;
 
 /***A车总体数据***/
@@ -81,6 +82,9 @@ typedef struct
 	Stage stage;
 	int step_number_left;
 	float target_distance;
+	MachineAGeneralState kMachineAGeneralStateBuf;
+  MachineAState kMachineAStateBuf;
+	RestartCommand hRestartCommandBuf;
 }MachineAGeneralData;
 
 extern MachineAGeneralState kMachineAGeneralState;
@@ -132,4 +136,6 @@ void CompetitionMode();
 void FormalStart();
 
 void StartPreMode();
+
+void 	StateRestartInit();
 #endif

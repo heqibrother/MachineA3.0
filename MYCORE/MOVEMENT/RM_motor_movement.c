@@ -76,4 +76,6 @@ void RMPartInit()
 	RM_speed_stage = kStopMove;
 	RM_MoveInfo.position_data.initial_position = 0;
 	RM_MoveInfo.position_data.finish_decelerate_position = 0;
+	RotateMotor.State = PIDPOSITION;
+	RotateMotor.PositionExpected = RM_MoveInfo.position_data.initial_position;
 }

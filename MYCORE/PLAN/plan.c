@@ -25,7 +25,7 @@ void MakePlan()
 			break;
 			
 		case kNeedToRestart:
-			Restart();
+			  Restart();
 			break;
 		
 		case kWaitToRestart:
@@ -34,6 +34,7 @@ void MakePlan()
 			 RestartModePlan();
 		   kMachineAGeneralState = kNormalWalk;
 				handle_command.hRestartCommand = kCommonState;//必须在完成重启初始化后重置
+				SendRestartCommandFeedback(kCommonState);
 				MyDelayms(20);
 			}
 			break;
@@ -43,6 +44,14 @@ void MakePlan()
 			{
 				WalkPlan();
 				//machineA_general_data.plan_isok = true;
+			}
+			if(kMachineAState == kClamberReady)//用于上坡重启忘了开按钮的事件，开了开关，可以正常上坡重启
+			{
+				kMachineAGeneralState = kClamberModeWaiting;	
+			}
+			if(IsDOORTouched(DOOR4)&&kMachineAState <= kStart)
+			{
+				kMachineAGeneralState = kWaitToStart;
 			}
 			break;
 		
@@ -103,6 +112,10 @@ void RestartModePlan()
 			ClamberModeInitialize();
 			break;
 		
+		case kShowRedFieldTurnLeft:
+			ShowRedFieldTurnLeft();
+			break;
+		
 		default:
 			break;
 	}
@@ -111,24 +124,46 @@ void RestartModePlan()
 void Restart()
 {
 		
-		kMachineAState = kRestartPrepareMode;
+	SetCamera(0);
 	  machineA_general_data.stage_step_number = 1;
 		time_point = kAllDone; 
 	  machineA_general_data.plan_isok = false;
 	  machineA_general_data.start_time = MyGetTime();
-		 if(handle_command.hRestartCommand != kClamberPositionRestart)
+		 if(handle_command.hRestartCommand == kClamberPositionRestart)
+		{
+					if(which_leg_first_clamber>0)
+					{
+						kLegState = kHighLegMove;//默认另条腿在上，以便检测到位
+					  HighlegLift();
+					}
+					else
+					{
+						kLegState = kLowLegMove;
+						LowlegLift();
+					}
+			
+			machineA_general_data.stage = kStage4;
+			kMachineAGeneralState = kStartingPre;
+		}
+		else 	if(handle_command.hRestartCommand == kShowRedFieldTurnLeft)
 		{
 			kLegState = RedFieldLeg(kHighLegMove);//默认另条腿在上，以便检测到位
 			RedFieldLegLift(kHighLegMove);
 			machineA_general_data.stage = kStage4;
 			kMachineAGeneralState = kStartingPre;
+			kMachineAState = kMoveRedFieldTurnLeft;
+			//kMachineAGeneralState = kMachineError;
 		}
 		else
 		{
-			kLegState = kHighLegMove;//默认另条腿在上，以便检测到位
-		  HighlegLift();
+//			kstrategyattribute = kConservativeStrategy;
+			kLegState = RedFieldLeg(kHighLegMove);//默认另条腿在上，以便检测到位
+			RedFieldLegLift(kHighLegMove);
 			machineA_general_data.stage = kStage4;
 			kMachineAGeneralState = kStartingPre;
+			kMachineAState = kRestartPrepareMode;
+			//kMachineAGeneralState = kMachineError;
+
 		}
 		switch(handle_command.hRestartCommand)
 	{
@@ -149,15 +184,21 @@ void Restart()
 		
 		case kSecondLinePositionRestart:
 			//leg_state_data.leg_state_number = 7;
-	    leg_state_data.leg_state_number_pre = 7;
+	  	machineA_general_data.hRestartCommandBuf = handle_command.hRestartCommand;
+	    leg_state_data.leg_state_number_pre = 11;
 			break;
 		
 		case kClamberPositionRestart:
    leg_state_data.leg_state_number_pre = 2;
 			kMachineAState = kClamberMode;
-		handle_command.hRestartCommand = kCommonState;
+//		handle_command.hRestartCommand = kCommonState;
+//		SendRestartCommandFeedback(kCommonState);
 	//kMachineAGeneralState = kNormalWalk;
 	//	handle_command.hRestartCommand = kCommonState;
+			break;
+		
+		case kShowRedFieldTurnLeft:
+			leg_state_data.leg_state_number_pre = 3;
 			break;
 		
 		default:
@@ -169,54 +210,75 @@ void Restart()
 
 void BeforeStartInitialize()
 {
-	StateInit();
+	StateRestartInit();
+	leg_angle.initial_yaw = leg_angle.original_yaw;
+	RefreshLegYaw();
 	leg_state_data.leg_state_number = 2;
 	leg_state_data.leg_state_number_pre = 2;
 	SetLegsInitialPosition(current_field.initial_position.x,current_field.initial_position.y);
+	//SetLegsInitialPosition(current_field.initial_position.x,current_field.initial_position.y);
 	kMachineAState = kBeforeStart;
 	ChangePositionRecord(kLegState,&location_data.current_position,&DM_MoveInfo);
 	ChangePositionRecord(kLegState,&location_data.motor_position,&DM_MoveInfo);
 	RecordLocation();
 	leg_angle.initial_yaw = leg_angle.original_yaw;
-	RefreshLegYaw();
 }
 
 void BeforeStepUpInitialize()
 {
-	StateInit();
-	leg_state_data.leg_state_number = 3;
+	StateRestartInit();
+	leg_angle.initial_yaw = leg_angle.original_yaw - field_direction*45;
+	RefreshLegYaw();
+	leg_state_data.leg_state_number = 4;
 	leg_state_data.leg_state_number_pre = 4;
 	SetLegsInitialPosition(current_field.first_line_restart.x,current_field.first_line_restart.y);
 	kMachineAState = kBeforeStepUp;
 	ChangePositionRecord(kLegState,&location_data.current_position,&DM_MoveInfo);
 	ChangePositionRecord(kLegState,&location_data.motor_position,&DM_MoveInfo);
 	RecordLocation();
-	leg_angle.initial_yaw = leg_angle.original_yaw - field_direction*45;
-	RefreshLegYaw();
+
 }
 
 void BeforeTurnRightInitialize()
 {
-	StateInit();
-	leg_state_data.leg_state_number = 7;
-	leg_state_data.leg_state_number_pre = 7;
+	StateRestartInit();
+	leg_angle.initial_yaw = leg_angle.original_yaw - field_direction*45;
+	RefreshLegYaw();
+	leg_state_data.leg_state_number = 11;
+	leg_state_data.leg_state_number_pre = 11;
+	if(field_direction>0)
+	{
+			current_field.second_line_restart.y = current_field.first_rope_position.y + installation.SecondRedWhiteLinePoint.y 
+	          - CalOpositionY(installation.RedFieldSecondTurnLegCorner.x,installation.RedFieldSecondTurnLegCorner.y,kLowLegMove);
+	}
+	else
+	{
+			current_field.second_line_restart.y = current_field.first_rope_position.y + installation.SecondRedWhiteLinePoint.y 
+	          - CalOpositionY(installation.BlueFieldSecondTurnLegCorner.x,installation.BlueFieldSecondTurnLegCorner.y,kHighLegMove);
+	}
+
 	SetLegsInitialPosition(current_field.second_line_restart.x,current_field.second_line_restart.y);
 	kMachineAState = kBeforeTurnRight;
 	ChangePositionRecord(kLegState,&location_data.current_position,&DM_MoveInfo);
 	ChangePositionRecord(kLegState,&location_data.motor_position,&DM_MoveInfo);
 	RecordLocation();
-	leg_angle.initial_yaw = leg_angle.original_yaw - field_direction*45;
-	RefreshLegYaw();
+
 }
 
 void ClamberModeInitialize()
 {
-	  StateInit();
+	  StateRestartInit();		
+	leg_angle.initial_yaw = leg_angle.original_yaw ;
     kMachineAState = kClamberReady;
 	 kMachineAGeneralState = kClamberModeWaiting;	
 		machineA_general_data.stage_step_number = 1;
-		leg_angle.initial_yaw = leg_angle.original_yaw ;//- field_direction*45;
+//- field_direction*45;
 	  RefreshLegYaw();
+}
+
+void ShowRedFieldTurnLeft()
+{
+	
 }
 //void SettingObstacleCrossingParameters(bool )
 //{

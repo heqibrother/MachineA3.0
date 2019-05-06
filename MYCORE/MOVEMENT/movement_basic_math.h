@@ -95,4 +95,5 @@ float CalDMMinSafeDistance();
 float CalDMMaxSafeDistance();
 float FloatSafeDivision(float divisor);
 int32_t Int32_tSafeDivision(int32_t divisor);//dividend/divisor
+void CalMovementPositionRestart(MotorMoveState *motor);
 #endif

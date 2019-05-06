@@ -2,7 +2,8 @@
 
 FieldPara current_field;
 InstallationLocation installation;
-const float field_direction = +1.0f;
+float field_direction = -1.0f;
+float which_leg_first_clamber = 1.0f;
 
 const float DM_radio = 0.57596f;//   66pi（3.141592654）/360  //motor_angle * radio = real distance
 const float RM_radio = 0.265625f;//0.32075f;//34:128 //motor_angle * radio = real angle
@@ -67,9 +68,15 @@ void FieldParaInit()
 	InstallationLocation *IL = &installation;
 	SetFieldPara(&(*IL).camera_position,-40.0f,0.0f);
 	SetFieldPara(&(*IL).rplidar_position,0.0f,560.0f);
-	SetFieldPara(&(*IL).laser_position,-110.0f,590.0f);
+	SetFieldPara(&(*IL).laser_position,-110.0f,570.0f);
+	SetFieldPara(&(*IL).RedFieldSecondTurnLegCorner,-280.0f,Aluminum_Tube_Width);
+	SetFieldPara(&(*IL).BlueFieldSecondTurnLegCorner,280.0f,Aluminum_Tube_Width);
+	SetFieldPara(&(*IL).SecondRedWhiteLinePoint,0.0f,-900.0f);
 	(*IL).LaserRedAngle = -7;
 	(*IL).LaserBlueAngle = 11;
+	
+			SendFieldPara1(current_field.first_line_position.y,current_field.first_rope_position.y,
+	               current_field.second_rope_position.y,current_field.hill_position.y);
 }
 
 void RedFieldParaInit()
@@ -80,11 +87,11 @@ void RedFieldParaInit()
 	SetFieldPara(&(*red_field).first_line_position,-680.0f,3140.0f);
 	SetFieldPara(&(*red_field).first_redline_position,-680.0f,3400.0f);
 	SetFieldPara(&(*red_field).first_line_restart,-600.0f,3200.0f);
-	SetFieldPara(&(*red_field).second_line_restart,660.0f,4400.0f);
-	SetFieldPara(&(*red_field).first_rope_position,0.0f,5565.0f);
-	SetFieldPara(&(*red_field).second_rope_position,0.0f,6335.0f);
-	SetFieldPara(&(*red_field).second_turn_position,1000.0f,0.0f);
-	SetFieldPara(&(*red_field).hill_position,-1280.0f,6455.0f);
+	SetFieldPara(&(*red_field).second_line_restart,590.0f,4400.0f);
+	SetFieldPara(&(*red_field).first_rope_position,0.0f,5565.0f);//第一个绳子5565
+	SetFieldPara(&(*red_field).second_rope_position,0.0f,6335.0f);//第二个绳子6335
+	SetFieldPara(&(*red_field).second_turn_position,950.0f,0.0f);
+	SetFieldPara(&(*red_field).hill_position,-1280.0f,6455.0f);//坡6455
 	
 	SetFieldPara(&(*red_field).first_redline_test,950.0f,3265.0f);
 	SetFieldPara(&(*red_field).second_redline_test,950.0f,current_field.first_rope_position.y - 1000.0f);
@@ -106,7 +113,7 @@ void BlueFieldParaInit()
 	SetFieldPara(&(*blue_field).first_rope_position,0.0f,5580.0f);
 	SetFieldPara(&(*blue_field).second_rope_position,0.0f,6340.0f);
 	SetFieldPara(&(*blue_field).second_turn_position,950.0f,0);
-	SetFieldPara(&(*blue_field).hill_position,-1280.0f,6450.0f);
+	SetFieldPara(&(*blue_field).hill_position,-1280.0f,6441.0f);
 	
 	SetFieldPara(&(*blue_field).first_redline_test,950.0f,3265.0f);
 	SetFieldPara(&(*blue_field).second_redline_test,950.0f,current_field.first_rope_position.y - 1000.0f);

@@ -18,6 +18,9 @@ typedef enum
 	kRisingTurn,
 	kCrossStep,
 	kCrossedStep,//关于旋转电机运动时机不同
+	kDetectStep,
+	kEndWalk,
+	kShowTurn,
 }MovementStyle;
 
 /***运动模式的类型***/
@@ -29,7 +32,7 @@ typedef enum
 	kBothUnStablity,          //正常，都不延长
 	kFlexibleAccelerate,
 	kFlexibleSteady,
-	kClamberSpecialCurve
+	kClamberSpecialCurve,
 }SpeedMode;//决定加减速时间
 
 /***电机运动位置数据（角度为单位）***/
@@ -96,6 +99,7 @@ typedef  struct
   MotorTimeData time_data;
   MotorSpeedData speed_data;
 	bool motor_position;//标志位，判断电机是否到位
+	float move_direction;
 }MotorMoveState;
 
 /***控制结构，所有时点***/
@@ -216,7 +220,7 @@ bool SafeToMoveBeforeRecover();
  * @return: true(need to wait) false(no)
  * @status: 2019.4.21
  */
-bool SafeToLayDownBeforePosition();
+bool SafeToLayDownBeforePosition(float safe_distance);
 
 /**
  * @brief: Detect errors in the initial decision based on location
@@ -239,7 +243,7 @@ void SetObstacleLocation(float obstacleposition,float obstaclewidth,Obstacle *ta
  * @status: 2019.4.21
  */
 void RefreshMovementData();
-void CalMovementDataForClamberMode();
+void CalMovementDataForClamberMode(float RM_angle);
 void ClamberWorkingMode();
 void ClamberPrepareMode();
 void RestartPrepareMode();
@@ -248,4 +252,9 @@ void CalculateClamberMovementData();
 void RisingTurnMode();
 void CrossStepMode();
 void CrossedStepMode();
+void DetectStepMode();
+bool LegPosition();
+void EndWalkMode();
+void ShowTurnMode();
+void RestartMovementDataDLC();
 #endif

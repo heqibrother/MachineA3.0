@@ -106,7 +106,7 @@ float SuitableAccelerateSpeed()
 	if(DM_MoveInfo.time_data.accelerate_time!=0)
 	result = DM_MoveInfo.speed_data.target_position_speed * LookUpDMSpeedTable((float)time_walked/(float)Int32_tSafeDivision(DM_MoveInfo.time_data.accelerate_time));
 	
-	if(result<DM_MoveInfo.speed_data.target_position_speed/20.0f)
+		if(fabs(result)<fabs(DM_MoveInfo.speed_data.target_position_speed/20.0f))
 	return DM_MoveInfo.speed_data.target_position_speed/20.0f;
 	return result;
 }
@@ -118,14 +118,14 @@ float SuitableDecelerateSpeed()
 	time_left = LookUpDMTimeTable(DM_MoveInfo.distance_data.distance_left/DM_MoveInfo.distance_data.distance_decelerate)*DM_MoveInfo.time_data.decelerate_time;
 	if(DM_MoveInfo.time_data.decelerate_time!=0)
 	result = DM_MoveInfo.speed_data.target_position_speed * LookUpDMSpeedTable((float)time_left/(float)Int32_tSafeDivision(DM_MoveInfo.time_data.decelerate_time));
-		if(result<DM_MoveInfo.speed_data.target_position_speed/20.0f)
+		if(fabs(result)<fabs(DM_MoveInfo.speed_data.target_position_speed/20.0f))
 	return DM_MoveInfo.speed_data.target_position_speed/20.0f;
 	return result;
 }
 
 bool JugdeStageTool(float value_a,float value_b)
 {
-	if(value_a*DM_MoveInfo.speed_data.speed_direction > value_b*DM_MoveInfo.speed_data.speed_direction)
+	if(value_a*DM_MoveInfo.speed_data.speed_direction*DM_MoveInfo.move_direction > value_b*DM_MoveInfo.speed_data.speed_direction*DM_MoveInfo.move_direction)
 	{
 		return true;
 	}
@@ -171,14 +171,15 @@ void SetSpeedDirection()
 {
 	if(kLegState == kHighLegMove)
 	{
-		DM_MoveInfo.speed_data.speed_direction = -1.0f;
-		RM_MoveInfo.speed_data.speed_direction = -1.0f;
+		DM_MoveInfo.speed_data.speed_direction = -1.0f ;
+		RM_MoveInfo.speed_data.speed_direction = -1.0f ;
 	}
 	else if(kLegState == kLowLegMove)
 	{
 		DM_MoveInfo.speed_data.speed_direction = 1.0f;
 		RM_MoveInfo.speed_data.speed_direction = 1.0f;
 	}
+	DM_MoveInfo.move_direction  = 1.0f;
 }
 
 void RefreshMotorDistanceWalked()

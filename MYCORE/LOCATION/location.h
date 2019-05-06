@@ -46,6 +46,10 @@ typedef struct
 	float ground_leg_after_step;//前腿
 	float ground_leg_before_step;//后腿
 	float suspend_leg_before_step;
+	
+	//修正值
+	float laser_correction;
+	float laser_correction_show;
 }LocationData;
 
 extern LocationData location_data,location_data_test;

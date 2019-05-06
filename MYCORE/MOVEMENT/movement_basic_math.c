@@ -192,6 +192,99 @@ void CalMovementPosition(MotorMoveState *motor)
 	(*distance).distance_decelerate = CalRealDistance(fabs((*position).finish_decelerate_position - (*position).finish_keepspeed_position));
 }
 
+void CalMovementPositionRestart(MotorMoveState *motor)
+{
+	MotorPositionData *position = &(*motor).position_data;
+  MotorDistanceData *distance = &(*motor).distance_data;
+  MotorTimeData *time = &(*motor).time_data;
+  MotorSpeedData *speed = &(*motor).speed_data;
+//	if(kLegState == kHighLegMove&&)
+	switch(DM_MoveInfo.speed_data.speed_mode)
+	{
+		case kFlexibleAccelerate:
+			if(kLegState == kHighLegMove)
+			{
+				DM_MoveInfo.speed_data.speed_mode = kOnlyAccelerateStability;
+			}
+			else if(kLegState == kLowLegMove)
+			{
+				DM_MoveInfo.speed_data.speed_mode = kBothUnStablity;
+			}
+			break;
+			
+		case kFlexibleSteady:
+				if(kLegState == kHighLegMove)
+			{
+				DM_MoveInfo.speed_data.speed_mode = kBothStability;
+			}
+			else if(kLegState == kLowLegMove)
+			{
+					DM_MoveInfo.speed_data.speed_mode = kBothUnStablity;
+			}
+			break;
+		
+		default:
+			break;
+	}
+	switch(DM_MoveInfo.speed_data.speed_mode)
+	{
+		case kOnlyAccelerateStability:
+				 (*position).finish_accelerate_position = (*position).start_position 
+																								+ (*speed).speed_direction * CalRealPosition((*distance).distance_all *1.0f/3.0f);
+				 (*position).finish_keepspeed_position = (*position).start_position 
+																							  + (*speed).speed_direction * CalRealPosition((*distance).distance_all *4.0f/5.0f);
+				 (*position).finish_decelerate_position = (*position).start_position 
+																								+ (*speed).speed_direction * CalRealPosition((*distance).distance_all);
+				 
+			break;
+		
+		case kOnlyDecelerateStability:
+					(*position).finish_accelerate_position = (*position).start_position 
+																								+ (*speed).speed_direction * CalRealPosition((*distance).distance_all *1.0f/5.0f);
+				 (*position).finish_keepspeed_position = (*position).start_position 
+																							  + (*speed).speed_direction * CalRealPosition((*distance).distance_all *2.0f/3.0f);
+				 (*position).finish_decelerate_position = (*position).start_position 
+																								+ (*speed).speed_direction * CalRealPosition((*distance).distance_all);
+			break;
+																	
+		case kBothStability:
+				 (*position).finish_accelerate_position = (*position).start_position 
+																								+ (*speed).speed_direction * CalRealPosition((*distance).distance_all *1.0f/3.0f);
+				 (*position).finish_keepspeed_position = (*position).start_position 
+																							  + (*speed).speed_direction * CalRealPosition((*distance).distance_all *2.0f/3.0f);
+				 (*position).finish_decelerate_position = (*position).start_position 
+																								+ (*speed).speed_direction * CalRealPosition((*distance).distance_all);
+			break;
+																																
+		case kBothUnStablity:
+				 (*position).finish_accelerate_position = (*position).start_position 
+																								+ (*speed).speed_direction * CalRealPosition((*distance).distance_all *1.0f/5.0f);
+				 (*position).finish_keepspeed_position = (*position).start_position 
+																							  + (*speed).speed_direction * CalRealPosition((*distance).distance_all *6.0f/7.0f);
+				 (*position).finish_decelerate_position = (*position).start_position 
+																								+ (*speed).speed_direction * CalRealPosition((*distance).distance_all);
+			break;
+		
+		case kClamberSpecialCurve:
+					(*position).finish_accelerate_position = (*position).start_position 
+																								+ (*speed).speed_direction * CalRealPosition((*distance).distance_all *1.0f/4.0f);
+				 (*position).finish_keepspeed_position = (*position).start_position 
+																							  + (*speed).speed_direction * CalRealPosition((*distance).distance_all  *3.0f/4.0f);
+				 (*position).finish_decelerate_position = (*position).start_position 
+																								+ (*speed).speed_direction * CalRealPosition((*distance).distance_all);
+			break;
+		
+		default:
+			break;
+	}
+	(*time).accelerate_time = (int32_t)(fabs((*position).finish_accelerate_position - (*position).start_position) / FloatSafeDivision((*speed).target_position_speed*360.0f / 60.0f /1000.0f)/speed_curve_area_radio);
+	(*time).keepspeed_time = (int32_t)fabs(((*position).finish_keepspeed_position - (*position).finish_accelerate_position) / FloatSafeDivision((*speed).target_position_speed*360.0f / 60.0f/1000.0f));
+	(*time).decelerate_time = (int32_t)((fabs((*position).finish_decelerate_position -(*position).finish_keepspeed_position) / FloatSafeDivision((*speed).target_position_speed*360.0f / 60.0f/1000.0f)/speed_curve_area_radio));
+	(*distance).distance_accelerate = CalRealDistance(fabs((*position).finish_accelerate_position - (*position).start_position));
+	(*distance).distance_decelerate = CalRealDistance(fabs((*position).finish_decelerate_position - (*position).finish_keepspeed_position));
+}
+
+
 void CalMovementSpeed(int speed_max)
 {
 	float speed_limmit;

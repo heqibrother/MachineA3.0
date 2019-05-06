@@ -1,7 +1,10 @@
 #ifndef __HANDLECONTROL_H
 #define __HANDLECONTROL_H
 
-#include "superstratum.h"
+#include "math.h"
+#include "stm32f4xx.h"
+#include "arm_math.h"
+#include <stdbool.h>
 
 /***重启状态***/
 typedef enum
@@ -10,13 +13,15 @@ typedef enum
   kInitialPositionRestart,
 	kFirstLinePositionRestart,
 	kSecondLinePositionRestart,
-	kClamberPositionRestart
+	kClamberPositionRestart,
+	kShowRedFieldTurnLeft,
 }RestartCommand;
 
 /***手柄返回数据***/
 typedef struct
 {
   int16_t sendhandledata[4];
+	bool send_field_para_y_flag;
 }SendHandle;
 
 /***手柄状态***/
@@ -27,6 +32,8 @@ typedef struct
 }HandleCommand;
 
 extern HandleCommand handle_command;
-/*********Function declaration*******/
 
+#include "superstratum.h"
+/*********Function declaration*******/
+void SendFieldParaY();
 #endif

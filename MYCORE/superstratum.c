@@ -32,7 +32,9 @@ void JudgeMovement()
 		machineA_general_data.plan_isok = false;
 		leg_state_data.force_time_lay_down_flag = false; 
 //		DMStopMove();//
-//		RMStopMove();
+		RMStopMove();
+		//if(	kMachineAState == kBeforeTurnRight)
+		kMachineAGeneralState = kMachineError;
 //		kMachineAGeneralState = kWaitCommand;
 	}
 }
@@ -85,9 +87,23 @@ void CheckState()
 		DMStopMove();
 		RMStopMove();
 		kMachineAGeneralState = kWaitCommand;
-		
+	//	machineA_general_data.kMachineAGeneralStateBuf = kMachineAGeneralState;
+	//	machineA_general_data.kMachineAStateBuf = kMachineAState;
 		//kMachineAGeneralState = kMachineError;
 	}
+}
+void 	StateRestartInit()
+{
+	OrgansInit();
+	LegPartInit();
+	RMPartInit();
+	DMPartInit();
+	OrgansInit();
+	machineA_general_data.plan_isok = false;
+	leg_data_feedback.crossed_step = false;
+	leg_data_feedback.send_leg_change_flag = false;
+	leg_state_data.leg_safe_to_laydown =1 ;
+	leg_data_feedback.crossd_step_state = 0;
 }
 
 void StateInit()
@@ -105,6 +121,8 @@ void StateInit()
 	leg_data_feedback.crossed_step = false;
 	leg_data_feedback.send_leg_change_flag = false;
 	leg_state_data.leg_safe_to_laydown =1 ;
+	kstrategyattribute = kNeutralStrategy;
+	machineA_general_data.hRestartCommandBuf = kCommonState;
 }
 
 void CompetitionInit()
@@ -167,6 +185,7 @@ void StartPreMode()
 		case kStage4:
 		if(DetectLegRecoverPosition()&&MyGetTime() - machineA_general_data.start_time>50)
 		{
+		//	kMachineAGeneralState = kMachineError;
 				//kLegState = RedFieldLeg(kHighLegMove);
 		  machineA_general_data.stage = kStage5;
 			kMachineAGeneralState = kNormalWalk;

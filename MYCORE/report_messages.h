@@ -38,4 +38,5 @@ void ReportStepPosition();
 void ReportPositionX();
 void ReportClamberLegState();
 void ReportPositionXY();
+void ReportStepDistancePosition();
 #endif

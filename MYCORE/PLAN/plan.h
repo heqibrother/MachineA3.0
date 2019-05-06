@@ -35,4 +35,5 @@ void BeforeStartInitialize();
 void BeforeStepUpInitialize();
 void BeforeTurnRightInitialize();
 void ClamberModeInitialize();
+void ShowRedFieldTurnLeft();
 #endif

@@ -24,7 +24,7 @@ void OrgansInit()
 void SetCamera(int16_t set_angle)
 {
 	int16_t result = 0;
-	result = -1*(float)set_angle/180.0f*(220-90)*field_direction+155;
+	result = -1*(float)set_angle/180.0f*(220-90)+150;
 	organ.camera_angle = result;
 	OrganCommand();
 }

@@ -75,12 +75,18 @@ void GetLaser1Location(LocationData *locationdata)
 //GetLaserRadarLocation(locationdata);
 	LocationDataType *location =&(*locationdata).laser1_position;
 	PositionDataType *position =&(*locationdata).current_position;
-	(*location).y = (*locationdata).laser1_data * arm_cos_f32(GetLaseFieldAngle()*angle_to_radian_radio);
-	(*location).y = CalOpositionY(installation.laser_position.x,installation.laser_position.y,kHighLegMove);
-	(*location).y = current_field.hill_position.y - (*locationdata).laser1_data * arm_cos_f32(GetLaseFieldAngle()*angle_to_radian_radio)
-      	-CalOpositionY(installation.laser_position.x,installation.laser_position.y,kHighLegMove);
+//	(*location).y = (*locationdata).laser1_data * arm_cos_f32(GetLaseFieldAngle()*angle_to_radian_radio);
+//	(*location).y = CalOpositionY(installation.laser_position.x,installation.laser_position.y,kHighLegMove);
+//////////////	(*location).y = current_field.hill_position.y - (*locationdata).laser1_data * arm_cos_f32(GetLaseFieldAngle()*angle_to_radian_radio)
+//////////////      	-CalOpositionY(installation.laser_position.x,installation.laser_position.y,kHighLegMove);
 	//if(fabs(location_data.laser_radar_position.y - (*location).y )<500&&(*locationdata).laser1_data!=0)
-	if((*locationdata).laser1_data > 500&&fabs((*location).y-location_data.motor_position.highleg_y)<800)
+	
+	//if(kstrategyattribute == kRadicalStrategy)
+	{
+		(*location).y =current_field.hill_position.y - (*locationdata).laser1_data * arm_cos_f32(GetLaseFieldAngle()*angle_to_radian_radio)
+      	-CalOpositionY(installation.laser_position.x,installation.laser_position.y,kHighLegMove) + location_data.laser_correction;
+	}
+	if((*locationdata).laser1_data > 500&&fabs((*location).y-location_data.motor_position.highleg_y)<1000)
 	{
 		location_data.laser1_position.ShouldBeTrusted = true;
 	}
@@ -143,18 +149,18 @@ void GetStepLocationData()
 		if(kLegState == kHighLegMove)
 		{
 			location_data.ground_leg_after_step = fabs(DM_MoveInfo.position_data.finish_decelerate_position - DriveMotor.PositionMeasure)*DM_radio * 2 
-                                      			/ FloatSafeDivision(arm_cos_f32((45 - leg_angle.highleg_yaw)*angle_to_radian_radio));
+                                      			/ FloatSafeDivision(arm_cos_f32((field_direction*45 - leg_angle.highleg_yaw)*angle_to_radian_radio));
 			location_data.ground_leg_before_step = 2*Half_Length - location_data.ground_leg_after_step;
 			location_data.suspend_leg_before_step = fabs(DriveMotor.PositionMeasure - DM_MoveInfo.position_data.initial_position)*DM_radio * 2
-			                                       *arm_cos_f32((45 - leg_angle.highleg_yaw)*angle_to_radian_radio);
+			                                       *arm_cos_f32((field_direction*45 - leg_angle.highleg_yaw)*angle_to_radian_radio);
 		}
 		else
 		{
 			location_data.ground_leg_after_step = fabs(DM_MoveInfo.position_data.finish_decelerate_position - DriveMotor.PositionMeasure)*DM_radio * 2 
-                                      			/ FloatSafeDivision(arm_cos_f32((45 - leg_angle.lowleg_yaw)*angle_to_radian_radio));
+                                      			/ FloatSafeDivision(arm_cos_f32((field_direction*45 - leg_angle.lowleg_yaw)*angle_to_radian_radio));
 			location_data.ground_leg_before_step = 2*Half_Length - location_data.ground_leg_after_step;
 			location_data.suspend_leg_before_step = fabs(DriveMotor.PositionMeasure - DM_MoveInfo.position_data.initial_position)*DM_radio * 2
-			                                       *arm_cos_f32((45 - leg_angle.lowleg_yaw)*angle_to_radian_radio);
+			                                       *arm_cos_f32((field_direction*45 - leg_angle.lowleg_yaw)*angle_to_radian_radio);
 		}
 	}
 }

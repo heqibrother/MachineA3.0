@@ -112,12 +112,12 @@ float CalOpositionY(float rela_x,float rela_y,int which_turn)
 		float result_a;
 	if(which_turn == kHighLegMove)
 	{
-		result_a =  (rela_x*arm_sin_f32(leg_angle.highleg_yaw*angle_to_radian_radio)
+		result_a =  (-1.0f*rela_x*arm_sin_f32(leg_angle.highleg_yaw*angle_to_radian_radio)
 		            +rela_y*arm_cos_f32(leg_angle.highleg_yaw*angle_to_radian_radio));
 	}
 	else
 	{
-		result_a = (rela_x*arm_sin_f32(leg_angle.lowleg_yaw*angle_to_radian_radio)+
+		result_a = (-1.0f*rela_x*arm_sin_f32(leg_angle.lowleg_yaw*angle_to_radian_radio)+
 		           rela_y*arm_cos_f32(leg_angle.lowleg_yaw*angle_to_radian_radio));
 	}
 
@@ -130,10 +130,14 @@ void SetLegsInitialPosition(float set_x,float set_y)//再确认腿状态和方向后使用准
 	{
 		location_data.current_position.lowleg_x = set_x;
 		location_data.current_position.lowleg_y = set_y;
+		location_data.motor_position.lowleg_x = set_x;
+		location_data.motor_position.lowleg_y = set_y;
 	}
 	else
 	{
 		location_data.current_position.highleg_x = set_x;
 		location_data.current_position.highleg_y = set_y;
+		location_data.motor_position.highleg_x = set_x;
+		location_data.motor_position.highleg_y = set_y;
 	}
 }

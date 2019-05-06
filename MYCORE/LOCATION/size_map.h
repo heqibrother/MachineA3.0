@@ -29,6 +29,9 @@ typedef struct
 	PointPosition first_column;
 	PointPosition second_column;
 	PointPosition third_column;
+	
+	bool para_change_flag;
+	bool field_attribute_know_flag;
 }FieldPara;
 
 typedef struct
@@ -36,12 +39,16 @@ typedef struct
 	PointPosition camera_position;
 	PointPosition rplidar_position;
 	PointPosition laser_position;
+	PointPosition RedFieldSecondTurnLegCorner;
+	PointPosition BlueFieldSecondTurnLegCorner;
+	PointPosition SecondRedWhiteLinePoint;
 	
 	float LaserRedAngle;
   float LaserBlueAngle;
 }InstallationLocation;
 
-extern const float field_direction ;
+extern float field_direction ;
+extern float which_leg_first_clamber;
 
 extern const float DM_radio ;
 extern const float RM_radio ;

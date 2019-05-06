@@ -1,16 +1,27 @@
 #include "stepdistance.h"
 int CalStepNumber(float alldistance,float distancehope,int required_remainder,float *step_distance,float deviation)
 {
-	int steps_far =0,steps_near = 0,steps_medium = 0,steps_result;
-	steps_far = 2*MyCeil((alldistance - distancehope*(float)required_remainder)/(2.0f*(distancehope+deviation)));
-	steps_medium = 2*MyClose((alldistance - distancehope*(float)required_remainder)/(2.0f*distancehope));
-	steps_near =  2*MyFloor((alldistance - distancehope*(float)required_remainder)/(2.0f*(distancehope-deviation)));
-	steps_result = MyClose(CompareMin((float)steps_medium,(float)steps_near));
-	steps_result = MyClose(CompareMax((float)steps_far,(float)steps_result));
-	(*step_distance) = (alldistance - distancehope*(float)required_remainder)/steps_result;
-	if((*step_distance)<0.8*distancehope)
-		(*step_distance) = (alldistance)/(float)(steps_result+required_remainder);
-	return (steps_result+required_remainder);
+	int steps_far =0,steps_near = 0,steps_medium = 0,steps_result = 0;
+	if(alldistance - (distancehope+deviation)*(float)required_remainder<=0&&required_remainder == 1)//只差一步的情况
+	{
+			*step_distance = alldistance;
+		  steps_result = 1;
+			return steps_result;
+	}
+	steps_far = 2*MyCeil((alldistance - distancehope*(float)required_remainder)/(2.0f*(distancehope+deviation)));//长步需要的步数
+	steps_near = 2*MyFloor((alldistance - distancehope*(float)required_remainder)/(2.0f*(distancehope-deviation)));//短步需要的步数
+  if(steps_far <=0)//防止意外
+	{
+		  steps_far = 2;
+	}
+  steps_result =MyClose(steps_far + required_remainder);
+	
+	(*step_distance) = (alldistance - distancehope*(float)required_remainder)/steps_far;//平均最后一步前的步长
+	if((*step_distance)<0.8*distancehope)//判断最后一步是不是略显长了
+		(*step_distance) = (alldistance)/(float)(steps_result);
+
+	
+	return steps_result;
 }
 
 float CalStepDistance(float targetposition,float currentposition,float distancehope,LegState targetleg,int *step_number_left,float safe_distance)
@@ -77,7 +88,7 @@ int MyCeil(float value)
 int MyClose(float value)
 {
 		int integerbuf = (int)value;
-	float decimalbuf = value - integerbuf;
+	float decimalbuf = value - (float)integerbuf;
 	if(decimalbuf>=0.5f)
 	{
 		return integerbuf+1;
@@ -98,3 +109,18 @@ float CompareMin(float value1,float value2)
 	if(value1>value2)return value2;
 	return value1;
 }
+
+//int CalStepNumber(float alldistance,float distancehope,int required_remainder,float *step_distance,float deviation)
+//{
+//	int steps_far =0,steps_near = 0,steps_medium = 0,steps_result;
+//	steps_far = 2*MyCeil((alldistance - distancehope*(float)required_remainder)/(2.0f*(distancehope+deviation)));
+//	steps_medium = 2*MyClose((alldistance - distancehope*(float)required_remainder)/(2.0f*distancehope));
+//	steps_near =  2*MyFloor((alldistance - distancehope*(float)required_remainder)/(2.0f*(distancehope-deviation)));
+//	steps_result = MyClose(CompareMax((float)steps_near,(float)steps_medium));
+//	steps_result = MyClose(CompareMin((float)steps_result,(float)steps_far));
+//	
+//	(*step_distance) = (alldistance - distancehope*(float)required_remainder)/steps_result;
+//	if((*step_distance)<0.8*distancehope)
+//		(*step_distance) = (alldistance)/(float)(steps_result+required_remainder);
+//	return (steps_result+required_remainder);
+//}

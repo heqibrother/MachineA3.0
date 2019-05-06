@@ -153,7 +153,14 @@ void HighlegLift()
 
 void ClamberModeLeg()
 {
-	leg_state_data.leg_state_command = 0x1000;
+	if(which_leg_first_clamber>0)
+	{
+	   leg_state_data.leg_state_command = 0x1000;
+	}
+	else
+	{
+		leg_state_data.leg_state_command = 0x0100;
+	}
   SendLegCommand();
 }
 
@@ -341,6 +348,14 @@ void TaskLEGCOMMUNICATION(void *p_arg)
 			{
 				SendOrganCommand(organ.take_token_state,organ.lift_token_state,organ.camera_angle,0);
 			}
+			if(!current_field.field_attribute_know_flag)
+			{
+				SendFieldAttributeFeedback(0);
+			}
+			if(handle_command.send_handle.send_field_para_y_flag)
+			{
+				SendFieldParaY();
+			}
 	  	OSTimeDlyHMSM(0, 0, 0, 5, OS_OPT_TIME_HMSM_STRICT, &err);
 	  }
 }
@@ -352,10 +367,21 @@ void LegPrepareForClamber()
 	 MyDelayms(200);
 	 leg_state_data.leg_state_number = 9;
 		leg_state_data.leg_state_number_pre = 9;
-	 SetLegLengthLow(100,50,20,50);
+		if(which_leg_first_clamber>0)
+		{	
+			kLegState = kHighLegMove;
+	   SetLegLengthLow(100,50,20,50);	
+		}
+		else
+		{
+				kLegState = kLowLegMove;
+			SetLegLengthLow(50,100,50,20);	
+		}
 		//SetLegLengthLow(50,50,50,50);
-	 SendLegLength();
-	 ClamberModeLeg();
+	   SendLegLength();
+	   ClamberModeLeg();
+
+
 	}
 }
 
