@@ -210,6 +210,7 @@ void LegPartInit()
 	leg_state_data.leg_state_number = 0;
 	kLegState = RedFieldLeg(kHighLegMove);
 	leg_state_data.force_time_lay_down_flag = false;
+	SetLegSwitch(0,0,0,0);
 }
 
 int32_t GetTimeLayDownAdvance()
@@ -323,7 +324,8 @@ LegState ChangeLegState(LegState klegstate)
 void SendLegCommand()
 {
 	//ChangeLeg(leg_state_data.leg_state_command,leg_state_data.leg_target_state_time,leg_state_data.leg_state_number,leg_state_data.leg_safe_to_laydown);
-  leg_data_feedback.send_leg_change_flag = true;
+  SendLegChange(leg_state_data.leg_state_command,leg_state_data.leg_switch,leg_state_data.leg_state_number,leg_state_data.leg_safe_to_laydown);
+	leg_data_feedback.send_leg_change_flag = true;
 }
 
 void TaskLEGCOMMUNICATION(void *p_arg)
@@ -334,7 +336,7 @@ void TaskLEGCOMMUNICATION(void *p_arg)
 			if(leg_data_feedback.send_leg_change_flag == true)
 			{
 				//SendLegChange(1,2,3,4);
-				SendLegChange(leg_state_data.leg_state_command,leg_state_data.leg_target_state_time,leg_state_data.leg_state_number,leg_state_data.leg_safe_to_laydown);
+				SendLegChange(leg_state_data.leg_state_command,leg_state_data.leg_switch,leg_state_data.leg_state_number,leg_state_data.leg_safe_to_laydown);
 			}
 			if(leg_data_feedback.send_leg_height_change_flag == true)
 			{
@@ -410,3 +412,17 @@ void SendLegLength()
 	leg_state_data.leglength_low.right_behind = leg_state_data.leglength_low_pre.right_behind;
 	leg_data_feedback.send_leg_height_change_flag = true;
 }
+
+void SetLegSwitch(int16_t legrightfront,int16_t legleftfront,int16_t legleftbehind,int16_t legrightbehind)
+{
+	leg_state_data.leg_switch_state[0] = legrightfront;
+	leg_state_data.leg_switch_state[1] = legleftfront;
+	leg_state_data.leg_switch_state[2] = legleftbehind;
+	leg_state_data.leg_switch_state[3] = legrightbehind;
+	leg_state_data.leg_switch = (leg_state_data.leg_switch_state[0]<<12) +
+	                            (leg_state_data.leg_switch_state[1]<<8) +
+	                            (leg_state_data.leg_switch_state[2]<<4) +
+	                            leg_state_data.leg_switch_state[3];
+	 SendLegCommand();
+}
+

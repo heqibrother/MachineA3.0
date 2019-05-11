@@ -23,5 +23,5 @@ void TakeToken();
 void SetCameraAngle(int16_t set_angle);
 
 void SetCamera(int16_t set_angle);
-
+float CalSuitableLegMove(float original_data,float radio);
 #endif

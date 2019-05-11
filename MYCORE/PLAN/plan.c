@@ -25,7 +25,13 @@ void MakePlan()
 			break;
 			
 		case kNeedToRestart:
+			if(JudgeRotateLegsSeparate())
+			{
+			  if(JudgeLegsSeparate())
+			  {
 			  Restart();
+			  }
+		  }
 			break;
 		
 		case kWaitToRestart:
@@ -41,11 +47,12 @@ void MakePlan()
 		
 		case kWaitCommand:
 //			if(LastWalkOver())
+		  if(kMachineAState != kClamberReady)
 			{
 				WalkPlan();
 				//machineA_general_data.plan_isok = true;
 			}
-			if(kMachineAState == kClamberReady)//用于上坡重启忘了开按钮的事件，开了开关，可以正常上坡重启
+			if(kMachineAState == kClamberReady&&IsDOORTouched(DOOR4))//用于上坡重启忘了开按钮的事件，开了开关，可以正常上坡重启
 			{
 				kMachineAGeneralState = kClamberModeWaiting;	
 			}
@@ -179,6 +186,7 @@ void Restart()
 		
 		case kFirstLinePositionRestart:
 			//leg_state_data.leg_state_number = 3;
+		  machineA_general_data.hRestartCommandBuf = kFirstLinePositionRestart;
 	    leg_state_data.leg_state_number_pre = 3;
 			break;
 		

@@ -893,9 +893,26 @@ void EndWalkMode()
 		case kBeforeLegTouchGround:
 			if(LegPosition())
 			{
+				leg_state_data.leg_state_number = 2;
+				leg_state_data.leg_state_number_pre = 2;
+				SteadyLegMode();
+				time_point = kWaitRealSteady;
+			}
+			else break;
+			
+		case kWaitRealSteady:
+			if(LegPosition())
+			{
+				HighlegLift();	
+				time_point = kWaitRealSteady2;
+			}
+			else break;
+			
+		case kWaitRealSteady2:
+			if(LegPosition())
+			{
 				kLegState =kHighLegMove;
-				HighlegLift();
-					SetSpeedDirection();
+				SetSpeedDirection();
 				time_point = kAllDone;
 			}
 			else break;
@@ -1066,4 +1083,49 @@ bool LegPosition()
 	else
 		return false;
 	
+}
+
+bool JudgeLegsSeparate()
+{
+	if(fabs(DriveMotor.PositionMeasure - DM_MoveInfo.position_data.initial_position)<(Aluminum_Tube_Width/2+5)/FloatSafeDivision(DM_radio))
+	{
+		if(fabs(DriveMotor.PositionMeasure - (DM_MoveInfo.position_data.initial_position
+			     +field_direction*(Aluminum_Tube_Width/2 + 15)/FloatSafeDivision(DM_radio)))<10)
+		{
+			return true;
+		}
+		else
+		{
+			DriveMotor.State = PIDPOSITION;
+			DriveMotor.PositionExpected = DM_MoveInfo.position_data.initial_position - field_direction * (Aluminum_Tube_Width/2 + 15) /FloatSafeDivision(DM_radio);
+			return false;
+		}
+	}
+	else
+	{
+//		RotateMotor.State = PIDPOSITION;
+//		RotateMotor.PositionExpected = RM_MoveInfo.position_data.initial_position;
+		DriveMotor.State = PIDPOSITION;
+		DriveMotor.PositionExpected = DriveMotor.PositionMeasure;
+		return true;
+	}
+
+	return true;
+}
+
+bool JudgeRotateLegsSeparate()
+{
+	if(fabs(RotateMotor.PositionMeasure - RM_MoveInfo.position_data.initial_position)<10)
+	{
+
+			return true;
+	}
+	else
+	{
+		RotateMotor.State = PIDPOSITION;
+		RotateMotor.PositionExpected = RM_MoveInfo.position_data.initial_position;
+		return false;
+	}
+
+	return true;
 }

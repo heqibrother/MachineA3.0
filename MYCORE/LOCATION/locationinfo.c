@@ -82,9 +82,15 @@ void GetLaser1Location(LocationData *locationdata)
 	//if(fabs(location_data.laser_radar_position.y - (*location).y )<500&&(*locationdata).laser1_data!=0)
 	
 	//if(kstrategyattribute == kRadicalStrategy)
+	if(kstrategyattribute != kConservativeStrategy)
 	{
 		(*location).y =current_field.hill_position.y - (*locationdata).laser1_data * arm_cos_f32(GetLaseFieldAngle()*angle_to_radian_radio)
       	-CalOpositionY(installation.laser_position.x,installation.laser_position.y,kHighLegMove) + location_data.laser_correction;
+	}
+	else
+	{
+		(*location).y =current_field.hill_position.y - (*locationdata).laser1_data * arm_cos_f32(GetLaseFieldAngle()*angle_to_radian_radio)
+      	-CalOpositionY(installation.laser_position.x,installation.laser_position.y,kHighLegMove) ;
 	}
 	if((*locationdata).laser1_data > 500&&fabs((*location).y-location_data.motor_position.highleg_y)<1000)
 	{

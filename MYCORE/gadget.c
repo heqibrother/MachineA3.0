@@ -85,3 +85,16 @@ void RedFieldLegLift(LegState target_leg_state)
 	}
 }
 
+float CalSuitableLegMove(float original_data,float radio)
+{
+	if(kLegState == kHighLegMove)
+	{
+		original_data = original_data / radio;
+	}
+	else if(kLegState == kLowLegMove)
+	{
+		return original_data;
+	}
+	return original_data;
+}
+

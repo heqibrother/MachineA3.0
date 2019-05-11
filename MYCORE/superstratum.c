@@ -34,7 +34,7 @@ void JudgeMovement()
 //		DMStopMove();//
 		RMStopMove();
 		//if(	kMachineAState == kBeforeTurnRight)
-		kMachineAGeneralState = kMachineError;
+	//	kMachineAGeneralState = kMachineError;
 //		kMachineAGeneralState = kWaitCommand;
 	}
 }
@@ -57,7 +57,7 @@ void CheckState()
 	}
 	if(!IsDOORTouched(DOOR2))
 	{
-		if(kMachineAGeneralState == kWaitToStart&&kMachineAGeneralState != kStartingPre)
+		if(kMachineAGeneralState == kWaitToStart&&machineA_general_data.normal_start_flag)
 		{			
 			machineA_general_data.stage = kStage1;
       kMachineATestItem = kTestFunctionCrossRope;
@@ -81,12 +81,13 @@ void CheckState()
 	}
 	
 	if(!IsDOORTouched(DOOR4)
-		&&(kMachineAGeneralState != kWaitToRestart&&kMachineAGeneralState != kNeedToRestart)
+		&&(kMachineAGeneralState != kWaitToRestart&&kMachineAGeneralState != kNeedToRestart&&kMachineAGeneralState != kWaitCommand)
 	&&(handle_command.hRestartCommand == kCommonState))//&&handle_command.hRestartCommand != kCommonState)
 	{
 		DMStopMove();
 		RMStopMove();
 		kMachineAGeneralState = kWaitCommand;
+		TakeToken();
 	//	machineA_general_data.kMachineAGeneralStateBuf = kMachineAGeneralState;
 	//	machineA_general_data.kMachineAStateBuf = kMachineAState;
 		//kMachineAGeneralState = kMachineError;

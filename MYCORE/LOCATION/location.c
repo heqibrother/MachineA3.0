@@ -56,13 +56,12 @@ void SendLocationInfo()
 	{
 	  location_data.laser_correction_show = current_field.first_line_position.y - buf;
 	}
-	SendScreenData2(location_data.laser_correction_show,location_data.laser_correction,location_data.laser1_position.y,(short)MyClose(which_leg_first_clamber));
+	SendScreenData2(leg_angle.original_pitch,location_data.laser_correction,location_data.laser1_position.y,(short)machineA_general_data.normal_start_flag);//(short)MyClose(which_leg_first_clamber));
 }
 
 void PositionInit()
 {
 	location_data.current_position.lowleg_x = current_field.initial_position.x;
 	location_data.current_position.lowleg_y = 0;
-	location_data.laser_correction = 0;
-	location_data.laser_correction_show = 0;
+
 }

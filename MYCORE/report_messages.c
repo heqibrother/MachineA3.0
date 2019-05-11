@@ -244,10 +244,10 @@ void ReportClamberLegState()
 			break;
 		
 		case 1:
-	SendFrame.Data.floats_ts[0] = leg_state_data.leglength_low.right_front;
-	SendFrame.Data.floats_ts[1] = leg_state_data.leglength_low.left_front;
-	SendFrame.Data.floats_ts[2] = leg_state_data.leglength_low.left_behind;
-	SendFrame.Data.floats_ts[3] = leg_state_data.leglength_low.right_behind;
+	SendFrame.Data.floats_ts[0] = RM_speed_stage;
+	SendFrame.Data.floats_ts[1] = DM_speed_stage;
+	SendFrame.Data.floats_ts[2] = time_point;
+	SendFrame.Data.floats_ts[3] = leg_angle.original_pitch;
 		messager_mark = 2;	
 			break;
 		
@@ -263,7 +263,7 @@ void ReportClamberLegState()
 	SendFrame.Data.floats_ts[0] = leg_data_feedback.crossed_step;
 	SendFrame.Data.floats_ts[1] = kMachineAState;
 	SendFrame.Data.floats_ts[2] = kMachineAGeneralState;
-	SendFrame.Data.floats_ts[3] = kLegState;
+	SendFrame.Data.floats_ts[3] = count_data_recived;
 		messager_mark = 0;	
 			break;
 		

@@ -72,6 +72,9 @@ void FieldParaInit()
 	SetFieldPara(&(*IL).RedFieldSecondTurnLegCorner,-280.0f,Aluminum_Tube_Width);
 	SetFieldPara(&(*IL).BlueFieldSecondTurnLegCorner,280.0f,Aluminum_Tube_Width);
 	SetFieldPara(&(*IL).SecondRedWhiteLinePoint,0.0f,-900.0f);
+	
+	location_data.laser_correction = 100;//激光矫正100
+	location_data.laser_correction_show = 0;
 	(*IL).LaserRedAngle = -7;
 	(*IL).LaserBlueAngle = 11;
 	
@@ -84,14 +87,14 @@ void RedFieldParaInit()
 	FieldPara *red_field = &current_field;
 	SetFieldPara(&(*red_field).initial_position,-570.0f,0.0f);
 	SetFieldPara(&(*red_field).first_line_pre_position,-520.0f,2160.0f);
-	SetFieldPara(&(*red_field).first_line_position,-680.0f,3140.0f);
+	SetFieldPara(&(*red_field).first_line_position,-680.0f,3158.0f);//3140
 	SetFieldPara(&(*red_field).first_redline_position,-680.0f,3400.0f);
-	SetFieldPara(&(*red_field).first_line_restart,-600.0f,3200.0f);
+	SetFieldPara(&(*red_field).first_line_restart,-700.0f,3200.0f);
 	SetFieldPara(&(*red_field).second_line_restart,590.0f,4400.0f);
-	SetFieldPara(&(*red_field).first_rope_position,0.0f,5565.0f);//第一个绳子5565
-	SetFieldPara(&(*red_field).second_rope_position,0.0f,6335.0f);//第二个绳子6335
+	SetFieldPara(&(*red_field).first_rope_position,0.0f,5576.0f);//第一个绳子5565
+	SetFieldPara(&(*red_field).second_rope_position,0.0f,6342.0f);//第二个绳子6335
 	SetFieldPara(&(*red_field).second_turn_position,950.0f,0.0f);
-	SetFieldPara(&(*red_field).hill_position,-1280.0f,6455.0f);//坡6455
+	SetFieldPara(&(*red_field).hill_position,-1280.0f,6462.0f);//坡6455
 	
 	SetFieldPara(&(*red_field).first_redline_test,950.0f,3265.0f);
 	SetFieldPara(&(*red_field).second_redline_test,950.0f,current_field.first_rope_position.y - 1000.0f);
@@ -104,16 +107,16 @@ void RedFieldParaInit()
 void BlueFieldParaInit()
 {
 	FieldPara *blue_field = &current_field;
-	SetFieldPara(&(*blue_field).initial_position,-520.0f,0.0f);
+	SetFieldPara(&(*blue_field).initial_position,-570.0f,0.0f);
 	SetFieldPara(&(*blue_field).first_line_pre_position,-520.0f,2160.0f);
-	SetFieldPara(&(*blue_field).first_line_position,-680.0f,3120.0f);
+	SetFieldPara(&(*blue_field).first_line_position,-680.0f,3120.0f);//第一次转向位置
 	SetFieldPara(&(*blue_field).first_redline_position,-680.0f,3400.0f);
-	SetFieldPara(&(*blue_field).first_line_restart,-680.0f,3265.0f);
-	SetFieldPara(&(*blue_field).second_line_restart,660.0f,4400.0f);
-	SetFieldPara(&(*blue_field).first_rope_position,0.0f,5580.0f);
-	SetFieldPara(&(*blue_field).second_rope_position,0.0f,6340.0f);
+	SetFieldPara(&(*blue_field).first_line_restart,-700.0f,3265.0f);
+	SetFieldPara(&(*blue_field).second_line_restart,590.0f,4400.0f);
+	SetFieldPara(&(*blue_field).first_rope_position,0.0f,5580.0f);//第一根绳
+	SetFieldPara(&(*blue_field).second_rope_position,0.0f,6340.0f);//第二根绳
 	SetFieldPara(&(*blue_field).second_turn_position,950.0f,0);
-	SetFieldPara(&(*blue_field).hill_position,-1280.0f,6441.0f);
+	SetFieldPara(&(*blue_field).hill_position,-1280.0f,6441.0f);//坡的位置
 	
 	SetFieldPara(&(*blue_field).first_redline_test,950.0f,3265.0f);
 	SetFieldPara(&(*blue_field).second_redline_test,950.0f,current_field.first_rope_position.y - 1000.0f);

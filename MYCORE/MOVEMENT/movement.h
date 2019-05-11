@@ -113,6 +113,7 @@ typedef enum{                //全部时点标志位
 	  kBeforeRMPosition,      //旋转电机未到位
 	  kBeforeLegTouchGround,  //放腿触地
 	  kWaitRealSteady,
+	  kWaitRealSteady2,
 	  kAllDone                //所有操作均已完成
 }TimePoint;
 
@@ -140,6 +141,9 @@ typedef struct
 	int leg_state_number_pre;//记录状态数据，用于腿切换时点的切换
 	int leg_target_state_time;//记录到下一个状态的时间
 	int leg_safe_to_laydown;//1安全 0不安全
+	int16_t leg_switch;
+	int16_t leg_switch_state[4];
+	
 	LegLength leglength_high;
 	LegLength leglength_low;
 	LegLength leglength_high_pre;
@@ -257,4 +261,6 @@ bool LegPosition();
 void EndWalkMode();
 void ShowTurnMode();
 void RestartMovementDataDLC();
+bool JudgeLegsSeparate();
+bool JudgeRotateLegsSeparate();
 #endif

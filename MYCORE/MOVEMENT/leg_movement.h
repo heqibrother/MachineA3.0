@@ -28,6 +28,7 @@ void SendLegCommand();
 void LegPrepareForClamber();
 void SetLegLengthHigh(int16_t legrightfront,int16_t legleftfront,int16_t legleftbehind,int16_t legrightbehind);
 void SetLegLengthLow(int16_t legrightfront,int16_t legleftfront,int16_t legleftbehind,int16_t legrightbehind);
+void SetLegSwitch(int16_t legrightfront,int16_t legleftfront,int16_t legleftbehind,int16_t legrightbehind);
 void SendLegLength();
 void ClamberModeLeg();
 LegState DetectLegState();

@@ -85,6 +85,7 @@ typedef struct
 	MachineAGeneralState kMachineAGeneralStateBuf;
   MachineAState kMachineAStateBuf;
 	RestartCommand hRestartCommandBuf;
+	bool normal_start_flag;
 }MachineAGeneralData;
 
 extern MachineAGeneralState kMachineAGeneralState;

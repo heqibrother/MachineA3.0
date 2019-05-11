@@ -3,7 +3,7 @@
 
 #include "superstratum.h"
 
-
+extern int count_data_recived;
 /*********Function declaration*******/
 /**
  * @brief: Return data and record with txt

@@ -11,6 +11,7 @@ typedef struct
 	int32_t change_light_time;
 	int32_t light_time;
 	int32_t dark_time;
+	int32_t change_time;
 }SecurityLedState;
 
 /***°²È«×´Ì¬***/
@@ -37,6 +38,8 @@ typedef struct
   SecurityItemData sGeneralState;
 	SecurityItemData sMotorState;
 	SecurityItemData sLegState;
+	SecurityItemData sGyroscope;
+	SecurityItemData RotateMotor;
 }SecurityItems;
 
 extern SecurityItems securityitem;
@@ -46,6 +49,8 @@ void JudgeSecurityState();
 SecurityState JudgeGeneralStateSecurity();
 SecurityState JudgeMotorStateSecurity();
 SecurityState JudgeLegState();
+SecurityState JudgeRotateMotorSecurity();
+SecurityState JudgeGyroscopeSecurity();
 void SecurityStateInit();
 void SetTwinkParameter(SecurityState state,SecurityLedState *ledstate);
 void LedIndicate(LED_TypeDef led,SecurityLedState *ledstate,int32_t current_time);
